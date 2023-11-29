@@ -1,8 +1,10 @@
 #include "lge_window.h"
 
+#include <utility>
+
 namespace lge {
     LgeWindow::LgeWindow(std::string name, int w, int h)
-            : windowName{name}, width{w}, height{h} { initWindow(); }
+            : windowName{std::move(name)}, width{w}, height{h} { initWindow(); }
 
     LgeWindow::~LgeWindow() {
       glfwDestroyWindow(window);

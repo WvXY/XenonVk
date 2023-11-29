@@ -24,6 +24,6 @@ namespace lge {
         const int height;
         std::string windowName;
 
-        GLFWwindow *window;
+        GLFWwindow *window{};
     };
 } // namespace lge
