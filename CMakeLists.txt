@@ -12,6 +12,10 @@ find_package(Vulkan REQUIRED)
 
 add_executable(${PROJECT_NAME}
         main.cpp
+        lge_window.h
+        lge_window.cpp
+        first_app.cpp
+        first_app.h
 )
 
 target_link_libraries(${PROJECT_NAME}
