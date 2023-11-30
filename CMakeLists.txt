@@ -16,6 +16,8 @@ add_executable(${PROJECT_NAME}
         lge_window.cpp
         first_app.cpp
         first_app.h
+        lge_pipeline.h
+        lge_pipeline.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}
