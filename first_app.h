@@ -2,6 +2,7 @@
 
 #include "lge_window.h"
 #include "lge_pipeline.h"
+#include "lge_device.h"
 
 #include <string>
 #include <filesystem>
@@ -15,13 +16,19 @@ namespace lge{
         void run();
 
       private:
-        // TODO: make root path configurable
         const std::string rootPath = std::filesystem::current_path().parent_path().string();
-        const std::string vertShaderSrc = "shaders\\simple_shader.vert.spv";
-        const std::string fragShaderSrc = "shaders\\simple_shader.frag.spv";
+        const std::string vertShaderSrc = "\\shaders\\simple_shader.vert.spv";
+        const std::string fragShaderSrc = "\\shaders\\simple_shader.frag.spv";
 
         LgeWindow lgeWindow{"First App", WIDTH, HEIGHT};
+        LgeDevice lgeDevice{lgeWindow};
+
         LgePipeline lgePipeline{
-          rootPath + "\\" + vertShaderSrc, rootPath + "\\" + fragShaderSrc};
+          lgeDevice,
+          rootPath + vertShaderSrc,
+          rootPath + fragShaderSrc,
+          LgePipeline::defaultPipelineConfigInfo(WIDTH, HEIGHT)
+        };
+
     };
 }

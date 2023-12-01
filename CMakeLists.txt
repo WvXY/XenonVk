@@ -14,10 +14,12 @@ add_executable(${PROJECT_NAME}
         main.cpp
         lge_window.h
         lge_window.cpp
-        first_app.cpp
         first_app.h
+        first_app.cpp
         lge_pipeline.h
         lge_pipeline.cpp
+        lge_device.h
+        lge_device.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}
