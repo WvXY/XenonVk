@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.26)
-project(simple_game_engine)
+project(little_game_engine)
 
 set(CMAKE_CXX_STANDARD 23)
 

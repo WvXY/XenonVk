@@ -20,7 +20,7 @@ namespace lge {
     std::ifstream file{path, std::ios::ate | std::ios::binary};
 
     if (!file.is_open()) {
-      std::cout << "Error: File Could not open" << std::endl;
+      std::cout << "Error: File do not exist or could not open" << std::endl;
       throw std::runtime_error("Could not open file: " + path);
     }
 
