@@ -16,9 +16,9 @@ namespace lge{
 
       private:
         // TODO: make root path configurable
-        std::string rootPath = std::filesystem::current_path().parent_path().string();
-        std::string vertShaderSrc = "shaders\\simple_shader.vert.spv";
-        std::string fragShaderSrc = "shaders\\simple_shader.frag.spv";
+        const std::string rootPath = std::filesystem::current_path().parent_path().string();
+        const std::string vertShaderSrc = "shaders\\simple_shader.vert.spv";
+        const std::string fragShaderSrc = "shaders\\simple_shader.frag.spv";
 
         LgeWindow lgeWindow{"First App", WIDTH, HEIGHT};
         LgePipeline lgePipeline{
