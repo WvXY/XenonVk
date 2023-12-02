@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.26)
-project(little_game_engine)
+project(little-game-engine)
 
 set(CMAKE_CXX_STANDARD 23)
 
@@ -12,10 +12,10 @@ find_package(Vulkan REQUIRED)
 
 add_executable(${PROJECT_NAME}
         main.cpp
-        lge_window.h
-        lge_window.cpp
         first_app.h
         first_app.cpp
+        lge_window.h
+        lge_window.cpp
         lge_pipeline.h
         lge_pipeline.cpp
         lge_device.h
