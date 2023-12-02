@@ -3,7 +3,7 @@
 namespace lge {
 
     void FirstApp::run() {
-      while (!lgeWindow.shouldClose()){
+      while (!lgeWindow.shouldClose()) {
         glfwPollEvents();
       }
     }

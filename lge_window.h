@@ -10,12 +10,14 @@ namespace lge {
     class LgeWindow {
     public:
         LgeWindow(std::string windowName, int width, int height);
+
         ~LgeWindow();
 
-        LgeWindow(const LgeWindow &)= delete;
+        LgeWindow(const LgeWindow &) = delete;
+
         LgeWindow &operator=(const LgeWindow &) = delete;
 
-        bool shouldClose() {return glfwWindowShouldClose(window);}
+        bool shouldClose() { return glfwWindowShouldClose(window); }
 
         void createWindowSurface(VkInstance instance, VkSurfaceKHR *surface);
 

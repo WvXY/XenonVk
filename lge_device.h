@@ -30,7 +30,7 @@ class LgeDevice {
   const bool enableValidationLayers = true;
 #endif
 
-  LgeDevice(LgeWindow &window);
+  explicit LgeDevice(LgeWindow &window);
   ~LgeDevice();
 
   // Not copyable or movable
