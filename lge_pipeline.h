@@ -8,6 +8,19 @@
 namespace lge {
 
     struct PipelineConfigInfo {
+        // https://pastebin.com/EmsJWHzb
+        VkViewport viewport;
+        VkRect2D scissor;
+        VkPipelineViewportStateCreateInfo viewportInfo;
+        VkPipelineInputAssemblyStateCreateInfo inputAssemblyInfo;
+        VkPipelineRasterizationStateCreateInfo rasterizationInfo;
+        VkPipelineMultisampleStateCreateInfo multisampleInfo;
+        VkPipelineColorBlendAttachmentState colorBlendAttachment;
+        VkPipelineColorBlendStateCreateInfo colorBlendInfo;
+        VkPipelineDepthStencilStateCreateInfo depthStencilInfo;
+        VkPipelineLayout pipelineLayout = nullptr;
+        VkRenderPass renderPass = nullptr;
+        uint32_t subpass = 0;
     };
 
     class LgePipeline {
@@ -18,7 +31,7 @@ namespace lge {
                 const std::string &fragment_shader_path,
                 const PipelineConfigInfo &configInfo);
 
-        ~LgePipeline() {}
+        ~LgePipeline();
 
         LgePipeline(const LgePipeline &) = delete;
 
