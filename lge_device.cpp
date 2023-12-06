@@ -1,4 +1,4 @@
-#include "lge_device.h"
+#include "lge_device.hpp"
 
 // std headers
 #include <cstring>

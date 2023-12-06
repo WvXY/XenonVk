@@ -1,6 +1,6 @@
 #pragma once
 
-#include "lge_window.h"
+#include "lge_window.hpp"
 
 // std lib headers
 #include <string>

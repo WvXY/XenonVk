@@ -1,6 +1,6 @@
 #pragma once
 
-#include "lge_device.h"
+#include "lge_device.hpp"
 
 #include <string>
 #include <vector>
@@ -11,7 +11,6 @@ namespace lge {
         // https://pastebin.com/EmsJWHzb
         VkViewport viewport;
         VkRect2D scissor;
-        VkPipelineViewportStateCreateInfo viewportInfo;
         VkPipelineInputAssemblyStateCreateInfo inputAssemblyInfo;
         VkPipelineRasterizationStateCreateInfo rasterizationInfo;
         VkPipelineMultisampleStateCreateInfo multisampleInfo;

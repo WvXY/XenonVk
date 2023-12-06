@@ -1,4 +1,4 @@
-#include "lge_window.h"
+#include "lge_window.hpp"
 
 #include <utility>
 

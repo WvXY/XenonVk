@@ -12,14 +12,16 @@ find_package(Vulkan REQUIRED)
 
 add_executable(${PROJECT_NAME}
         main.cpp
-        first_app.h
+        first_app.hpp
         first_app.cpp
-        lge_window.h
+        lge_window.hpp
         lge_window.cpp
-        lge_pipeline.h
+        lge_pipeline.hpp
         lge_pipeline.cpp
-        lge_device.h
+        lge_device.hpp
         lge_device.cpp
+        lge_swap_chain.hpp
+        lge_swap_chain.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}
