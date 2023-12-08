@@ -10,6 +10,8 @@ find_package(GLM CONFIG REQUIRED)
 find_package(GLFW3 REQUIRED)
 find_package(Vulkan REQUIRED)
 
+# TODO: auto compile shaders
+
 add_executable(${PROJECT_NAME}
         main.cpp
         first_app.hpp
@@ -25,6 +27,7 @@ add_executable(${PROJECT_NAME}
 )
 
 target_link_libraries(${PROJECT_NAME}
+#        shaders
         glfw
         glm::glm
         Vulkan::Vulkan

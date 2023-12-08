@@ -23,6 +23,10 @@ namespace lge {
       vkDestroyPipeline(lgeDevice.device(), graphicsPipeline, nullptr);
     }
 
+    void LgePipeline::bind(VkCommandBuffer commandBuffer) {
+      vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
+    }
+
     std::vector<char> LgePipeline::readFile(const std::string &path) {
 
       std::ifstream file{path, std::ios::ate | std::ios::binary};
