@@ -4,6 +4,7 @@
 #include "lge_pipeline.hpp"
 #include "lge_swap_chain.hpp"
 #include "lge_device.hpp"
+#include "lge_model.hpp"
 
 #include <string>
 #include <filesystem>
@@ -31,12 +32,10 @@ namespace lge {
         const std::string vertShaderPath = "\\shaders\\simple_shader.vert.spv";
         const std::string fragShaderPath = "\\shaders\\simple_shader.frag.spv";
 
+        void loadModel();
         void createPipelineLayout();
-
         void createPipeline();
-
         void createCommandBuffers();
-
         void drawFrame();
 
         LgeWindow lgeWindow{"First App", WIDTH, HEIGHT};
@@ -45,6 +44,7 @@ namespace lge {
         std::unique_ptr<LgePipeline> lgePipeline;
         VkPipelineLayout pipelineLayout;
         std::vector<VkCommandBuffer> commandBuffers;
+        std::unique_ptr<LgeModel> lgeModel;
 
     };
 }

@@ -24,6 +24,8 @@ add_executable(${PROJECT_NAME}
         lge_device.cpp
         lge_swap_chain.hpp
         lge_swap_chain.cpp
+        lge_model.cpp
+        lge_model.hpp
 )
 
 target_link_libraries(${PROJECT_NAME}

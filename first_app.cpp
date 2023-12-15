@@ -2,10 +2,12 @@
 
 //std
 #include <array>
+#include <stdexcept>
 
 namespace lge {
 
     FirstApp::FirstApp() {
+      loadModel();
       createPipelineLayout();
       createPipeline();
       createCommandBuffers();
@@ -22,6 +24,15 @@ namespace lge {
       }
 
       vkDeviceWaitIdle(lgeDevice.device());
+    }
+
+    void FirstApp::loadModel() {
+      std::vector<LgeModel::Vertex> vertices{
+              {{0.0f, -0.5f}},
+              {{0.5f, 0.5f}},
+              {{-0.5f, 0.5f}}
+      };
+      lgeModel = std::make_unique<LgeModel>(lgeDevice, vertices);
     }
 
     void FirstApp::createPipelineLayout() {
@@ -89,8 +100,11 @@ namespace lge {
 
         vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
+
+
         lgePipeline->bind(commandBuffers[i]);
-        vkCmdDraw(commandBuffers[i], 3, 1, 0, 0);
+        lgeModel->bind(commandBuffers[i]);
+        lgeModel->draw(commandBuffers[i]);
 
         vkCmdEndRenderPass(commandBuffers[i]);
         if (vkEndCommandBuffer(commandBuffers[i]) != VK_SUCCESS) {

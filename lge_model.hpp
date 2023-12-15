@@ -1,14 +1,40 @@
-//
-// Created by xy-wu on 12/9/2023.
-//
+#pragma once
 
-#ifndef LITTLE_GAME_ENGINE_LGE_MODEL_HPP
-#define LITTLE_GAME_ENGINE_LGE_MODEL_HPP
+#include "lge_device.hpp"
 
+#define GLM_FORCE_RADIANS
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
+#include <glm/glm.hpp>
 
-class lge_model {
+// std
+#include <vector>
 
-};
+namespace lge{
+    class LgeModel {
+    public:
+        struct Vertex {
+            glm::vec2 position;
 
+            static std::vector<VkVertexInputBindingDescription> getBindingDescriptions();
+            static std::vector<VkVertexInputAttributeDescription> getAttributeDescriptions();
 
-#endif //LITTLE_GAME_ENGINE_LGE_MODEL_HPP
+        };
+
+        LgeModel(LgeDevice &device, const std::vector<Vertex> &vertices);
+        ~LgeModel();
+
+        LgeModel(const LgeModel&) = delete;
+        LgeModel &operator=(const LgeModel &) = delete;
+
+        void bind(VkCommandBuffer commandBuffer);
+        void draw(VkCommandBuffer commandBuffer);
+
+    private:
+        void createVertexBuffers(const std::vector<Vertex> &vertices);
+
+        LgeDevice &lgeDevice;
+        VkBuffer vertexBuffer;
+        VkDeviceMemory vertexBufferMemory;
+        uint32_t vertexCount;
+    };
+}
