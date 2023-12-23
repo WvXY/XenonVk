@@ -28,9 +28,9 @@ namespace lge {
 
     void FirstApp::loadModel() {
       std::vector<LgeModel::Vertex> vertices{
-              {{0.0f, -0.5f}},
-              {{0.5f, 0.5f}},
-              {{-0.5f, 0.5f}}
+              {{0.0f, -0.5f}, {1.0f, 0.0f, 0.0f}},
+              {{0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
+              {{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}}
       };
       lgeModel = std::make_unique<LgeModel>(lgeDevice, vertices);
     }
@@ -56,8 +56,8 @@ namespace lge {
       pipelineConfig.pipelineLayout = pipelineLayout;
       lgePipeline = std::make_unique<LgePipeline>(
               lgeDevice,
-              rootPath + vertShaderPath,
-              rootPath + fragShaderPath,
+              vertShaderPath,
+              fragShaderPath,
               pipelineConfig
       );
     }

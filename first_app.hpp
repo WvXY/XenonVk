@@ -28,9 +28,9 @@ namespace lge {
         void run();
 
     private:
-        const std::string rootPath = std::filesystem::current_path().parent_path().string();
-        const std::string vertShaderPath = "\\shaders\\simple_shader.vert.spv";
-        const std::string fragShaderPath = "\\shaders\\simple_shader.frag.spv";
+//        const std::string rootPath = std::filesystem::current_path().parent_path().string();
+        const std::string vertShaderPath = "shaders\\simple_shader.vert.spv";
+        const std::string fragShaderPath = "shaders\\simple_shader.frag.spv";
 
         void loadModel();
         void createPipelineLayout();
