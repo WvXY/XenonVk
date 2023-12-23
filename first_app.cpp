@@ -44,7 +44,7 @@ namespace lge {
       pipelineLayoutInfo.pPushConstantRanges = nullptr;
       if (vkCreatePipelineLayout(
               lgeDevice.device(), &pipelineLayoutInfo, nullptr, &pipelineLayout)
-          != VK_SUCCESS) {
+              != VK_SUCCESS) {
         throw std::runtime_error("failed to create pipeline layout!");
       }
     }
@@ -55,10 +55,7 @@ namespace lge {
       pipelineConfig.renderPass = lgeSwapChain.getRenderPass();
       pipelineConfig.pipelineLayout = pipelineLayout;
       lgePipeline = std::make_unique<LgePipeline>(
-              lgeDevice,
-              vertShaderPath,
-              fragShaderPath,
-              pipelineConfig
+              lgeDevice, vertShaderPath, fragShaderPath, pipelineConfig
       );
     }
 
