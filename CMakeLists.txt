@@ -5,9 +5,8 @@ set(CMAKE_CXX_STANDARD 23)
 
 # using vcpkg to manage dependencies
 #set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
-#find_path(GLM_PATH glm/glm.h)
 
-find_package(GLM REQUIRED)
+find_package(GLM CONFIG REQUIRED)
 find_package(GLFW3 REQUIRED)
 find_package(Vulkan REQUIRED)
 
@@ -28,8 +27,8 @@ add_executable(${PROJECT_NAME}
 )
 
 target_link_libraries(${PROJECT_NAME}
-        glfw
         glm::glm
+        glfw
         Vulkan::Vulkan
 )
 

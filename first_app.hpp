@@ -35,10 +35,12 @@ namespace lge {
         void createPipeline();
         void createCommandBuffers();
         void drawFrame();
+        void recreateSwapChain();
+        void recordCommandBuffer(int imageIndex);
 
         LgeWindow lgeWindow{"First App", WIDTH, HEIGHT};
         LgeDevice lgeDevice{lgeWindow};
-        LgeSwapChain lgeSwapChain{lgeDevice, lgeWindow.getExtent()};
+        std::unique_ptr<LgeSwapChain> lgeSwapChain;
         std::unique_ptr<LgePipeline> lgePipeline;
         VkPipelineLayout pipelineLayout;
         std::vector<VkCommandBuffer> commandBuffers;

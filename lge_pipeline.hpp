@@ -34,7 +34,7 @@ namespace lge {
 
         LgePipeline(const LgePipeline &) = delete;
 
-        void operator=(const LgePipeline &) = delete;
+        LgePipeline &operator=(const LgePipeline &) = delete;
 
         void bind(VkCommandBuffer commandBuffer);
 
