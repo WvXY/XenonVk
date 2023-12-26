@@ -4,9 +4,10 @@ project(little-game-engine)
 set(CMAKE_CXX_STANDARD 23)
 
 # using vcpkg to manage dependencies
-set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
+#set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
+#find_path(GLM_PATH glm/glm.h)
 
-find_package(GLM CONFIG REQUIRED)
+find_package(GLM REQUIRED)
 find_package(GLFW3 REQUIRED)
 find_package(Vulkan REQUIRED)
 
@@ -34,11 +35,12 @@ target_link_libraries(${PROJECT_NAME}
 
 # --------------auto compile shaders---------------
 ## https://gist.github.com/evilactually/a0d191701cb48f157b05be7f74d79396
-if (${CMAKE_HOST_SYSTEM_PROCESSOR} STREQUAL "AMD64")
+if (WIN32)
     set(GLSL_VALIDATOR "$ENV{VULKAN_SDK}/Bin/glslangValidator.exe")
-else()
-    set(GLSL_VALIDATOR "$ENV{VULKAN_SDK}/Bin32/glslangValidator.exe")
-endif()
+elseif (UNIX)
+    set(GLSL_VALIDATOR "/bin/glslangValidator")
+endif ()
+
 
 file(GLOB_RECURSE GLSL_SOURCE_FILES
         "shaders/*.frag"
