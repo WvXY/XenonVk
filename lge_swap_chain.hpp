@@ -8,6 +8,8 @@
 // std lib headers
 #include <string>
 #include <vector>
+#include <memory>
+
 
 namespace lge {
 
@@ -16,6 +18,8 @@ class LgeSwapChain {
   static constexpr int MAX_FRAMES_IN_FLIGHT = 2;
 
   LgeSwapChain(LgeDevice &deviceRef, VkExtent2D windowExtent);
+  LgeSwapChain(
+          LgeDevice &deviceRef, VkExtent2D windowExtent, std::shared_ptr<LgeSwapChain> previous);
   ~LgeSwapChain();
 
   LgeSwapChain(const LgeSwapChain &) = delete;
@@ -39,6 +43,7 @@ class LgeSwapChain {
   VkResult submitCommandBuffers(const VkCommandBuffer *buffers, uint32_t *imageIndex);
 
  private:
+  void init();
   void createSwapChain();
   void createImageViews();
   void createDepthResources();
@@ -69,6 +74,7 @@ class LgeSwapChain {
   VkExtent2D windowExtent;
 
   VkSwapchainKHR swapChain;
+  std::shared_ptr<LgeSwapChain> oldSwapChain;
 
   std::vector<VkSemaphore> imageAvailableSemaphores;
   std::vector<VkSemaphore> renderFinishedSemaphores;

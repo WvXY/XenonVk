@@ -29,7 +29,6 @@ namespace lge {
     }
 
     std::vector<char> LgePipeline::readFile(const std::string &path) {
-
       std::ifstream file{path, std::ios::ate | std::ios::binary};
 
       if (!file.is_open()) {
@@ -44,14 +43,13 @@ namespace lge {
       file.read(buffer.data(), fileSize);
 
       file.close();
-
       return buffer;
     }
 
     void LgePipeline::createGraphicsPipeline(
             const std::string &vertex_shader_path,
             const std::string &fragment_shader_path,
-            const PipelineConfigInfo &configInfo) {
+            const PipelineConfigInfo &configInfo){
 
       assert(configInfo.pipelineLayout != VK_NULL_HANDLE &&
         "cannot create graphics pipeline:: no pipelineLayout provided in configInfo");
@@ -87,17 +85,9 @@ namespace lge {
       vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
       vertexInputInfo.vertexAttributeDescriptionCount =
               static_cast<uint32_t>(attributeDescriptions.size());
-      vertexInputInfo.vertexBindingDescriptionCount =
-              static_cast<uint32_t>(bindingDescriptions.size());
+      vertexInputInfo.vertexBindingDescriptionCount = static_cast<uint32_t>(bindingDescriptions.size());
       vertexInputInfo.pVertexAttributeDescriptions = attributeDescriptions.data();
       vertexInputInfo.pVertexBindingDescriptions = bindingDescriptions.data();
-
-      VkPipelineViewportStateCreateInfo viewportInfo{};
-      viewportInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
-      viewportInfo.viewportCount = 1;
-      viewportInfo.pViewports = &configInfo.viewport;
-      viewportInfo.scissorCount = 1;
-      viewportInfo.pScissors = &configInfo.scissor;
 
       VkGraphicsPipelineCreateInfo pipelineInfo{};
       pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
@@ -105,16 +95,16 @@ namespace lge {
       pipelineInfo.pStages = shaderStages;
       pipelineInfo.pVertexInputState = &vertexInputInfo;
       pipelineInfo.pInputAssemblyState = &configInfo.inputAssemblyInfo;
-      pipelineInfo.pViewportState = &viewportInfo;
+      pipelineInfo.pViewportState = &configInfo.viewportInfo;
       pipelineInfo.pRasterizationState = &configInfo.rasterizationInfo;
       pipelineInfo.pMultisampleState = &configInfo.multisampleInfo;
       pipelineInfo.pColorBlendState = &configInfo.colorBlendInfo;
       pipelineInfo.pDepthStencilState = &configInfo.depthStencilInfo;
-      pipelineInfo.pDynamicState = nullptr;
+      pipelineInfo.pDynamicState = &configInfo.dynamicStateInfo;
 
-      pipelineInfo.layout = configInfo.pipelineLayout;  // Not used yet
-      pipelineInfo.renderPass = configInfo.renderPass;  // Not used yet
-      pipelineInfo.subpass = configInfo.subpass;        // Not used yet
+      pipelineInfo.layout = configInfo.pipelineLayout;
+      pipelineInfo.renderPass = configInfo.renderPass;
+      pipelineInfo.subpass = configInfo.subpass;
 
       pipelineInfo.basePipelineIndex = -1;
       pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
@@ -125,15 +115,9 @@ namespace lge {
               1,
               &pipelineInfo,
               nullptr,
-              &graphicsPipeline
-              ) != VK_SUCCESS)
-      {
+              &graphicsPipeline) != VK_SUCCESS) {
         throw std::runtime_error("failed to create graphics pipeline");
       }
-
-
-      std::cout << "vertex shader: " << vertex_shader_code.size() << " bytes" << std::endl;
-      std::cout << "fragment shader: " << fragment_shader_code.size() << " bytes" << std::endl;
     }
 
     void LgePipeline::createShaderModule(const std::vector<char> &code, VkShaderModule *shaderModule) {
@@ -147,22 +131,16 @@ namespace lge {
       }
     }
 
-    PipelineConfigInfo LgePipeline::defaultPipelineConfigInfo(uint32_t width, uint32_t height) {
-      PipelineConfigInfo configInfo{};
-
+    void LgePipeline::defaultPipelineConfigInfo(PipelineConfigInfo& configInfo) {
       configInfo.inputAssemblyInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
       configInfo.inputAssemblyInfo.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
       configInfo.inputAssemblyInfo.primitiveRestartEnable = VK_FALSE;
 
-      configInfo.viewport.x = 0.0f;
-      configInfo.viewport.y = 0.0f;
-      configInfo.viewport.width = static_cast<float>(width);
-      configInfo.viewport.height = static_cast<float>(height);
-      configInfo.viewport.minDepth = 0.0f;
-      configInfo.viewport.maxDepth = 1.0f;
-
-      configInfo.scissor.offset = {0, 0};
-      configInfo.scissor.extent = {width, height};
+      configInfo.viewportInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
+      configInfo.viewportInfo.viewportCount = 1;
+      configInfo.viewportInfo.pViewports = nullptr;
+      configInfo.viewportInfo.scissorCount = 1;
+      configInfo.viewportInfo.pScissors = nullptr;
 
       configInfo.rasterizationInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
       configInfo.rasterizationInfo.depthClampEnable = VK_FALSE;
@@ -216,6 +194,11 @@ namespace lge {
       configInfo.depthStencilInfo.front = {};  // Optional
       configInfo.depthStencilInfo.back = {};   // Optional
 
-      return configInfo;
+      configInfo.dynamicStateEnables = {VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR};
+      configInfo.dynamicStateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
+      configInfo.dynamicStateInfo.pDynamicStates = configInfo.dynamicStateEnables.data();
+      configInfo.dynamicStateInfo.dynamicStateCount =
+              static_cast<uint32_t>(configInfo.dynamicStateEnables.size());
+      configInfo.dynamicStateInfo.flags = 0;
     }
 } // namespace lge

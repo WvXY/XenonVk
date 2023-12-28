@@ -2,6 +2,7 @@
 
 //std
 #include <array>
+#include <cassert>
 #include <stdexcept>
 
 namespace lge {
@@ -50,10 +51,13 @@ namespace lge {
     }
 
     void FirstApp::createPipeline() {
-      auto pipelineConfig =
-              LgePipeline::defaultPipelineConfigInfo(lgeSwapChain->width(), lgeSwapChain->height());
-      pipelineConfig.renderPass = lgeSwapChain->getRenderPass();
+      assert(lgeSwapChain != nullptr && "Cannot create pipeline before swap chain");
+      assert(pipelineLayout != nullptr && "Cannot create pipeline before pipeline layout");
+
+      PipelineConfigInfo pipelineConfig{};
+      LgePipeline::defaultPipelineConfigInfo(pipelineConfig);
       pipelineConfig.pipelineLayout = pipelineLayout;
+      pipelineConfig.renderPass = lgeSwapChain->getRenderPass();
       lgePipeline = std::make_unique<LgePipeline>(
               lgeDevice, vertShaderPath, fragShaderPath, pipelineConfig
       );
@@ -66,7 +70,16 @@ namespace lge {
         glfwWaitEvents();
       }
       vkDeviceWaitIdle(lgeDevice.device());
-      lgeSwapChain = std::make_unique<LgeSwapChain>(lgeDevice, extent);
+
+      if (lgeSwapChain == nullptr) {
+        lgeSwapChain = std::make_unique<LgeSwapChain>(lgeDevice, extent);
+      } else {
+        lgeSwapChain = std::make_unique<LgeSwapChain>(lgeDevice, extent, std::move(lgeSwapChain));
+        if (lgeSwapChain->imageCount() != commandBuffers.size()) {
+          freeCommandBuffers();
+          createCommandBuffers();
+        }
+      }
       createPipeline();
     }
 
@@ -83,6 +96,16 @@ namespace lge {
       VK_SUCCESS) {
         throw std::runtime_error("failed to allocate command buffers!");
       }
+    }
+
+    void FirstApp::freeCommandBuffers() {
+      vkFreeCommandBuffers(
+              lgeDevice.device(),
+              lgeDevice.getCommandPool(),
+              static_cast<uint32_t>(commandBuffers.size()),
+              commandBuffers.data()
+      );
+      commandBuffers.clear();
     }
 
     void FirstApp::recordCommandBuffer(int imageIndex) {
@@ -110,12 +133,22 @@ namespace lge {
 
       vkCmdBeginRenderPass(commandBuffers[imageIndex], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
+      VkViewport viewport{};
+      viewport.x = 0.0f;
+      viewport.y = 0.0f;
+      viewport.width = static_cast<float>(lgeSwapChain->getSwapChainExtent().width);
+      viewport.height = static_cast<float>(lgeSwapChain->getSwapChainExtent().height);
+      viewport.minDepth = 0.0f;
+      viewport.maxDepth = 1.0f;
+      VkRect2D scissor{{0, 0}, lgeSwapChain->getSwapChainExtent()};
+      vkCmdSetViewport(commandBuffers[imageIndex], 0, 1, &viewport);
+      vkCmdSetScissor(commandBuffers[imageIndex], 0, 1, &scissor);
+
       lgePipeline->bind(commandBuffers[imageIndex]);
       lgeModel->bind(commandBuffers[imageIndex]);
       lgeModel->draw(commandBuffers[imageIndex]);
 
       vkCmdEndRenderPass(commandBuffers[imageIndex]);
-
       if (vkEndCommandBuffer(commandBuffers[imageIndex]) != VK_SUCCESS) {
         throw std::runtime_error("failed to record command buffer!");
       }

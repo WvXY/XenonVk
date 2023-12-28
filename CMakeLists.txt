@@ -40,7 +40,6 @@ elseif (UNIX)
     set(GLSL_VALIDATOR "/bin/glslangValidator")
 endif ()
 
-
 file(GLOB_RECURSE GLSL_SOURCE_FILES
         "shaders/*.frag"
         "shaders/*.vert"
