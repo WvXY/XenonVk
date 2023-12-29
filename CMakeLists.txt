@@ -6,8 +6,13 @@ set(CMAKE_CXX_STANDARD 23)
 # using vcpkg to manage dependencies
 set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
 
+#set(GLFW3_DIR "/usr/include/GLFW")
+
+if(WIN32)
+    find_package(GLFW3 CONFIG REQUIRED)     # in Linux use apt/pacman GLFW install
+endif ()
+
 find_package(GLM CONFIG REQUIRED)
-find_package(GLFW3 CONFIG)
 find_package(Vulkan REQUIRED)
 
 add_executable(${PROJECT_NAME}
