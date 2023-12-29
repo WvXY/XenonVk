@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
 
 find_package(GLM CONFIG REQUIRED)
-find_package(GLFW3 REQUIRED)
+find_package(GLFW3 CONFIG)
 find_package(Vulkan REQUIRED)
 
 add_executable(${PROJECT_NAME}
