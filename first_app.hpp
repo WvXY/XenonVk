@@ -43,7 +43,7 @@ namespace lge {
         LgeDevice lgeDevice{lgeWindow};
         std::unique_ptr<LgeSwapChain> lgeSwapChain;
         std::unique_ptr<LgePipeline> lgePipeline;
-        VkPipelineLayout pipelineLayout;
+        VkPipelineLayout pipelineLayout{};
         std::vector<VkCommandBuffer> commandBuffers;
         std::unique_ptr<LgeModel> lgeModel;
 
