@@ -4,7 +4,7 @@
 #include "lge_pipeline.hpp"
 #include "lge_swap_chain.hpp"
 #include "lge_device.hpp"
-#include "lge_model.hpp"
+#include "lge_game_object.hpp"
 
 #include <string>
 #include <memory>
@@ -30,7 +30,7 @@ namespace lge {
         const std::string vertShaderPath = "shaders/simple_shader.vert.spv";
         const std::string fragShaderPath = "shaders/simple_shader.frag.spv";
 
-        void loadModel();
+        void loadGameObjects();
         void createPipelineLayout();
         void createPipeline();
         void createCommandBuffers();
@@ -38,6 +38,7 @@ namespace lge {
         void drawFrame();
         void recreateSwapChain();
         void recordCommandBuffer(int imageIndex);
+        void renderGameObjects(VkCommandBuffer commandBuffer);
 
         LgeWindow lgeWindow{"First App", WIDTH, HEIGHT};
         LgeDevice lgeDevice{lgeWindow};
@@ -45,7 +46,7 @@ namespace lge {
         std::unique_ptr<LgePipeline> lgePipeline;
         VkPipelineLayout pipelineLayout{};
         std::vector<VkCommandBuffer> commandBuffers;
-        std::unique_ptr<LgeModel> lgeModel;
+        std::vector<LgeGameObject> gameObjects;
 
     };
 }
