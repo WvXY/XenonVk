@@ -4,7 +4,6 @@
 #include <iostream>
 #include <stdexcept>
 
-
 int main() {
   lge::FirstApp app{};
 

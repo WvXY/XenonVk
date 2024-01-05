@@ -7,56 +7,56 @@
 
 namespace lge {
 
-    struct PipelineConfigInfo {
-        PipelineConfigInfo() = default;
-        PipelineConfigInfo(const PipelineConfigInfo&) = delete;
-        PipelineConfigInfo& operator=(const PipelineConfigInfo&) = delete;
+  struct PipelineConfigInfo {
+    PipelineConfigInfo() = default;
+    PipelineConfigInfo(const PipelineConfigInfo &) = delete;
+    PipelineConfigInfo &operator=(const PipelineConfigInfo &) = delete;
 
-        VkPipelineViewportStateCreateInfo viewportInfo;
-        VkPipelineInputAssemblyStateCreateInfo inputAssemblyInfo;
-        VkPipelineRasterizationStateCreateInfo rasterizationInfo;
-        VkPipelineMultisampleStateCreateInfo multisampleInfo;
-        VkPipelineColorBlendAttachmentState colorBlendAttachment;
-        VkPipelineColorBlendStateCreateInfo colorBlendInfo;
-        VkPipelineDepthStencilStateCreateInfo depthStencilInfo;
-        std::vector<VkDynamicState> dynamicStateEnables;
-        VkPipelineDynamicStateCreateInfo dynamicStateInfo;
-        VkPipelineLayout pipelineLayout = nullptr;
-        VkRenderPass renderPass = nullptr;
-        uint32_t subpass = 0;
-    };
+    VkPipelineViewportStateCreateInfo viewportInfo;
+    VkPipelineInputAssemblyStateCreateInfo inputAssemblyInfo;
+    VkPipelineRasterizationStateCreateInfo rasterizationInfo;
+    VkPipelineMultisampleStateCreateInfo multisampleInfo;
+    VkPipelineColorBlendAttachmentState colorBlendAttachment;
+    VkPipelineColorBlendStateCreateInfo colorBlendInfo;
+    VkPipelineDepthStencilStateCreateInfo depthStencilInfo;
+    std::vector<VkDynamicState> dynamicStateEnables;
+    VkPipelineDynamicStateCreateInfo dynamicStateInfo;
+    VkPipelineLayout pipelineLayout = nullptr;
+    VkRenderPass renderPass = nullptr;
+    uint32_t subpass = 0;
+  };
 
-    class LgePipeline {
-    public:
-        LgePipeline(
-                LgeDevice &device,
-                const std::string &vertex_shader_path,
-                const std::string &fragment_shader_path,
-                const PipelineConfigInfo &configInfo);
+  class LgePipeline {
+  public:
+    LgePipeline(
+            LgeDevice &device,
+            const std::string &vertex_shader_path,
+            const std::string &fragment_shader_path,
+            const PipelineConfigInfo &configInfo);
 
-        ~LgePipeline();
+    ~LgePipeline();
 
-        LgePipeline(const LgePipeline &) = delete;
-        LgePipeline &operator=(const LgePipeline &) = delete;
+    LgePipeline(const LgePipeline &) = delete;
+    LgePipeline &operator=(const LgePipeline &) = delete;
 
-        void bind(VkCommandBuffer commandBuffer);
+    void bind(VkCommandBuffer commandBuffer);
 
-        static void defaultPipelineConfigInfo(PipelineConfigInfo &configInfo);
+    static void defaultPipelineConfigInfo(PipelineConfigInfo &configInfo);
 
-    private:
-        static std::vector<char> readFile(const std::string &path);
+  private:
+    static std::vector<char> readFile(const std::string &path);
 
-        void createGraphicsPipeline(
-                const std::string &vertex_shader_path,
-                const std::string &fragment_shader_path,
-                const PipelineConfigInfo &configInfo);
+    void createGraphicsPipeline(
+            const std::string &vertex_shader_path,
+            const std::string &fragment_shader_path,
+            const PipelineConfigInfo &configInfo);
 
-        void createShaderModule(const std::vector<char> &code, VkShaderModule *shaderModule);
+    void createShaderModule(const std::vector<char> &code, VkShaderModule *shaderModule);
 
-        LgeDevice &lgeDevice;
-        VkPipeline graphicsPipeline;
-        VkShaderModule vertShaderModule;
-        VkShaderModule fragShaderModule;
-    };
+    LgeDevice &lgeDevice;
+    VkPipeline graphicsPipeline;
+    VkShaderModule vertShaderModule;
+    VkShaderModule fragShaderModule;
+  };
 
-}
+}// namespace lge
