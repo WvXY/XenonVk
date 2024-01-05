@@ -29,8 +29,12 @@ add_executable(${PROJECT_NAME}
         lge_swap_chain.cpp
         lge_model.cpp
         lge_model.hpp
-        lge_game_object.cpp
-#        lge_game_object.hpp
+        lge_game_object.hpp
+        lge_renderer.hpp
+        lge_renderer.cpp
+        simple_render_system.cpp
+        simple_render_system.hpp
+        #        lge_game_object.hpp
 )
 
 target_link_libraries(${PROJECT_NAME}
