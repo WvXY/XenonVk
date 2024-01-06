@@ -4,8 +4,9 @@
 #include <cstring>
 
 namespace lge {
-  LgeModel::LgeModel(LgeDevice &device, const std::vector<Vertex> &vertices)
-      : lgeDevice{device} { createVertexBuffers(vertices); }
+  LgeModel::LgeModel(LgeDevice &device, const std::vector<Vertex> &vertices) : lgeDevice{device} {
+    createVertexBuffers(vertices);
+  }
 
   LgeModel::~LgeModel() {
     vkDestroyBuffer(lgeDevice.device(), vertexBuffer, nullptr);
@@ -52,7 +53,7 @@ namespace lge {
   std::vector<VkVertexInputAttributeDescription> LgeModel::Vertex::getAttributeDescriptions() {
     return {
             // location, binding, format, offset
-            {0, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, position)},
+            {0, 0, VK_FORMAT_R32G32_SFLOAT, offsetof(Vertex, position)},
             {1, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, color)}};
   }
 }// namespace lge

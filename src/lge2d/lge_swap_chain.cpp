@@ -386,32 +386,22 @@ namespace lge {
 
   VkPresentModeKHR LgeSwapChain::chooseSwapPresentMode(
           const std::vector<VkPresentModeKHR> &availablePresentModes) {
-    switch (presentMode) {
-      case 0:
-        for (const auto &availablePresentMode: availablePresentModes) {
-          if (availablePresentMode == VK_PRESENT_MODE_MAILBOX_KHR) {
-            std::cout << "Present mode: Mailbox(Fast Vsync)" << std::endl;
-            return availablePresentMode;
-          }
-        }
-      case 1:
-        for (const auto &availablePresentMode: availablePresentModes) {
-          if (availablePresentMode == VK_PRESENT_MODE_FIFO_RELAXED_KHR) {
-            std::cout << "Present mode: FIFO_RELAXED(Adaptive Vsync)" << std::endl;
-            return availablePresentMode;
-          }
-        }
-      case 3:
-        for (const auto &availablePresentMode: availablePresentModes) {
-          if (availablePresentMode == VK_PRESENT_MODE_IMMEDIATE_KHR) {
-            std::cout << "Present mode: Immediate(Vsync Off)" << std::endl;
-            return availablePresentMode;
-          }
-        }
-      default:  // 2
-        std::cout << "Present mode: FIFO(Vsync)" << std::endl;
-        return VK_PRESENT_MODE_FIFO_KHR;
-    }
+    //  for (const auto &availablePresentMode : availablePresentModes) {
+    //    if (availablePresentMode == VK_PRESENT_MODE_MAILBOX_KHR) {
+    //      std::cout << "Present mode: Mailbox" << std::endl;
+    //      return availablePresentMode;
+    //    } // vsync off
+    //  }
+
+    //   for (const auto &availablePresentMode : availablePresentModes) {
+    //     if (availablePresentMode == VK_PRESENT_MODE_IMMEDIATE_KHR) {
+    //       std::cout << "Present mode: Immediate" << std::endl;
+    //       return availablePresentMode;
+    //     }
+    //   }
+
+    std::cout << "Present mode: V-Sync" << std::endl;
+    return VK_PRESENT_MODE_FIFO_KHR;
   }
 
   VkExtent2D LgeSwapChain::chooseSwapExtent(const VkSurfaceCapabilitiesKHR &capabilities) {

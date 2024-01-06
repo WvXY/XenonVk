@@ -46,8 +46,6 @@ namespace lge {
              swapChain.swapChainImageFormat == swapChainImageFormat;
     }
 
-
-
   private:
     void init();
     void createSwapChain();
@@ -56,9 +54,6 @@ namespace lge {
     void createRenderPass();
     void createFramebuffers();
     void createSyncObjects();
-
-    // 0: Mailbox, 1: FIFO_Relaxed, 2: FIFO(default), 3: Immediate (best to worst)
-    int presentMode = 0;
 
     // Helper functions
     VkSurfaceFormatKHR chooseSwapSurfaceFormat(

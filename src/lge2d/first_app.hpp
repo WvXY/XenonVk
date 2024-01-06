@@ -12,8 +12,8 @@
 namespace lge {
   class FirstApp {
   public:
-    static constexpr int WIDTH = 800;
-    static constexpr int HEIGHT = 600;
+    static constexpr int WIDTH = 1280;
+    static constexpr int HEIGHT = 720;
 
     FirstApp();
     ~FirstApp();
@@ -23,6 +23,9 @@ namespace lge {
     void run();
 
   private:
+    const std::string vertShaderPath = "shaders/simple_shader.vert.spv";
+    const std::string fragShaderPath = "shaders/simple_shader.frag.spv";
+
     LgeWindow lgeWindow{"First App", WIDTH, HEIGHT};
     LgeDevice lgeDevice{lgeWindow};
     LgeRenderer lgeRenderer{lgeWindow, lgeDevice};
