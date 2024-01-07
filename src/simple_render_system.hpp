@@ -9,23 +9,24 @@
 #include <vector>
 
 namespace lge {
-  class SimpleRenderSystem {
-  public:
-    SimpleRenderSystem(LgeDevice &device, VkRenderPass renderPass);
-    ~SimpleRenderSystem();
+class SimpleRenderSystem {
+ public:
+  SimpleRenderSystem(LgeDevice& device, VkRenderPass renderPass);
+  ~SimpleRenderSystem();
 
-    SimpleRenderSystem(const SimpleRenderSystem &) = delete;
-    SimpleRenderSystem &operator=(const SimpleRenderSystem &) = delete;
+  SimpleRenderSystem(const SimpleRenderSystem&) = delete;
+  SimpleRenderSystem& operator=(const SimpleRenderSystem&) = delete;
 
-    void renderGameObjects(VkCommandBuffer commandBuffer, std::vector<LgeGameObject> &gameObjects);
+  void renderGameObjects(VkCommandBuffer commandBuffer,
+                         std::vector<LgeGameObject>& gameObjects);
 
-  private:
-    void createPipelineLayout();
-    void createPipeline(VkRenderPass renderPass);
+ private:
+  void createPipelineLayout();
+  void createPipeline(VkRenderPass renderPass);
 
-    LgeDevice &lgeDevice;
+  LgeDevice& lgeDevice;
 
-    std::unique_ptr<LgePipeline> lgePipeline;
-    VkPipelineLayout pipelineLayout;
-  };
-}// namespace lge
+  std::unique_ptr<LgePipeline> lgePipeline;
+  VkPipelineLayout pipelineLayout;
+};
+}  // namespace lge
