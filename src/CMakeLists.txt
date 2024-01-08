@@ -1,9 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-if(WIN32)
-        find_package(GLFW3 CONFIG REQUIRED) # in Linux use apt/pacman GLFW install
-endif()
-
+find_package(glfw3 CONFIG REQUIRED)
 find_package(GLM CONFIG REQUIRED)
 find_package(Vulkan REQUIRED)
 

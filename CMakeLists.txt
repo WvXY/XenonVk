@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.26)
 project(little-game-engine)
 
 set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(GLFW_USE_WAYLAND ON)
 
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -Werror")
 set(OUT_DIR ${CMAKE_BINARY_DIR}/${PROJECT_NAME})

@@ -58,7 +58,7 @@ namespace lge {
     void createSyncObjects();
 
     // 0: Mailbox, 1: FIFO_Relaxed, 2: FIFO(default), 3: Immediate (best to worst)
-    int presentMode = 0;
+    int presentMode = 3;
 
     // Helper functions
     VkSurfaceFormatKHR chooseSwapSurfaceFormat(

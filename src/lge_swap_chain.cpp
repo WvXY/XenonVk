@@ -401,6 +401,9 @@ namespace lge {
             return availablePresentMode;
           }
         }
+      case 2:
+        std::cout << "Present mode: FIFO(Vsync)" << std::endl;
+        return VK_PRESENT_MODE_FIFO_KHR;
       case 3:
         for (const auto &availablePresentMode: availablePresentModes) {
           if (availablePresentMode == VK_PRESENT_MODE_IMMEDIATE_KHR) {
