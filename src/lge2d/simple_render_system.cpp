@@ -56,8 +56,8 @@ namespace lge {
     pipelineConfig.pipelineLayout = pipelineLayout;
     lgePipeline = std::make_unique<LgePipeline>(
             lgeDevice,
-            "shaders/simple_shader.vert.spv",
-            "shaders/simple_shader.frag.spv",
+            "shaders/simple_shader_2d.vert.spv",
+            "shaders/simple_shader_2d.frag.spv",
             pipelineConfig);
   }
 
