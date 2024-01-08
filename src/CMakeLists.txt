@@ -24,12 +24,14 @@ add_executable(${PROJECT_NAME}
         lge_renderer.cpp
         simple_render_system.cpp
         simple_render_system.hpp
+        lge_camera.cpp
+        lge_camera.hpp
 )
 
 target_link_libraries(${PROJECT_NAME}
-        glm::glm
-        glfw
-        Vulkan::Vulkan
+        PRIVATE glm::glm
+        PRIVATE glfw
+        PRIVATE Vulkan::Vulkan
 )
 
 add_subdirectory(shaders)

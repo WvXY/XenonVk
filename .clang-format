@@ -1,10 +1,12 @@
 ---
 BasedOnStyle: Google
-AllowShortBlocksOnASingleLine: Always
-AllowShortCaseLabelsOnASingleLine: true
-AllowShortFunctionsOnASingleLine: All
-AllowShortIfStatementsOnASingleLine: AllIfsAndElse
-AllowShortLoopsOnASingleLine: true
-AlwaysBreakAfterDefinitionReturnType: None
-AllowShortLambdasOnASingleLine: Inline
+#AllowShortBlocksOnASingleLine: Always
+#AllowShortCaseLabelsOnASingleLine: true
+#AllowShortFunctionsOnASingleLine: All
+#AllowShortIfStatementsOnASingleLine: AllIfsAndElse
+#AllowShortLoopsOnASingleLine: true
+#AlwaysBreakAfterDefinitionReturnType: None
+#AllowShortLambdasOnASingleLine: Inline
+#AllowAllArgumentsOnNextLine: true
+#AllowAllConstructorInitializersOnNextLine: true
 ...

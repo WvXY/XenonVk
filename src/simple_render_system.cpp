@@ -62,7 +62,8 @@ void SimpleRenderSystem::createPipeline(VkRenderPass renderPass) {
 }
 
 void SimpleRenderSystem::renderGameObjects(
-    VkCommandBuffer commandBuffer, std::vector<LgeGameObject>& gameObjects) {
+    VkCommandBuffer commandBuffer, std::vector<LgeGameObject>& gameObjects,
+    const LgeCamera& camera) {
   lgePipeline->bind(commandBuffer);
 
   for (auto& obj : gameObjects) {
@@ -73,7 +74,7 @@ void SimpleRenderSystem::renderGameObjects(
 
     SimplePushConstantData push{};
     push.color = obj.color;
-    push.transform = obj.transform.mat4();
+    push.transform = camera.getProjectionMatrix() * obj.transform.mat4();
 
     vkCmdPushConstants(
         commandBuffer, pipelineLayout,
