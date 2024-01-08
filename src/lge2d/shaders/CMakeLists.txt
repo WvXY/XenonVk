@@ -31,12 +31,12 @@ add_custom_target(
 
 add_dependencies(${PROJECT_NAME} Shaders2D)
 
-# if(MSVC) 
-#         add_custom_command(TARGET Shaders2D POST_BUILD
-#                 COMMAND ${CMAKE_COMMAND} -E make_directory
-#                         ${OUT_DIR}/$<CONFIG>/shaders
-#                 COMMAND ${CMAKE_COMMAND} -E copy_directory
-#                         ${SHADER_SPIRV_OUTPUT_DIRECTORY}
-#                         ${OUT_DIR}/$<CONFIG>/shaders
-#                 DEPENDS Shaders2D)
-# endif(MSVC)
+if(MSVC) 
+        add_custom_command(TARGET Shaders2D POST_BUILD
+                COMMAND ${CMAKE_COMMAND} -E make_directory
+                        ${OUT_DIR}/$<CONFIG>/shaders
+                COMMAND ${CMAKE_COMMAND} -E copy_directory
+                        ${SHADER_SPIRV_OUTPUT_DIRECTORY}
+                        ${OUT_DIR}/$<CONFIG>/shaders
+                DEPENDS Shaders2D)
+endif(MSVC)

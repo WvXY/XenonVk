@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.26)
-project(LGE)
+project(little-game-engine)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -12,11 +12,12 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${OUT_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${OUT_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${OUT_DIR})
 
-if(MSVC)
-    set(SHADER_SPIRV_OUTPUT_DIRECTORY ${OUT_DIR}/$<CONFIG>/shaders)
-else()
-    set(SHADER_SPIRV_OUTPUT_DIRECTORY ${OUT_DIR}/shaders)
-endif()
+# if(MSVC)  # incase of Clion & MSVC, we may need shader at 2 places
+# set(SHADER_SPIRV_OUTPUT_DIRECTORY ${OUT_DIR}/$<CONFIG>/shaders)
+# else()
+# set(SHADER_SPIRV_OUTPUT_DIRECTORY ${OUT_DIR}/shaders)
+# endif()
+set(SHADER_SPIRV_OUTPUT_DIRECTORY ${OUT_DIR}/shaders)
 
 set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
 
