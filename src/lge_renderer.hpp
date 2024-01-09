@@ -9,52 +9,44 @@
 #include "lge_window.hpp"
 
 namespace lge {
-class LgeRenderer
-{
-public:
-  LgeRenderer(LgeWindow& window, LgeDevice& device);
-  ~LgeRenderer();
-  LgeRenderer(const LgeRenderer&) = delete;
-  LgeRenderer& operator=(const LgeRenderer&) = delete;
+class LgeRenderer {
+  public:
+    LgeRenderer(LgeWindow& window, LgeDevice& device);
+    ~LgeRenderer();
+    LgeRenderer(const LgeRenderer&) = delete;
+    LgeRenderer& operator=(const LgeRenderer&) = delete;
 
-  VkRenderPass getSwapChainRenderPass() const
-  {
-    return lgeSwapChain->getRenderPass();
-  }
-  bool isFrameInProgress() const { return isFrameStarted; }
-  float getAspectRatio() const { return lgeSwapChain->extentAspectRatio(); }
+    VkRenderPass getSwapChainRenderPass() const { return lgeSwapChain->getRenderPass(); }
+    bool isFrameInProgress() const { return isFrameStarted; }
+    float getAspectRatio() const { return lgeSwapChain->extentAspectRatio(); }
 
-  VkCommandBuffer getCurrentCommandBuffer() const
-  {
-    assert(isFrameStarted &&
-           "Cannot get command buffer when frame not in progress");
-    return commandBuffers[currentFrameIndex];
-  }
+    VkCommandBuffer getCurrentCommandBuffer() const {
+        assert(isFrameStarted && "Cannot get command buffer when frame not in progress");
+        return commandBuffers[currentFrameIndex];
+    }
 
-  int getFrameIndex() const
-  {
-    assert(isFrameStarted &&
-           "Cannot get frame index when frame not in progress");
-    return currentFrameIndex;
-  }
+    int getFrameIndex() const {
+        assert(isFrameStarted && "Cannot get frame index when frame not in progress");
+        return currentFrameIndex;
+    }
 
-  VkCommandBuffer beginFrame();
-  void endFrame();
-  void beginSwapChainRenderPass(VkCommandBuffer commandBuffer);
-  void endSwapChainRenderPass(VkCommandBuffer commandBuffer);
+    VkCommandBuffer beginFrame();
+    void endFrame();
+    void beginSwapChainRenderPass(VkCommandBuffer commandBuffer);
+    void endSwapChainRenderPass(VkCommandBuffer commandBuffer);
 
-private:
-  void createCommandBuffers();
-  void freeCommandBuffers();
-  void recreateSwapChain();
+  private:
+    void createCommandBuffers();
+    void freeCommandBuffers();
+    void recreateSwapChain();
 
-  LgeWindow& lgeWindow;
-  LgeDevice& lgeDevice;
-  std::unique_ptr<LgeSwapChain> lgeSwapChain;
-  std::vector<VkCommandBuffer> commandBuffers;
+    LgeWindow& lgeWindow;
+    LgeDevice& lgeDevice;
+    std::unique_ptr<LgeSwapChain> lgeSwapChain;
+    std::vector<VkCommandBuffer> commandBuffers;
 
-  uint32_t currentImageIndex{ 0 };
-  int currentFrameIndex{ 0 };
-  bool isFrameStarted{ false };
+    uint32_t currentImageIndex{0};
+    int currentFrameIndex{0};
+    bool isFrameStarted{false};
 };
-} // namespace lge
+}  // namespace lge

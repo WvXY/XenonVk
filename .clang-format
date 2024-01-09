@@ -1,12 +1,18 @@
 ---
-BasedOnStyle: Google
+BasedOnStyle: Chromium
+Language: Cpp
+Standard: Latest
+SortIncludes: CaseInsensitive
+IndentWidth: 4
+AccessModifierOffset: -2
+ColumnLimit: 100
+AllowAllParametersOfDeclarationOnNextLine: true
+AllowAllArgumentsOnNextLine: true
 #AllowShortBlocksOnASingleLine: Always
 #AllowShortCaseLabelsOnASingleLine: true
-#AllowShortFunctionsOnASingleLine: All
-#AllowShortIfStatementsOnASingleLine: AllIfsAndElse
+#AllowShortFunctionsOnASingleLine: Inline
+#AllowShortIfStatementsOnASingleLine: WithoutElse
 #AllowShortLoopsOnASingleLine: true
-#AlwaysBreakAfterDefinitionReturnType: None
 #AllowShortLambdasOnASingleLine: Inline
-#AllowAllArgumentsOnNextLine: true
 #AllowAllConstructorInitializersOnNextLine: true
 ...

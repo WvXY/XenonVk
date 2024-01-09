@@ -9,34 +9,28 @@
 // little game engine
 namespace lge {
 class LgeWindow {
- public:
-  LgeWindow(std::string windowName, int width, int height);
+  public:
+    LgeWindow(std::string windowName, int width, int height);
+    ~LgeWindow();
+    LgeWindow(const LgeWindow&) = delete;
+    LgeWindow& operator=(const LgeWindow&) = delete;
 
-  ~LgeWindow();
+    bool shouldClose() { return glfwWindowShouldClose(window); }
+    VkExtent2D getExtent() { return {static_cast<uint32_t>(width), static_cast<uint32_t>(height)}; }
+    bool wasWindowResized() { return framebufferResized; }
+    void resetWindowResizedFlag() { framebufferResized = false; }
 
-  LgeWindow(const LgeWindow&) = delete;
+    void createWindowSurface(VkInstance instance, VkSurfaceKHR* surface);
 
-  LgeWindow& operator=(const LgeWindow&) = delete;
+  private:
+    static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
+    void initWindow();
 
-  bool shouldClose() { return glfwWindowShouldClose(window); }
-  VkExtent2D getExtent() {
-    return {static_cast<uint32_t>(width), static_cast<uint32_t>(height)};
-  }
-  bool wasWindowResized() { return framebufferResized; }
-  void resetWindowResizedFlag() { framebufferResized = false; }
+    int width;
+    int height;
+    bool framebufferResized = false;
+    std::string windowName;
 
-  void createWindowSurface(VkInstance instance, VkSurfaceKHR* surface);
-
- private:
-  static void framebufferResizeCallback(GLFWwindow* window, int width,
-                                        int height);
-  void initWindow();
-
-  int width;
-  int height;
-  bool framebufferResized = false;
-  std::string windowName;
-
-  GLFWwindow* window{};
+    GLFWwindow* window{};
 };
 }  // namespace lge

@@ -12,31 +12,29 @@
 
 namespace lge {
 class LgeModel {
- public:
-  struct Vertex {
-    glm::vec3 position{};
-    glm::vec3 color{};
+  public:
+    struct Vertex {
+        glm::vec3 position{};
+        glm::vec3 color{};
 
-    static std::vector<VkVertexInputBindingDescription>
-    getBindingDescriptions();
-    static std::vector<VkVertexInputAttributeDescription>
-    getAttributeDescriptions();
-  };
+        static std::vector<VkVertexInputBindingDescription> getBindingDescriptions();
+        static std::vector<VkVertexInputAttributeDescription> getAttributeDescriptions();
+    };
 
-  LgeModel(LgeDevice& device, const std::vector<Vertex>& vertices);
-  ~LgeModel();
-  LgeModel(const LgeModel&) = delete;
-  LgeModel& operator=(const LgeModel&) = delete;
+    LgeModel(LgeDevice& device, const std::vector<Vertex>& vertices);
+    ~LgeModel();
+    LgeModel(const LgeModel&) = delete;
+    LgeModel& operator=(const LgeModel&) = delete;
 
-  void bind(VkCommandBuffer commandBuffer);
-  void draw(VkCommandBuffer commandBuffer);
+    void bind(VkCommandBuffer commandBuffer);
+    void draw(VkCommandBuffer commandBuffer);
 
- private:
-  void createVertexBuffers(const std::vector<Vertex>& vertices);
+  private:
+    void createVertexBuffers(const std::vector<Vertex>& vertices);
 
-  LgeDevice& lgeDevice;
-  VkBuffer vertexBuffer;
-  VkDeviceMemory vertexBufferMemory;
-  uint32_t vertexCount;
+    LgeDevice& lgeDevice;
+    VkBuffer vertexBuffer;
+    VkDeviceMemory vertexBufferMemory;
+    uint32_t vertexCount;
 };
 }  // namespace lge
