@@ -29,7 +29,11 @@ FirstApp::~FirstApp() {}
 
 void FirstApp::run() {
     SimpleRenderSystem simpleRenderSystem{lgeDevice, lgeRenderer.getSwapChainRenderPass()};
+
     LgeCamera camera{};
+    //    camera.setViewDirection({0.f, 0.f, 0.f}, {1.f, 0.f, 1.f});
+    glm::vec3 cameraTarget = gameObjects[0].transform.translation;
+    camera.setViewTarget({-1.f, -3.f, 1.f}, cameraTarget);
 
     while (!lgeWindow.shouldClose()) {
         glfwPollEvents();
