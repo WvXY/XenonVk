@@ -1,18 +1,12 @@
 ---
-BasedOnStyle: Chromium
+BasedOnStyle: LLVM
 Language: Cpp
 Standard: Latest
-SortIncludes: CaseInsensitive
-IndentWidth: 4
-AccessModifierOffset: -2
-ColumnLimit: 100
-AllowAllParametersOfDeclarationOnNextLine: true
-AllowAllArgumentsOnNextLine: true
-#AllowShortBlocksOnASingleLine: Always
-#AllowShortCaseLabelsOnASingleLine: true
-#AllowShortFunctionsOnASingleLine: Inline
-#AllowShortIfStatementsOnASingleLine: WithoutElse
-#AllowShortLoopsOnASingleLine: true
-#AllowShortLambdasOnASingleLine: Inline
+#IndentWidth: 4
+UseTab: Never
+#ColumnLimit: 100
+PointerAlignment: Left
+#AllowAllArgumentsOnNextLine: true
+#AllowAllParametersOfDeclarationOnNextLine: true
 #AllowAllConstructorInitializersOnNextLine: true
 ...

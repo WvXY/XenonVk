@@ -11,24 +11,24 @@
 
 namespace lge {
 class SimpleRenderSystem {
-  public:
-    SimpleRenderSystem(LgeDevice& device, VkRenderPass renderPass);
-    ~SimpleRenderSystem();
+public:
+  SimpleRenderSystem(LgeDevice& device, VkRenderPass renderPass);
+  ~SimpleRenderSystem();
 
-    SimpleRenderSystem(const SimpleRenderSystem&) = delete;
-    SimpleRenderSystem& operator=(const SimpleRenderSystem&) = delete;
+  SimpleRenderSystem(const SimpleRenderSystem&) = delete;
+  SimpleRenderSystem& operator=(const SimpleRenderSystem&) = delete;
 
-    void renderGameObjects(VkCommandBuffer commandBuffer,
-                           std::vector<LgeGameObject>& gameObjects,
-                           const LgeCamera& camera);
+  void renderGameObjects(VkCommandBuffer commandBuffer,
+                         std::vector<LgeGameObject>& gameObjects,
+                         const LgeCamera& camera);
 
-  private:
-    void createPipelineLayout();
-    void createPipeline(VkRenderPass renderPass);
+private:
+  void createPipelineLayout();
+  void createPipeline(VkRenderPass renderPass);
 
-    LgeDevice& lgeDevice;
+  LgeDevice& lgeDevice;
 
-    std::unique_ptr<LgePipeline> lgePipeline;
-    VkPipelineLayout pipelineLayout;
+  std::unique_ptr<LgePipeline> lgePipeline;
+  VkPipelineLayout pipelineLayout;
 };
-}  // namespace lge
+} // namespace lge

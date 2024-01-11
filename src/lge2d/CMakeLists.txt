@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.26)
 project(Little-Game-Engine-2D)
 
 find_package(GLFW3 CONFIG REQUIRED)
