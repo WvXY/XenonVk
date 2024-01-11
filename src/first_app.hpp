@@ -28,6 +28,7 @@ private:
   LgeRenderer lgeRenderer{lgeWindow, lgeDevice};
 
   void loadGameObjects();
+
   std::vector<LgeGameObject> gameObjects;
 };
 } // namespace lge

@@ -25,16 +25,16 @@ void LgeWindow::initWindow() {
   glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
 }
 
-void LgeWindow::createWindowSurface(VkInstance instance,
-                                    VkSurfaceKHR* surface) {
+void LgeWindow::createWindowSurface(
+    VkInstance instance, VkSurfaceKHR* surface) {
   if (glfwCreateWindowSurface(instance, window, nullptr, surface) !=
       VK_SUCCESS) {
     throw std::runtime_error("failed to create window surface.");
   }
 }
 
-void LgeWindow::framebufferResizeCallback(GLFWwindow* window, int width,
-                                          int height) {
+void LgeWindow::framebufferResizeCallback(
+    GLFWwindow* window, int width, int height) {
   auto lgeWindow =
       reinterpret_cast<LgeWindow*>(glfwGetWindowUserPointer(window));
   lgeWindow->framebufferResized = true;

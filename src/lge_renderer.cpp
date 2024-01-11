@@ -13,7 +13,9 @@ LgeRenderer::LgeRenderer(LgeWindow& window, LgeDevice& device)
   createCommandBuffers();
 }
 
-LgeRenderer::~LgeRenderer() { freeCommandBuffers(); }
+LgeRenderer::~LgeRenderer() {
+  freeCommandBuffers();
+}
 
 void LgeRenderer::recreateSwapChain() {
   auto extent = lgeWindow.getExtent();
@@ -46,16 +48,17 @@ void LgeRenderer::createCommandBuffers() {
   allocInfo.commandPool = lgeDevice.getCommandPool();
   allocInfo.commandBufferCount = static_cast<uint32_t>(commandBuffers.size());
 
-  if (vkAllocateCommandBuffers(lgeDevice.device(), &allocInfo,
-                               commandBuffers.data()) != VK_SUCCESS) {
+  if (vkAllocateCommandBuffers(
+          lgeDevice.device(), &allocInfo, commandBuffers.data()) !=
+      VK_SUCCESS) {
     throw std::runtime_error("failed to allocate command buffers!");
   }
 }
 
 void LgeRenderer::freeCommandBuffers() {
-  vkFreeCommandBuffers(lgeDevice.device(), lgeDevice.getCommandPool(),
-                       static_cast<uint32_t>(commandBuffers.size()),
-                       commandBuffers.data());
+  vkFreeCommandBuffers(
+      lgeDevice.device(), lgeDevice.getCommandPool(),
+      static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
   commandBuffers.clear();
 }
 
@@ -85,8 +88,8 @@ VkCommandBuffer LgeRenderer::beginFrame() {
 }
 
 void LgeRenderer::endFrame() {
-  assert(isFrameStarted &&
-         "Can't call endFrame while frame is not in progress");
+  assert(
+      isFrameStarted && "Can't call endFrame while frame is not in progress");
   auto commandBuffer = getCurrentCommandBuffer();
   if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS) {
     throw std::runtime_error("failed to record command buffer!");
@@ -108,10 +111,12 @@ void LgeRenderer::endFrame() {
 }
 
 void LgeRenderer::beginSwapChainRenderPass(VkCommandBuffer commandBuffer) {
-  assert(isFrameStarted &&
-         "Can't call beginSwapChainRenderPass if frame is not in progress");
-  assert(commandBuffer == getCurrentCommandBuffer() &&
-         "Can't begin render pass on command buffer from a different frame");
+  assert(
+      isFrameStarted &&
+      "Can't call beginSwapChainRenderPass if frame is not in progress");
+  assert(
+      commandBuffer == getCurrentCommandBuffer() &&
+      "Can't begin render pass on command buffer from a different frame");
 
   VkRenderPassBeginInfo renderPassInfo{};
   renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
@@ -127,8 +132,8 @@ void LgeRenderer::beginSwapChainRenderPass(VkCommandBuffer commandBuffer) {
   renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
   renderPassInfo.pClearValues = clearValues.data();
 
-  vkCmdBeginRenderPass(commandBuffer, &renderPassInfo,
-                       VK_SUBPASS_CONTENTS_INLINE);
+  vkCmdBeginRenderPass(
+      commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
   VkViewport viewport{};
   viewport.x = 0.0f;
@@ -144,10 +149,12 @@ void LgeRenderer::beginSwapChainRenderPass(VkCommandBuffer commandBuffer) {
 }
 
 void LgeRenderer::endSwapChainRenderPass(VkCommandBuffer commandBuffer) {
-  assert(isFrameStarted &&
-         "Can't call endSwapChainRenderPass if frame is not in progress");
-  assert(commandBuffer == getCurrentCommandBuffer() &&
-         "Can't end render pass on command buffer from a different frame");
+  assert(
+      isFrameStarted &&
+      "Can't call endSwapChainRenderPass if frame is not in progress");
+  assert(
+      commandBuffer == getCurrentCommandBuffer() &&
+      "Can't end render pass on command buffer from a different frame");
   vkCmdEndRenderPass(commandBuffer);
 }
 

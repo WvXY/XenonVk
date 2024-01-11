@@ -26,6 +26,8 @@ add_executable(${PROJECT_NAME}
         simple_render_system.hpp
         lge_camera.cpp
         lge_camera.hpp
+        kbd_controller.cpp
+        kbd_controller.hpp
 )
 
 target_link_libraries(${PROJECT_NAME}

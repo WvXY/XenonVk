@@ -28,9 +28,10 @@ struct PipelineConfigInfo {
 
 class LgePipeline {
 public:
-  LgePipeline(LgeDevice& device, const std::string& vertex_shader_path,
-              const std::string& fragment_shader_path,
-              const PipelineConfigInfo& configInfo);
+  LgePipeline(
+      LgeDevice& device, const std::string& vertex_shader_path,
+      const std::string& fragment_shader_path,
+      const PipelineConfigInfo& configInfo);
 
   ~LgePipeline();
 
@@ -44,12 +45,13 @@ public:
 private:
   static std::vector<char> readFile(const std::string& path);
 
-  void createGraphicsPipeline(const std::string& vertex_shader_path,
-                              const std::string& fragment_shader_path,
-                              const PipelineConfigInfo& configInfo);
+  void createGraphicsPipeline(
+      const std::string& vertex_shader_path,
+      const std::string& fragment_shader_path,
+      const PipelineConfigInfo& configInfo);
 
-  void createShaderModule(const std::vector<char>& code,
-                          VkShaderModule* shaderModule);
+  void createShaderModule(
+      const std::vector<char>& code, VkShaderModule* shaderModule);
 
   LgeDevice& lgeDevice;
   VkPipeline graphicsPipeline;

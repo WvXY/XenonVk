@@ -2,11 +2,18 @@
 BasedOnStyle: LLVM
 Language: Cpp
 Standard: Latest
-#IndentWidth: 4
-UseTab: Never
-#ColumnLimit: 100
+#IndentWidth: 2
+#AccessModifierOffset: -2
+#ColumnLimit: 80
 PointerAlignment: Left
-#AllowAllArgumentsOnNextLine: true
-#AllowAllParametersOfDeclarationOnNextLine: true
-#AllowAllConstructorInitializersOnNextLine: true
+AllowAllParametersOfDeclarationOnNextLine: true
+AllowAllArgumentsOnNextLine: true
+AllowShortBlocksOnASingleLine: Always
+AllowShortCaseLabelsOnASingleLine: true
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortIfStatementsOnASingleLine: WithoutElse
+AllowShortLoopsOnASingleLine: true
+AllowShortLambdasOnASingleLine: Inline
+AllowAllConstructorInitializersOnNextLine: true
+AlignAfterOpenBracket: AlwaysBreak
 ...

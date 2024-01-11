@@ -10,10 +10,10 @@
 #include "lge_model.hpp"
 
 namespace lge {
-LgePipeline::LgePipeline(LgeDevice& device,
-                         const std::string& vertex_shader_path,
-                         const std::string& fragment_shader_path,
-                         const PipelineConfigInfo& configInfo)
+LgePipeline::LgePipeline(
+    LgeDevice& device, const std::string& vertex_shader_path,
+    const std::string& fragment_shader_path,
+    const PipelineConfigInfo& configInfo)
     : lgeDevice{device} {
   createGraphicsPipeline(vertex_shader_path, fragment_shader_path, configInfo);
 }
@@ -25,8 +25,8 @@ LgePipeline::~LgePipeline() {
 }
 
 void LgePipeline::bind(VkCommandBuffer commandBuffer) {
-  vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
-                    graphicsPipeline);
+  vkCmdBindPipeline(
+      commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
 }
 
 std::vector<char> LgePipeline::readFile(const std::string& path) {
@@ -51,13 +51,15 @@ void LgePipeline::createGraphicsPipeline(
     const std::string& vertex_shader_path,
     const std::string& fragment_shader_path,
     const PipelineConfigInfo& configInfo) {
-  assert(configInfo.pipelineLayout != VK_NULL_HANDLE &&
-         "cannot create graphics pipeline:: no pipelineLayout provided in "
-         "configInfo");
+  assert(
+      configInfo.pipelineLayout != VK_NULL_HANDLE &&
+      "cannot create graphics pipeline:: no pipelineLayout provided in "
+      "configInfo");
 
-  assert(configInfo.renderPass != VK_NULL_HANDLE &&
-         "cannot create graphics pipeline:: no renderPass provided in "
-         "configInfo");
+  assert(
+      configInfo.renderPass != VK_NULL_HANDLE &&
+      "cannot create graphics pipeline:: no renderPass provided in "
+      "configInfo");
 
   auto vertex_shader_code = readFile(vertex_shader_path);
   auto fragment_shader_code = readFile(fragment_shader_path);
@@ -113,22 +115,23 @@ void LgePipeline::createGraphicsPipeline(
   pipelineInfo.basePipelineIndex = -1;
   pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
 
-  if (vkCreateGraphicsPipelines(lgeDevice.device(), VK_NULL_HANDLE, 1,
-                                &pipelineInfo, nullptr,
-                                &graphicsPipeline) != VK_SUCCESS) {
+  if (vkCreateGraphicsPipelines(
+          lgeDevice.device(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr,
+          &graphicsPipeline) != VK_SUCCESS) {
     throw std::runtime_error("failed to create graphics pipeline");
   }
 }
 
-void LgePipeline::createShaderModule(const std::vector<char>& code,
-                                     VkShaderModule* shaderModule) {
+void LgePipeline::createShaderModule(
+    const std::vector<char>& code, VkShaderModule* shaderModule) {
   VkShaderModuleCreateInfo createInfo{};
   createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
   createInfo.codeSize = code.size();
   createInfo.pCode = reinterpret_cast<const uint32_t*>(code.data());
 
-  if (vkCreateShaderModule(lgeDevice.device(), &createInfo, nullptr,
-                           shaderModule) != VK_SUCCESS) {
+  if (vkCreateShaderModule(
+          lgeDevice.device(), &createInfo, nullptr, shaderModule) !=
+      VK_SUCCESS) {
     throw std::runtime_error("failed to create shader module");
   }
 }
@@ -206,8 +209,8 @@ void LgePipeline::defaultPipelineConfigInfo(PipelineConfigInfo& configInfo) {
   configInfo.depthStencilInfo.front = {}; // Optional
   configInfo.depthStencilInfo.back = {};  // Optional
 
-  configInfo.dynamicStateEnables = {VK_DYNAMIC_STATE_VIEWPORT,
-                                    VK_DYNAMIC_STATE_SCISSOR};
+  configInfo.dynamicStateEnables = {
+      VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR};
   configInfo.dynamicStateInfo.sType =
       VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
   configInfo.dynamicStateInfo.pDynamicStates =

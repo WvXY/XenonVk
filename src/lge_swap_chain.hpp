@@ -17,8 +17,9 @@ public:
   static constexpr int MAX_FRAMES_IN_FLIGHT = 2;
 
   LgeSwapChain(LgeDevice& deviceRef, VkExtent2D windowExtent);
-  LgeSwapChain(LgeDevice& deviceRef, VkExtent2D windowExtent,
-               std::shared_ptr<LgeSwapChain> previous);
+  LgeSwapChain(
+      LgeDevice& deviceRef, VkExtent2D windowExtent,
+      std::shared_ptr<LgeSwapChain> previous);
   ~LgeSwapChain();
 
   LgeSwapChain(const LgeSwapChain&) = delete;
@@ -42,8 +43,8 @@ public:
   VkFormat findDepthFormat();
 
   VkResult acquireNextImage(uint32_t* imageIndex);
-  VkResult submitCommandBuffers(const VkCommandBuffer* buffers,
-                                uint32_t* imageIndex);
+  VkResult
+  submitCommandBuffers(const VkCommandBuffer* buffers, uint32_t* imageIndex);
 
   bool compareSwapFormats(const LgeSwapChain& swapChain) const {
     return swapChain.swapChainDepthFormat == swapChainDepthFormat &&
