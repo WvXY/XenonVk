@@ -33,8 +33,7 @@ void KbdController::moveInPlaneXZ(
   if (glfwGetKey(window, keys.down) == GLFW_PRESS) { moveDir -= upDir; }
 
   if (glm::dot(moveDir, moveDir) > std::numeric_limits<float>::epsilon()) {
-    gameObject.transform.translation +=
-        moveSpeed * dt * glm::normalize(moveDir);
+    gameObject.transform.translation += moveSpeed * dt * glm::normalize(moveDir);
   }
 }
 

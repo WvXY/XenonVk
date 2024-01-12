@@ -1,4 +1,5 @@
 #include "lge_pipeline.hpp"
+#include "lge_model.hpp"
 
 #include <cassert>
 #include <filesystem>
@@ -6,8 +7,6 @@
 #include <iostream>
 #include <stdexcept>
 #include <vector>
-
-#include "lge_model.hpp"
 
 namespace lge {
 LgePipeline::LgePipeline(
@@ -48,15 +47,14 @@ std::vector<char> LgePipeline::readFile(const std::string& path) {
 void LgePipeline::createGraphicsPipeline(
     const std::string& vertex_shader_path, const std::string& fragment_shader_path,
     const PipelineConfigInfo& configInfo) {
+
   assert(
       configInfo.pipelineLayout != VK_NULL_HANDLE &&
-      "cannot create graphics pipeline:: no pipelineLayout provided in "
-      "configInfo");
+      "cannot create graphics pipeline:: no pipelineLayout provided in configInfo");
 
   assert(
       configInfo.renderPass != VK_NULL_HANDLE &&
-      "cannot create graphics pipeline:: no renderPass provided in "
-      "configInfo");
+      "cannot create graphics pipeline:: no renderPass provided in configInfo");
 
   auto vertex_shader_code   = readFile(vertex_shader_path);
   auto fragment_shader_code = readFile(fragment_shader_path);

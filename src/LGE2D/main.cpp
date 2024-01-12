@@ -9,7 +9,7 @@ int main() {
 
   try {
     app.run();
-  } catch (const std::exception &err) {
+  } catch (const std::exception& err) {
     std::cerr << err.what() << std::endl;
     return EXIT_FAILURE;
   }

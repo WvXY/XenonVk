@@ -14,7 +14,8 @@
 namespace lge {
 
 struct SimplePushConstantData {
-  glm::mat4 transform{1.f};
+  glm::mat2 transform{1.f};
+  glm::vec2 offset;
   alignas(16) glm::vec3 color;
 };
 
@@ -56,21 +57,22 @@ void SimpleRenderSystem::createPipeline(VkRenderPass renderPass) {
   pipelineConfig.renderPass     = renderPass;
   pipelineConfig.pipelineLayout = pipelineLayout;
   lgePipeline                   = std::make_unique<LgePipeline>(
-      lgeDevice, "shaders/simple_shader.vert.spv", "shaders/simple_shader.frag.spv",
+      lgeDevice, "shaders/simple_shader_2d.vert.spv", "shaders/simple_shader_2d.frag.spv",
       pipelineConfig);
 }
 
 void SimpleRenderSystem::renderGameObjects(
-    VkCommandBuffer commandBuffer, std::vector<LgeGameObject>& gameObjects,
-    const LgeCamera& camera) {
+    VkCommandBuffer commandBuffer, std::vector<LgeGameObject>& gameObjects) {
   lgePipeline->bind(commandBuffer);
 
-  auto projectionView = camera.getProjection() * camera.getView();
-
   for (auto& obj : gameObjects) {
+    obj.transform2d.rotation =
+        glm::mod(obj.transform2d.rotation + 0.01f, glm::two_pi<float>());
+
     SimplePushConstantData push{};
+    push.offset    = obj.transform2d.translation;
     push.color     = obj.color;
-    push.transform = projectionView * obj.transform.mat4();
+    push.transform = obj.transform2d.mat2();
 
     vkCmdPushConstants(
         commandBuffer, pipelineLayout,

@@ -1,12 +1,12 @@
 #pragma once
 
-#include <cassert>
-#include <memory>
-#include <vector>
-
 #include "lge_device.hpp"
 #include "lge_swap_chain.hpp"
 #include "lge_window.hpp"
+
+#include <cassert>
+#include <memory>
+#include <vector>
 
 namespace lge {
 class LgeRenderer {
@@ -18,7 +18,6 @@ public:
 
   VkRenderPass getSwapChainRenderPass() const { return lgeSwapChain->getRenderPass(); }
   bool isFrameInProgress() const { return isFrameStarted; }
-  float getAspectRatio() const { return lgeSwapChain->extentAspectRatio(); }
 
   VkCommandBuffer getCurrentCommandBuffer() const {
     assert(isFrameStarted && "Cannot get command buffer when frame not in progress");

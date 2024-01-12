@@ -22,4 +22,4 @@ set(SHADER_SPIRV_OUTPUT_DIRECTORY ${OUT_DIR}/shaders)
 set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
 
 add_subdirectory(src)
-add_subdirectory(src/lge2d)
+add_subdirectory(src/LGE2D)

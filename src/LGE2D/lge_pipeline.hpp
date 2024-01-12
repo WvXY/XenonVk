@@ -1,9 +1,9 @@
 #pragma once
 
+#include "lge_device.hpp"
+
 #include <string>
 #include <vector>
-
-#include "lge_device.hpp"
 
 namespace lge {
 

@@ -16,4 +16,6 @@ AllowShortLoopsOnASingleLine: true
 AllowShortLambdasOnASingleLine: Inline
 AllowAllConstructorInitializersOnNextLine: true
 AlignAfterOpenBracket: AlwaysBreak
+AlignArrayOfStructures: Left
+AlignConsecutiveAssignments: Consecutive
 ...

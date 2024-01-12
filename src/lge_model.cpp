@@ -21,7 +21,7 @@ LgeModel::~LgeModel() {
 }
 
 void LgeModel::bind(VkCommandBuffer commandBuffer) {
-  VkBuffer buffers[] = {vertexBuffer};
+  VkBuffer buffers[]     = {vertexBuffer};
   VkDeviceSize offsets[] = {0};
   vkCmdBindVertexBuffers(commandBuffer, 0, 1, buffers, offsets);
 
@@ -68,7 +68,7 @@ void LgeModel::createVertexBuffers(const std::vector<Vertex>& vertices) {
 }
 
 void LgeModel::createIndexBuffers(const std::vector<uint32_t>& indices) {
-  indexCount = static_cast<uint32_t>(indices.size());
+  indexCount     = static_cast<uint32_t>(indices.size());
   hasIndexBuffer = indexCount > 0;
   if (!hasIndexBuffer) return;
 
@@ -98,16 +98,18 @@ void LgeModel::createIndexBuffers(const std::vector<uint32_t>& indices) {
 
 std::vector<VkVertexInputBindingDescription> LgeModel::Vertex::getBindingDescriptions() {
   std::vector<VkVertexInputBindingDescription> bindingDescriptions(1);
-  bindingDescriptions[0].binding = 0;
-  bindingDescriptions[0].stride = sizeof(Vertex);
+  bindingDescriptions[0].binding   = 0;
+  bindingDescriptions[0].stride    = sizeof(Vertex);
   bindingDescriptions[0].inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
   return bindingDescriptions;
 }
 
 std::vector<VkVertexInputAttributeDescription>
 LgeModel::Vertex::getAttributeDescriptions() {
-  return {// location, binding, format, offset
-          {0, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, position)},
-          {1, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, color)}};
+  return {
+  // location, binding, format, offset
+      {0, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, position)},
+      {1, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, color)   }
+  };
 }
 } // namespace lge

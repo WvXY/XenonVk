@@ -1,7 +1,8 @@
 #include "lge_window.hpp"
 
-#include <stdexcept>
 #include <utility>
+
+#include <stdexcept>
 
 namespace lge {
 LgeWindow::LgeWindow(std::string name, int w, int h)

@@ -14,19 +14,14 @@ namespace lge {
 class LgeModel {
 public:
   struct Vertex {
-    glm::vec3 position{};
-    glm::vec3 color{};
+    glm::vec2 position;
+    glm::vec3 color;
 
     static std::vector<VkVertexInputBindingDescription> getBindingDescriptions();
     static std::vector<VkVertexInputAttributeDescription> getAttributeDescriptions();
   };
 
-  struct Builder {
-    std::vector<Vertex> vertices{};
-    std::vector<uint32_t> indices{};
-  };
-
-  LgeModel(LgeDevice& device, const LgeModel::Builder& builder);
+  LgeModel(LgeDevice& device, const std::vector<Vertex>& vertices);
   ~LgeModel();
   LgeModel(const LgeModel&)            = delete;
   LgeModel& operator=(const LgeModel&) = delete;
@@ -36,17 +31,10 @@ public:
 
 private:
   void createVertexBuffers(const std::vector<Vertex>& vertices);
-  void createIndexBuffers(const std::vector<uint32_t>& indices);
 
   LgeDevice& lgeDevice;
-
   VkBuffer vertexBuffer;
   VkDeviceMemory vertexBufferMemory;
   uint32_t vertexCount;
-
-  bool hasIndexBuffer = false;
-  VkBuffer indexBuffer;
-  VkDeviceMemory indexBufferMemory;
-  uint32_t indexCount;
 };
 } // namespace lge

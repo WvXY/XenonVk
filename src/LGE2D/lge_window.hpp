@@ -3,7 +3,6 @@
 #define GLFW_INCLUDE_VULKAN
 
 #include <GLFW/glfw3.h>
-
 #include <string>
 
 // little game engine
@@ -11,8 +10,11 @@ namespace lge {
 class LgeWindow {
 public:
   LgeWindow(std::string windowName, int width, int height);
+
   ~LgeWindow();
-  LgeWindow(const LgeWindow&)            = delete;
+
+  LgeWindow(const LgeWindow&) = delete;
+
   LgeWindow& operator=(const LgeWindow&) = delete;
 
   bool shouldClose() { return glfwWindowShouldClose(window); }
@@ -21,7 +23,6 @@ public:
   }
   bool wasWindowResized() { return framebufferResized; }
   void resetWindowResizedFlag() { framebufferResized = false; }
-  GLFWwindow* getGLFWwindow() { return window; }
 
   void createWindowSurface(VkInstance instance, VkSurfaceKHR* surface);
 
