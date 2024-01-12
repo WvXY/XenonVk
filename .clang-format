@@ -4,7 +4,7 @@ Language: Cpp
 Standard: Latest
 #IndentWidth: 2
 #AccessModifierOffset: -2
-#ColumnLimit: 80
+ColumnLimit: 90
 PointerAlignment: Left
 AllowAllParametersOfDeclarationOnNextLine: true
 AllowAllArgumentsOnNextLine: true
