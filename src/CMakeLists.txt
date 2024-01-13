@@ -5,6 +5,10 @@ find_package(GLFW3 CONFIG REQUIRED)
 find_package(GLM CONFIG REQUIRED)
 find_package(Vulkan REQUIRED)
 
+find_path(TINY_OBJ_LOADER_PATH tiny_obj_loader.h
+        HINTS ${EXTERNAL_LIB_DIR} REQUIRED
+)
+
 add_executable(${PROJECT_NAME}
         main.cpp
         first_app.hpp
@@ -28,12 +32,17 @@ add_executable(${PROJECT_NAME}
         lge_camera.hpp
         kbd_controller.cpp
         kbd_controller.hpp
+        lge_utils.hpp
 )
 
 target_link_libraries(${PROJECT_NAME}
         PRIVATE glm::glm
         PRIVATE glfw
         PRIVATE Vulkan::Vulkan
+)
+
+target_include_directories(${PROJECT_NAME}
+        PRIVATE ${TINY_OBJ_LOADER_PATH}
 )
 
 add_subdirectory(shaders)
