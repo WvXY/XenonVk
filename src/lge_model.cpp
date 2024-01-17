@@ -131,14 +131,19 @@ std::vector<VkVertexInputBindingDescription> LgeModel::Vertex::getBindingDescrip
   return bindingDescriptions;
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wc++11-narrowing"
 std::vector<VkVertexInputAttributeDescription>
 LgeModel::Vertex::getAttributeDescriptions() {
   return {
   // location, binding, format, offset
       {0, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, position)},
-      {1, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, color)   }
+      {1, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, color)   },
+      {2, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, normal)  },
+      {3, 0, VK_FORMAT_R32G32_SFLOAT,    offsetof(Vertex, uv)      }
   };
 }
+#pragma clang diagnostic pop
 
 void LgeModel::Builder::loadModel(const std::string& filepath) {
   tinyobj::attrib_t attrib;
@@ -165,14 +170,10 @@ void LgeModel::Builder::loadModel(const std::string& filepath) {
             attrib.vertices[3 * index.vertex_index + 1],
             attrib.vertices[3 * index.vertex_index + 2]};
 
-        auto colorIndex = 3 * index.vertex_index + 2;
-        if (colorIndex < attrib.colors.size()) {
-          vertex.color = {
-              attrib.colors[colorIndex - 2], attrib.colors[colorIndex - 1],
-              attrib.colors[colorIndex - 0]};
-        } else {
-          vertex.color = {1.0f, 1.0f, 1.0f};
-        }
+        vertex.color = {
+            attrib.colors[3 * index.vertex_index + 0],
+            attrib.colors[3 * index.vertex_index + 1],
+            attrib.colors[3 * index.vertex_index + 2]};
       }
       if (index.normal_index >= 0) {
         vertex.normal = {

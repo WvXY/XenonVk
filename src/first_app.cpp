@@ -75,7 +75,7 @@ void FirstApp::run() {
 
 void FirstApp::loadGameObjects() {
   std::shared_ptr<LgeModel> lgeModel =
-      LgeModel::createModelFromFile(lgeDevice, "../../models/colored_cube.obj");
+      LgeModel::createModelFromFile(lgeDevice, "../../models/smooth_vase.obj");
 
   auto gameObject                  = LgeGameObject::createGameObject();
   gameObject.model                 = lgeModel;
