@@ -2,6 +2,7 @@
 
 #include "lge_camera.hpp"
 #include "lge_device.hpp"
+#include "lge_frame_info.hpp"
 #include "lge_game_object.hpp"
 #include "lge_pipeline.hpp"
 
@@ -19,8 +20,7 @@ public:
   SimpleRenderSystem& operator=(const SimpleRenderSystem&) = delete;
 
   void renderGameObjects(
-      VkCommandBuffer commandBuffer, std::vector<LgeGameObject>& gameObjects,
-      const LgeCamera& camera);
+      FrameInfo& frameInfo, std::vector<LgeGameObject>& gameObjects);
 
 private:
   void createPipelineLayout();

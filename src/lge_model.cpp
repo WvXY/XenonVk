@@ -29,15 +29,7 @@ LgeModel::LgeModel(LgeDevice& device, const LgeModel::Builder& builder)
   createIndexBuffers(builder.indices);
 }
 
-LgeModel::~LgeModel() {
-  vkDestroyBuffer(lgeDevice.device(), vertexBuffer, nullptr);
-  vkFreeMemory(lgeDevice.device(), vertexBufferMemory, nullptr);
-
-  if (hasIndexBuffer) {
-    vkDestroyBuffer(lgeDevice.device(), indexBuffer, nullptr);
-    vkFreeMemory(lgeDevice.device(), indexBufferMemory, nullptr);
-  }
-}
+LgeModel::~LgeModel() {}
 
 std::unique_ptr<LgeModel>
 LgeModel::createModelFromFile(LgeDevice& device, const std::string& filepath) {
@@ -48,12 +40,12 @@ LgeModel::createModelFromFile(LgeDevice& device, const std::string& filepath) {
 }
 
 void LgeModel::bind(VkCommandBuffer commandBuffer) {
-  VkBuffer buffers[]     = {vertexBuffer};
+  VkBuffer buffers[]     = {vertexBuffer->getBuffer()};
   VkDeviceSize offsets[] = {0};
   vkCmdBindVertexBuffers(commandBuffer, 0, 1, buffers, offsets);
 
   if (hasIndexBuffer) {
-    vkCmdBindIndexBuffer(commandBuffer, indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+    vkCmdBindIndexBuffer(commandBuffer, indexBuffer->getBuffer(), 0, VK_INDEX_TYPE_UINT32);
   }
 }
 
@@ -71,27 +63,21 @@ void LgeModel::createVertexBuffers(const std::vector<Vertex>& vertices) {
   assert(vertexCount >= 3 && "Vertex count must be at least 3");
 
   VkDeviceSize bufferSize = sizeof(vertices[0]) * vertexCount;
+  uint32_t vertexSize     = sizeof(vertices[0]);
 
-  VkBuffer stagingBuffer;
-  VkDeviceMemory stagingBufferMemory;
-  lgeDevice.createBuffer(
-      bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-      VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-      stagingBuffer, stagingBufferMemory);
+  LgeBuffer stagingBuffer{
+      lgeDevice, vertexSize, vertexCount, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+      VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT};
 
-  void* data;
-  vkMapMemory(lgeDevice.device(), stagingBufferMemory, 0, bufferSize, 0, &data);
-  memcpy(data, vertices.data(), static_cast<size_t>(bufferSize));
-  vkUnmapMemory(lgeDevice.device(), stagingBufferMemory);
+  stagingBuffer.map();
+  stagingBuffer.writeToBuffer((void*)vertices.data());
 
-  lgeDevice.createBuffer(
-      bufferSize, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
-      VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, vertexBuffer, vertexBufferMemory);
+  vertexBuffer = std::make_unique<LgeBuffer>(
+      lgeDevice, vertexSize, vertexCount,
+      VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT ,
+      VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
-  lgeDevice.copyBuffer(stagingBuffer, vertexBuffer, bufferSize);
-
-  vkDestroyBuffer(lgeDevice.device(), stagingBuffer, nullptr);
-  vkFreeMemory(lgeDevice.device(), stagingBufferMemory, nullptr);
+  lgeDevice.copyBuffer(stagingBuffer.getBuffer(), vertexBuffer->getBuffer(), bufferSize);
 }
 
 void LgeModel::createIndexBuffers(const std::vector<uint32_t>& indices) {
@@ -100,27 +86,21 @@ void LgeModel::createIndexBuffers(const std::vector<uint32_t>& indices) {
   if (!hasIndexBuffer) return;
 
   VkDeviceSize bufferSize = sizeof(indices[0]) * indexCount;
+  uint32_t indexSize      = sizeof(indices[0]);
 
-  VkBuffer stagingBuffer;
-  VkDeviceMemory stagingBufferMemory;
-  lgeDevice.createBuffer(
-      bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-      VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-      stagingBuffer, stagingBufferMemory);
+  LgeBuffer stagingBuffer{
+      lgeDevice, indexSize, indexCount, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+      VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT};
 
-  void* data;
-  vkMapMemory(lgeDevice.device(), stagingBufferMemory, 0, bufferSize, 0, &data);
-  memcpy(data, indices.data(), static_cast<size_t>(bufferSize));
-  vkUnmapMemory(lgeDevice.device(), stagingBufferMemory);
+  stagingBuffer.map();
+  stagingBuffer.writeToBuffer((void*)indices.data());
 
-  lgeDevice.createBuffer(
-      bufferSize, VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
-      VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, indexBuffer, indexBufferMemory);
+  indexBuffer = std::make_unique<LgeBuffer>(
+      lgeDevice, indexSize, indexCount,
+      VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
+      VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
-  lgeDevice.copyBuffer(stagingBuffer, indexBuffer, bufferSize);
-
-  vkDestroyBuffer(lgeDevice.device(), stagingBuffer, nullptr);
-  vkFreeMemory(lgeDevice.device(), stagingBufferMemory, nullptr);
+  lgeDevice.copyBuffer(stagingBuffer.getBuffer(), indexBuffer->getBuffer(), bufferSize);
 }
 
 std::vector<VkVertexInputBindingDescription> LgeModel::Vertex::getBindingDescriptions() {
@@ -131,17 +111,13 @@ std::vector<VkVertexInputBindingDescription> LgeModel::Vertex::getBindingDescrip
   return bindingDescriptions;
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wc++11-narrowing"
 std::vector<VkVertexInputAttributeDescription>
 LgeModel::Vertex::getAttributeDescriptions() {
-  return {
-  // location, binding, format, offset
-      {0, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, position)},
-      {1, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, color)   },
-      {2, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, normal)  },
-      {3, 0, VK_FORMAT_R32G32_SFLOAT,    offsetof(Vertex, uv)      }
-  };
+  return {// location, binding, format, offset
+          {0, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, position)},
+          {1, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, color)},
+          {2, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, normal)},
+          {3, 0, VK_FORMAT_R32G32_SFLOAT, offsetof(Vertex, uv)}};
 }
 #pragma clang diagnostic pop
 

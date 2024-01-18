@@ -1,6 +1,7 @@
 #include "first_app.hpp"
 
 #include "kbd_controller.hpp"
+#include "lge_buffer.hpp"
 #include "lge_camera.hpp"
 #include "simple_render_system.hpp"
 
@@ -21,9 +22,14 @@
 
 namespace lge {
 
-struct SimplePushConstantData {
-  glm::mat4 transform{1.0f};
-  alignas(16) glm::vec3 color;
+// struct SimplePushConstantData {
+//   glm::mat4 transform{1.0f};
+//   alignas(16) glm::vec3 color;
+// };
+
+struct GlobalUbo {
+  glm::mat4 projectionView{1.f};
+  glm::vec3 lightDirection{0.f, 1.f, -1.f};
 };
 
 FirstApp::FirstApp() {
@@ -33,6 +39,15 @@ FirstApp::FirstApp() {
 FirstApp::~FirstApp() {}
 
 void FirstApp::run() {
+  LgeBuffer globalUboBuffer{
+      lgeDevice,
+      sizeof(GlobalUbo),
+      LgeSwapChain::MAX_FRAMES_IN_FLIGHT,
+      VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+      VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
+      lgeDevice.properties.limits.minUniformBufferOffsetAlignment};
+  globalUboBuffer.map();
+
   SimpleRenderSystem simpleRenderSystem{lgeDevice, lgeRenderer.getSwapChainRenderPass()};
   LgeCamera camera{};
   //    camera.setViewDirection({0.f, 0.f, 0.f}, {1.f, 0.f, 1.f});
@@ -63,8 +78,18 @@ void FirstApp::run() {
     camera.setPerspectiveProjection(glm::radians(60.f), aspect, 0.1f, 10.f);
 
     if (auto commandBuffer = lgeRenderer.beginFrame()) {
+      int frameIndex = lgeRenderer.getFrameIndex();
+      FrameInfo frameInfo{frameIndex, frameTime, commandBuffer, camera};
+
+      // update global UBO
+      GlobalUbo ubo{};
+      ubo.projectionView = camera.getProjection() * camera.getView();
+      globalUboBuffer.writeToIndex(&ubo, frameIndex);
+      globalUboBuffer.flushIndex(frameIndex);
+
+      // render
       lgeRenderer.beginSwapChainRenderPass(commandBuffer);
-      simpleRenderSystem.renderGameObjects(commandBuffer, gameObjects, camera);
+      simpleRenderSystem.renderGameObjects(frameInfo, gameObjects);
       lgeRenderer.endSwapChainRenderPass(commandBuffer);
       lgeRenderer.endFrame();
     }

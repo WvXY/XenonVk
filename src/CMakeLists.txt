@@ -34,6 +34,9 @@ add_executable(${PROJECT_NAME}
         kbd_controller.hpp
         lge_utils.hpp
         lge_game_object.cpp
+        lge_buffer.cpp
+        lge_buffer.hpp
+        lge_frame_info.hpp
 )
 
 target_link_libraries(${PROJECT_NAME}

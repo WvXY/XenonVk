@@ -1,6 +1,7 @@
 #pragma once
 
 #include "lge_device.hpp"
+#include "lge_buffer.hpp"
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
@@ -53,13 +54,11 @@ private:
 
   LgeDevice& lgeDevice;
 
-  VkBuffer vertexBuffer;
-  VkDeviceMemory vertexBufferMemory;
+  std::unique_ptr<LgeBuffer> vertexBuffer;
   uint32_t vertexCount;
 
   bool hasIndexBuffer = false;
-  VkBuffer indexBuffer;
-  VkDeviceMemory indexBufferMemory;
+  std::unique_ptr<LgeBuffer> indexBuffer;
   uint32_t indexCount;
 };
 } // namespace lge
