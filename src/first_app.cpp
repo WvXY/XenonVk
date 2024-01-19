@@ -22,33 +22,47 @@
 
 namespace lge {
 
-// struct SimplePushConstantData {
-//   glm::mat4 transform{1.0f};
-//   alignas(16) glm::vec3 color;
-// };
-
 struct GlobalUbo {
   glm::mat4 projectionView{1.f};
-  glm::vec3 lightDirection{0.f, 1.f, -1.f};
+  glm::vec3 lightDirection{0.f, -3.f, -1.f};
 };
 
 FirstApp::FirstApp() {
+  globalPool =
+      LgeDescriptorPool::Builder(lgeDevice)
+          .setMaxSets(LgeSwapChain::MAX_FRAMES_IN_FLIGHT)
+          .addPoolSize(
+              VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, LgeSwapChain::MAX_FRAMES_IN_FLIGHT)
+          .build();
   loadGameObjects();
 }
 
 FirstApp::~FirstApp() {}
 
 void FirstApp::run() {
-  LgeBuffer globalUboBuffer{
-      lgeDevice,
-      sizeof(GlobalUbo),
-      LgeSwapChain::MAX_FRAMES_IN_FLIGHT,
-      VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-      VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
-      lgeDevice.properties.limits.minUniformBufferOffsetAlignment};
-  globalUboBuffer.map();
+  std::vector<std::unique_ptr<LgeBuffer>> uboBuffers(LgeSwapChain::MAX_FRAMES_IN_FLIGHT);
+  for (int i = 0; i < uboBuffers.size(); i++) {
+    uboBuffers[i] = std::make_unique<LgeBuffer>(
+        lgeDevice, sizeof(GlobalUbo), 1, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
+    uboBuffers[i]->map();
+  }
 
-  SimpleRenderSystem simpleRenderSystem{lgeDevice, lgeRenderer.getSwapChainRenderPass()};
+  auto globalSetLayout =
+      LgeDescriptorSetLayout::Builder(lgeDevice)
+          .addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT)
+          .build();
+  std::vector<VkDescriptorSet> globalDescriptorSets(LgeSwapChain::MAX_FRAMES_IN_FLIGHT);
+  for (int i = 0; i < globalDescriptorSets.size(); i++) {
+    auto bufferInfo = uboBuffers[i]->descriptorInfo();
+    LgeDescriptorWriter(*globalSetLayout, *globalPool)
+        .writeBuffer(0, &bufferInfo)
+        .build(globalDescriptorSets[i]);
+  }
+
+  SimpleRenderSystem simpleRenderSystem{
+      lgeDevice, lgeRenderer.getSwapChainRenderPass(),
+      globalSetLayout->getDescriptorSetLayout()};
   LgeCamera camera{};
   //    camera.setViewDirection({0.f, 0.f, 0.f}, {1.f, 0.f, 1.f});
   glm::vec3 cameraTarget = gameObjects[0].transform.translation;
@@ -79,13 +93,14 @@ void FirstApp::run() {
 
     if (auto commandBuffer = lgeRenderer.beginFrame()) {
       int frameIndex = lgeRenderer.getFrameIndex();
-      FrameInfo frameInfo{frameIndex, frameTime, commandBuffer, camera};
+      FrameInfo frameInfo{
+          frameIndex, frameTime, commandBuffer, camera, globalDescriptorSets[frameIndex]};
 
       // update global UBO
       GlobalUbo ubo{};
       ubo.projectionView = camera.getProjection() * camera.getView();
-      globalUboBuffer.writeToIndex(&ubo, frameIndex);
-      globalUboBuffer.flushIndex(frameIndex);
+      uboBuffers[frameIndex]->writeToBuffer(&ubo);
+      uboBuffers[frameIndex]->flush();
 
       // render
       lgeRenderer.beginSwapChainRenderPass(commandBuffer);
@@ -99,14 +114,24 @@ void FirstApp::run() {
 }
 
 void FirstApp::loadGameObjects() {
-  std::shared_ptr<LgeModel> lgeModel =
-      LgeModel::createModelFromFile(lgeDevice, "../../models/smooth_vase.obj");
-
-  auto gameObject                  = LgeGameObject::createGameObject();
-  gameObject.model                 = lgeModel;
-  gameObject.transform.translation = {0.f, 0.f, 1.0f};
-  gameObject.transform.scale       = {0.5f, 0.5f, 0.5f};
-  gameObjects.push_back(std::move(gameObject));
+  std::vector<std::string> modelPaths = {
+      "../../models/bunny.obj", "../../models/cube.obj", "../../models/colored_cube.obj",
+      "../../models/smooth_vase.obj", "../../models/flat_vase.obj"};
+  float x = -2.f;
+  for (std::string& modelPath : modelPaths) {
+    std::shared_ptr<LgeModel> lgeModel =
+        LgeModel::createModelFromFile(lgeDevice, modelPath);
+    auto gameObject                  = LgeGameObject::createGameObject();
+    gameObject.model                 = lgeModel;
+    gameObject.transform.translation = {x, 0.f, 1.0f};
+    gameObject.transform.scale       = glm::vec3{1.0f};
+    gameObjects.push_back(std::move(gameObject));
+    x += .8f;
+  }
+  gameObjects[0].transform.scale = {2.5f, 2.5f, 2.5f};  // bunny do not have uv coords so it is
+                                                        // rendered as a dark silhouette
+  gameObjects[1].transform.scale = {0.2f, 0.2f, 0.2f};
+  gameObjects[2].transform.scale = {0.2f, 0.2f, 0.2f};
 }
 
 } // namespace lge

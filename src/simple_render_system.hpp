@@ -13,7 +13,7 @@
 namespace lge {
 class SimpleRenderSystem {
 public:
-  SimpleRenderSystem(LgeDevice& device, VkRenderPass renderPass);
+  SimpleRenderSystem(LgeDevice& device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);
   ~SimpleRenderSystem();
 
   SimpleRenderSystem(const SimpleRenderSystem&)            = delete;
@@ -23,7 +23,7 @@ public:
       FrameInfo& frameInfo, std::vector<LgeGameObject>& gameObjects);
 
 private:
-  void createPipelineLayout();
+  void createPipelineLayout(VkDescriptorSetLayout globalSetLayout);
   void createPipeline(VkRenderPass renderPass);
 
   LgeDevice& lgeDevice;

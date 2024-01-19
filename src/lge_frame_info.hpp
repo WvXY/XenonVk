@@ -11,6 +11,7 @@ struct FrameInfo {
   float frameTime;
   VkCommandBuffer commandBuffer;
   LgeCamera& camera;
+  VkDescriptorSet globalDescriptorSet;
 };
 
 } // namespace lge

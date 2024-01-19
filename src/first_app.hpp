@@ -8,6 +8,8 @@
 #include "lge_game_object.hpp"
 #include "lge_renderer.hpp"
 #include "lge_window.hpp"
+#include "lge_descriptors.hpp"
+
 
 namespace lge {
 class FirstApp {
@@ -29,6 +31,7 @@ private:
 
   void loadGameObjects();
 
+  std::unique_ptr<LgeDescriptorPool> globalPool{};
   std::vector<LgeGameObject> gameObjects;
 };
 } // namespace lge

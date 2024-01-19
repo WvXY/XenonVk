@@ -37,6 +37,8 @@ add_executable(${PROJECT_NAME}
         lge_buffer.cpp
         lge_buffer.hpp
         lge_frame_info.hpp
+        lge_descriptors.cpp
+        lge_descriptors.hpp
 )
 
 target_link_libraries(${PROJECT_NAME}
