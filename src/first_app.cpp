@@ -24,7 +24,9 @@ namespace lge {
 
 struct GlobalUbo {
   glm::mat4 projectionView{1.f};
-  glm::vec3 lightDirection{0.f, -3.f, -1.f};
+  glm::vec4 ambientLightColor{1.f, 1.f, 1.f, .06f};
+  glm::vec3 lightDirection{0.f, -1.f, -1.f};
+  alignas(16) glm::vec4 lightColor{1.f};
 };
 
 FirstApp::FirstApp() {
@@ -68,7 +70,8 @@ void FirstApp::run() {
   glm::vec3 cameraTarget = gameObjects[0].transform.translation;
   camera.setViewTarget({-1.f, -3.f, 1.f}, cameraTarget);
 
-  auto viewerObject = LgeGameObject::createGameObject();
+  auto viewerObject                    = LgeGameObject::createGameObject();
+  viewerObject.transform.translation.z = -2.f;
   KbdController kbdController{};
 
   auto currentTime = std::chrono::high_resolution_clock::now();
@@ -89,7 +92,7 @@ void FirstApp::run() {
 
     float aspect = lgeRenderer.getAspectRatio();
     //    camera.setOrthographicProjection(-aspect, aspect, -1, 1, -1, 1);
-    camera.setPerspectiveProjection(glm::radians(60.f), aspect, 0.1f, 10.f);
+    camera.setPerspectiveProjection(glm::radians(60.f), aspect, 0.1f, 100.f);
 
     if (auto commandBuffer = lgeRenderer.beginFrame()) {
       int frameIndex = lgeRenderer.getFrameIndex();
@@ -114,24 +117,33 @@ void FirstApp::run() {
 }
 
 void FirstApp::loadGameObjects() {
+  std::shared_ptr<LgeModel> lgeModel;
   std::vector<std::string> modelPaths = {
       "../../models/bunny.obj", "../../models/cube.obj", "../../models/colored_cube.obj",
       "../../models/smooth_vase.obj", "../../models/flat_vase.obj"};
   float x = -2.f;
   for (std::string& modelPath : modelPaths) {
-    std::shared_ptr<LgeModel> lgeModel =
-        LgeModel::createModelFromFile(lgeDevice, modelPath);
-    auto gameObject                  = LgeGameObject::createGameObject();
-    gameObject.model                 = lgeModel;
-    gameObject.transform.translation = {x, 0.f, 1.0f};
+    lgeModel         = LgeModel::createModelFromFile(lgeDevice, modelPath);
+    auto gameObject  = LgeGameObject::createGameObject();
+    gameObject.model = lgeModel;
+    gameObject.transform.translation = {x, 0.f, 0.0f};
     gameObject.transform.scale       = glm::vec3{1.0f};
     gameObjects.push_back(std::move(gameObject));
     x += .8f;
   }
-  gameObjects[0].transform.scale = {2.5f, 2.5f, 2.5f};  // bunny do not have uv coords so it is
-                                                        // rendered as a dark silhouette
+  gameObjects[0].transform.scale = {
+      2.5f, 2.5f, 2.5f}; // bunny do not have uv coords so it is
+                         // rendered as a dark silhouette
   gameObjects[1].transform.scale = {0.2f, 0.2f, 0.2f};
   gameObjects[2].transform.scale = {0.2f, 0.2f, 0.2f};
+
+  // Floor
+  lgeModel         = LgeModel::createModelFromFile(lgeDevice, "../../models/quad.obj");
+  auto gameObject  = LgeGameObject::createGameObject();
+  gameObject.model = lgeModel;
+  gameObject.transform.translation = {0, 0.2f, 0.0f};
+  gameObject.transform.scale       = glm::vec3{10.0f};
+  gameObjects.push_back(std::move(gameObject));
 }
 
 } // namespace lge
