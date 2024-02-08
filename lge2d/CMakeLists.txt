@@ -1,13 +1,9 @@
 cmake_minimum_required(VERSION 3.26)
-project(Little-Game-Engine)
+project(little-game-engine-2d)
 
 find_package(GLFW3 CONFIG REQUIRED)
 find_package(GLM CONFIG REQUIRED)
 find_package(Vulkan REQUIRED)
-
-find_path(TINY_OBJ_LOADER_PATH tiny_obj_loader.h
-        HINTS ${EXTERNAL_LIB_DIR} REQUIRED
-)
 
 add_executable(${PROJECT_NAME}
         main.cpp
@@ -28,29 +24,12 @@ add_executable(${PROJECT_NAME}
         lge_renderer.cpp
         simple_render_system.cpp
         simple_render_system.hpp
-        lge_camera.cpp
-        lge_camera.hpp
-        kbd_controller.cpp
-        kbd_controller.hpp
-        lge_utils.hpp
-        lge_game_object.cpp
-        lge_buffer.cpp
-        lge_buffer.hpp
-        lge_frame_info.hpp
-        lge_descriptors.cpp
-        lge_descriptors.hpp
 )
 
 target_link_libraries(${PROJECT_NAME}
-        PRIVATE glm::glm
-        PRIVATE glfw
-        PRIVATE Vulkan::Vulkan
-)
-
-target_include_directories(${PROJECT_NAME}
-        PRIVATE ${TINY_OBJ_LOADER_PATH}
+        glm::glm
+        glfw
+        Vulkan::Vulkan
 )
 
 add_subdirectory(shaders)
-
-
