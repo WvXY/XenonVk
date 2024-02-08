@@ -121,6 +121,7 @@ void FirstApp::loadGameObjects() {
   std::vector<std::string> modelPaths = {
       "../../models/bunny.obj", "../../models/cube.obj", "../../models/colored_cube.obj",
       "../../models/smooth_vase.obj", "../../models/flat_vase.obj"};
+
   float x = -2.f;
   for (std::string& modelPath : modelPaths) {
     lgeModel         = LgeModel::createModelFromFile(lgeDevice, modelPath);
@@ -130,9 +131,9 @@ void FirstApp::loadGameObjects() {
     gameObject.transform.scale       = glm::vec3{1.0f};
     gameObjects.emplace(gameObject.getId(), std::move(gameObject));
     x += .8f;
-  }
+  } // bunny do not have uv coords, so it is rendered as a dark silhouette
+
   gameObjects.at(0).transform.scale = {2.5f, 2.5f, 2.5f};
-  // bunny do not have uv coords, so it is rendered as a dark silhouette
   gameObjects.at(1).transform.scale = {0.2f, 0.2f, 0.2f};
   gameObjects.at(2).transform.scale = {0.2f, 0.2f, 0.2f};
 
