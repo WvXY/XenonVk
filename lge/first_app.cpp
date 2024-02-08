@@ -21,7 +21,6 @@
 #define MAX_FRAME_TIME 0.5f
 
 namespace lge {
-
 struct GlobalUbo {
   glm::mat4 projectionView{1.f};
   glm::vec4 ambientLightColor{1.f, 1.f, 1.f, .06f};
@@ -52,7 +51,7 @@ void FirstApp::run() {
 
   auto globalSetLayout =
       LgeDescriptorSetLayout::Builder(lgeDevice)
-          .addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT)
+          .addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL_GRAPHICS)
           .build();
   std::vector<VkDescriptorSet> globalDescriptorSets(LgeSwapChain::MAX_FRAMES_IN_FLIGHT);
   for (int i = 0; i < globalDescriptorSets.size(); i++) {
@@ -67,7 +66,7 @@ void FirstApp::run() {
       globalSetLayout->getDescriptorSetLayout()};
   LgeCamera camera{};
   //    camera.setViewDirection({0.f, 0.f, 0.f}, {1.f, 0.f, 1.f});
-  glm::vec3 cameraTarget = gameObjects[0].transform.translation;
+  glm::vec3 cameraTarget = gameObjects.at(0).transform.translation;
   camera.setViewTarget({-1.f, -3.f, 1.f}, cameraTarget);
 
   auto viewerObject                    = LgeGameObject::createGameObject();
@@ -97,7 +96,8 @@ void FirstApp::run() {
     if (auto commandBuffer = lgeRenderer.beginFrame()) {
       int frameIndex = lgeRenderer.getFrameIndex();
       FrameInfo frameInfo{
-          frameIndex, frameTime, commandBuffer, camera, globalDescriptorSets[frameIndex]};
+          frameIndex, frameTime, commandBuffer, camera, globalDescriptorSets[frameIndex],
+          gameObjects};
 
       // update global UBO
       GlobalUbo ubo{};
@@ -107,7 +107,7 @@ void FirstApp::run() {
 
       // render
       lgeRenderer.beginSwapChainRenderPass(commandBuffer);
-      simpleRenderSystem.renderGameObjects(frameInfo, gameObjects);
+      simpleRenderSystem.renderGameObjects(frameInfo);
       lgeRenderer.endSwapChainRenderPass(commandBuffer);
       lgeRenderer.endFrame();
     }
@@ -128,14 +128,13 @@ void FirstApp::loadGameObjects() {
     gameObject.model = lgeModel;
     gameObject.transform.translation = {x, 0.f, 0.0f};
     gameObject.transform.scale       = glm::vec3{1.0f};
-    gameObjects.push_back(std::move(gameObject));
+    gameObjects.emplace(gameObject.getId(), std::move(gameObject));
     x += .8f;
   }
-  gameObjects[0].transform.scale = {
-      2.5f, 2.5f, 2.5f}; // bunny do not have uv coords so it is
-                         // rendered as a dark silhouette
-  gameObjects[1].transform.scale = {0.2f, 0.2f, 0.2f};
-  gameObjects[2].transform.scale = {0.2f, 0.2f, 0.2f};
+  gameObjects.at(0).transform.scale = {2.5f, 2.5f, 2.5f};
+  // bunny do not have uv coords, so it is rendered as a dark silhouette
+  gameObjects.at(1).transform.scale = {0.2f, 0.2f, 0.2f};
+  gameObjects.at(2).transform.scale = {0.2f, 0.2f, 0.2f};
 
   // Floor
   lgeModel         = LgeModel::createModelFromFile(lgeDevice, "../../models/quad.obj");
@@ -143,7 +142,6 @@ void FirstApp::loadGameObjects() {
   gameObject.model = lgeModel;
   gameObject.transform.translation = {0, 0.2f, 0.0f};
   gameObject.transform.scale       = glm::vec3{10.0f};
-  gameObjects.push_back(std::move(gameObject));
+  gameObjects.emplace(gameObject.getId(), std::move(gameObject));
 }
-
 } // namespace lge

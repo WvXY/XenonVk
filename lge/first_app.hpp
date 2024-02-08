@@ -32,6 +32,6 @@ private:
   void loadGameObjects();
 
   std::unique_ptr<LgeDescriptorPool> globalPool{};
-  std::vector<LgeGameObject> gameObjects;
+  LgeGameObject::Map gameObjects;
 };
 } // namespace lge

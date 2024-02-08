@@ -1,8 +1,10 @@
 #pragma once
 
-#include "lge_camera.hpp"
-
 #include <vulkan/vulkan.h>
+
+#include "lge_camera.hpp"
+#include "lge_game_object.hpp"
+
 
 namespace lge {
 
@@ -12,6 +14,7 @@ struct FrameInfo {
   VkCommandBuffer commandBuffer;
   LgeCamera& camera;
   VkDescriptorSet globalDescriptorSet;
+  LgeGameObject::Map& gameObjects;
 };
 
 } // namespace lge
