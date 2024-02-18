@@ -1,26 +1,26 @@
 #pragma once
 
-#include "lge_camera.hpp"
-#include "lge_device.hpp"
-#include "lge_frame_info.hpp"
-#include "lge_game_object.hpp"
-#include "lge_pipeline.hpp"
+#include "../lge_camera.hpp"
+#include "../lge_device.hpp"
+#include "../lge_frame_info.hpp"
+#include "../lge_game_object.hpp"
+#include "../lge_pipeline.hpp"
 
 // std
 #include <memory>
 #include <vector>
 
 namespace lge {
-class SimpleRenderSystem {
+class PointLightSystem {
 public:
-  SimpleRenderSystem(
+  PointLightSystem(
       LgeDevice& device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);
-  ~SimpleRenderSystem();
+  ~PointLightSystem();
 
-  SimpleRenderSystem(const SimpleRenderSystem&)            = delete;
-  SimpleRenderSystem& operator=(const SimpleRenderSystem&) = delete;
+  PointLightSystem(const PointLightSystem&)            = delete;
+  PointLightSystem& operator=(const PointLightSystem&) = delete;
 
-  void renderGameObjects(FrameInfo& frameInfo);
+  void render(FrameInfo& frameInfo);
 
 private:
   void createPipelineLayout(VkDescriptorSetLayout globalSetLayout);

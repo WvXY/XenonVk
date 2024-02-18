@@ -80,8 +80,8 @@ void LgePipeline::createGraphicsPipeline(
   shaderStages[1].pNext  = nullptr;
   shaderStages[1].pSpecializationInfo = nullptr;
 
-  auto bindingDescriptions   = LgeModel::Vertex::getBindingDescriptions();
-  auto attributeDescriptions = LgeModel::Vertex::getAttributeDescriptions();
+  auto& bindingDescriptions   = configInfo.bindingDescriptions;
+  auto& attributeDescriptions = configInfo.attributeDescriptions;
   VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
   vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
   vertexInputInfo.vertexAttributeDescriptionCount =
@@ -206,5 +206,8 @@ void LgePipeline::defaultPipelineConfigInfo(PipelineConfigInfo& configInfo) {
   configInfo.dynamicStateInfo.dynamicStateCount =
       static_cast<uint32_t>(configInfo.dynamicStateEnables.size());
   configInfo.dynamicStateInfo.flags = 0;
+
+  configInfo.bindingDescriptions   = LgeModel::Vertex::getBindingDescriptions();
+  configInfo.attributeDescriptions = LgeModel::Vertex::getAttributeDescriptions();
 }
 } // namespace lge

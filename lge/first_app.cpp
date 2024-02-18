@@ -3,7 +3,8 @@
 #include "kbd_controller.hpp"
 #include "lge_buffer.hpp"
 #include "lge_camera.hpp"
-#include "simple_render_system.hpp"
+#include "systems/point_light_system.hpp"
+#include "systems/simple_render_system.hpp"
 
 // std
 #include <array>
@@ -22,7 +23,8 @@
 
 namespace lge {
 struct GlobalUbo {
-  glm::mat4 projectionView{1.f};
+  glm::mat4 projection{1.f};
+  glm::mat4 view{1.f};
   glm::vec4 ambientLightColor{1.f, 1.f, 1.f, .06f};
   glm::vec3 lightDirection{0.f, -1.f, -1.f};
   alignas(16) glm::vec4 lightColor{1.f};
@@ -64,6 +66,10 @@ void FirstApp::run() {
   SimpleRenderSystem simpleRenderSystem{
       lgeDevice, lgeRenderer.getSwapChainRenderPass(),
       globalSetLayout->getDescriptorSetLayout()};
+  PointLightSystem pointLightSystem{
+      lgeDevice, lgeRenderer.getSwapChainRenderPass(),
+      globalSetLayout->getDescriptorSetLayout()};
+
   LgeCamera camera{};
   //    camera.setViewDirection({0.f, 0.f, 0.f}, {1.f, 0.f, 1.f});
   glm::vec3 cameraTarget = gameObjects.at(0).transform.translation;
@@ -101,13 +107,15 @@ void FirstApp::run() {
 
       // update global UBO
       GlobalUbo ubo{};
-      ubo.projectionView = camera.getProjection() * camera.getView();
+      ubo.projection = camera.getProjection();
+      ubo.view       = camera.getView();
       uboBuffers[frameIndex]->writeToBuffer(&ubo);
       uboBuffers[frameIndex]->flush();
 
       // render
       lgeRenderer.beginSwapChainRenderPass(commandBuffer);
       simpleRenderSystem.renderGameObjects(frameInfo);
+      pointLightSystem.render(frameInfo);
       lgeRenderer.endSwapChainRenderPass(commandBuffer);
       lgeRenderer.endFrame();
     }
