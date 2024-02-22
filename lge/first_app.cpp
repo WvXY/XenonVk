@@ -22,13 +22,6 @@
 #define MAX_FRAME_TIME 0.5f
 
 namespace lge {
-struct GlobalUbo {
-  glm::mat4 projection{1.f};
-  glm::mat4 view{1.f};
-  glm::vec4 ambientLightColor{1.f, 1.f, 1.f, .06f};
-  glm::vec3 lightDirection{0.f, -1.f, -1.f};
-  alignas(16) glm::vec4 lightColor{1.f};
-};
 
 FirstApp::FirstApp() {
   globalPool =
@@ -109,6 +102,7 @@ void FirstApp::run() {
       GlobalUbo ubo{};
       ubo.projection = camera.getProjection();
       ubo.view       = camera.getView();
+      pointLightSystem.update(frameInfo, ubo);
       uboBuffers[frameIndex]->writeToBuffer(&ubo);
       uboBuffers[frameIndex]->flush();
 
@@ -126,31 +120,53 @@ void FirstApp::run() {
 
 void FirstApp::loadGameObjects() {
   std::shared_ptr<LgeModel> lgeModel;
-  std::vector<std::string> modelPaths = {
-      "../../models/bunny.obj", "../../models/cube.obj", "../../models/colored_cube.obj",
-      "../../models/smooth_vase.obj", "../../models/flat_vase.obj"};
+  {
+    std::vector<std::string> modelPaths = {
+        "../../models/bunny.obj", "../../models/cube.obj",
+        "../../models/colored_cube.obj", "../../models/smooth_vase.obj",
+        "../../models/flat_vase.obj"};
 
-  float x = -2.f;
-  for (std::string& modelPath : modelPaths) {
-    lgeModel         = LgeModel::createModelFromFile(lgeDevice, modelPath);
+    float x = -2.f;
+    for (std::string& modelPath : modelPaths) {
+      lgeModel         = LgeModel::createModelFromFile(lgeDevice, modelPath);
+      auto gameObject  = LgeGameObject::createGameObject();
+      gameObject.model = lgeModel;
+      gameObject.transform.translation = {x, 0.f, 0.0f};
+      gameObject.transform.scale       = glm::vec3{1.0f};
+      gameObjects.emplace(gameObject.getId(), std::move(gameObject));
+      x += .8f;
+    } // bunny do not have uv coords, so it is rendered as a dark silhouette
+
+    gameObjects.at(0).transform.scale = {2.5f, 2.5f, 2.5f};
+    gameObjects.at(1).transform.scale = {0.2f, 0.2f, 0.2f};
+    gameObjects.at(2).transform.scale = {0.2f, 0.2f, 0.2f};
+  }
+
+  { // Floor
+    lgeModel         = LgeModel::createModelFromFile(lgeDevice, "../../models/quad.obj");
     auto gameObject  = LgeGameObject::createGameObject();
     gameObject.model = lgeModel;
-    gameObject.transform.translation = {x, 0.f, 0.0f};
-    gameObject.transform.scale       = glm::vec3{1.0f};
+    gameObject.transform.translation = {0, 0.2f, 0.0f};
+    gameObject.transform.scale       = glm::vec3{10.0f};
     gameObjects.emplace(gameObject.getId(), std::move(gameObject));
-    x += .8f;
-  } // bunny do not have uv coords, so it is rendered as a dark silhouette
+  }
 
-  gameObjects.at(0).transform.scale = {2.5f, 2.5f, 2.5f};
-  gameObjects.at(1).transform.scale = {0.2f, 0.2f, 0.2f};
-  gameObjects.at(2).transform.scale = {0.2f, 0.2f, 0.2f};
+  { // Point light
+    std::vector<glm::vec3> lightColors{
+        {1.f, .1f, .1f}, {.1f, .1f, 1.f}, {.1f, 1.f, .1f},
+        {1.f, 1.f, .1f}, {.1f, 1.f, 1.f}, {1.f, 1.f, 1.f} //
+    };
 
-  // Floor
-  lgeModel         = LgeModel::createModelFromFile(lgeDevice, "../../models/quad.obj");
-  auto gameObject  = LgeGameObject::createGameObject();
-  gameObject.model = lgeModel;
-  gameObject.transform.translation = {0, 0.2f, 0.0f};
-  gameObject.transform.scale       = glm::vec3{10.0f};
-  gameObjects.emplace(gameObject.getId(), std::move(gameObject));
+    for (int i = 0; i < lightColors.size(); i++) {
+      auto pointLight  = LgeGameObject::makePointLight(0.2f);
+      pointLight.color = lightColors[i];
+      auto rotateLight = glm::rotate(
+          glm::mat4(1.f), (i * glm::two_pi<float>()) / lightColors.size(),
+          {0.f, -1.f, 0.f});
+      pointLight.transform.translation =
+          glm::vec3(rotateLight * glm::vec4(-1.f, -1.f, -1.f, 1.f));
+      gameObjects.emplace(pointLight.getId(), std::move(pointLight));
+    }
+  }
 }
 } // namespace lge

@@ -13,9 +13,10 @@
 
 namespace lge {
 
-struct SimplePushConstantData {
-  glm::mat4 modelMatrix{1.f};
-  glm::mat4 normalMatrix{1.f};
+struct PointLightPushConstants {
+  glm::vec4 position{};
+  glm::vec4 color{};
+  float radius{};
 };
 
 PointLightSystem::PointLightSystem(
@@ -30,11 +31,11 @@ PointLightSystem::~PointLightSystem() {
 }
 
 void PointLightSystem::createPipelineLayout(VkDescriptorSetLayout globalSetLayout) {
-//  VkPushConstantRange pushConstantRange{};
-//  pushConstantRange.stageFlags =
-//      VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
-//  pushConstantRange.offset = 0;
-//  pushConstantRange.size   = sizeof(SimplePushConstantData);
+  VkPushConstantRange pushConstantRange{};
+  pushConstantRange.stageFlags =
+      VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
+  pushConstantRange.offset = 0;
+  pushConstantRange.size   = sizeof(PointLightPushConstants);
 
   std::vector<VkDescriptorSetLayout> layouts = {globalSetLayout};
 
@@ -42,8 +43,8 @@ void PointLightSystem::createPipelineLayout(VkDescriptorSetLayout globalSetLayou
   pipelineLayoutInfo.sType          = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
   pipelineLayoutInfo.setLayoutCount = static_cast<uint32_t>(layouts.size());
   pipelineLayoutInfo.pSetLayouts    = layouts.data();
-  pipelineLayoutInfo.pushConstantRangeCount = 0;
-  pipelineLayoutInfo.pPushConstantRanges    = nullptr;
+  pipelineLayoutInfo.pushConstantRangeCount = 1;
+  pipelineLayoutInfo.pPushConstantRanges    = &pushConstantRange;
   if (vkCreatePipelineLayout(
           lgeDevice.device(), &pipelineLayoutInfo, nullptr, &pipelineLayout) !=
       VK_SUCCESS) {
@@ -63,6 +64,29 @@ void PointLightSystem::createPipeline(VkRenderPass renderPass) {
       pipelineConfig);
 }
 
+void PointLightSystem::update(FrameInfo& frameInfo, GlobalUbo& globalUbo) {
+  auto rotateLight =
+      glm::rotate(glm::mat4(1.f), 0.5f * frameInfo.frameTime, {0.f, -1.f, 0.f});
+
+  int lightIndex = 0;
+  for (auto& kv : frameInfo.gameObjects) {
+    auto& gov = kv.second;
+    if (gov.pointLight == nullptr) { continue; }
+
+    assert(lightIndex < MAX_LIGHTS && "Too many point lights!");
+
+    gov.transform.translation =
+        glm::vec3(rotateLight * glm::vec4(gov.transform.translation, 1.0f));
+
+    auto& pointLight    = globalUbo.pointLights[lightIndex];
+    pointLight.position = glm::vec4(gov.transform.translation, 1.0f);
+    pointLight.color    = glm::vec4(gov.color, gov.pointLight->intensity);
+
+    lightIndex++;
+  }
+  globalUbo.pointLightCount = lightIndex;
+}
+
 void PointLightSystem::render(FrameInfo& frameInfo) {
   lgePipeline->bind(frameInfo.commandBuffer);
 
@@ -70,7 +94,21 @@ void PointLightSystem::render(FrameInfo& frameInfo) {
       frameInfo.commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1,
       &frameInfo.globalDescriptorSet, 0, nullptr);
 
-  vkCmdDraw(frameInfo.commandBuffer, 6, 1, 0, 0);
+  for (auto& kv : frameInfo.gameObjects) {
+    auto& gov = kv.second;
+    if (gov.pointLight == nullptr) { continue; }
+
+    PointLightPushConstants push{};
+    push.position = glm::vec4(gov.transform.translation, 1.0f);
+    push.color    = glm::vec4(gov.color, gov.pointLight->intensity);
+    push.radius   = gov.transform.scale.x;
+
+    vkCmdPushConstants(
+        frameInfo.commandBuffer, pipelineLayout,
+        VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0,
+        sizeof(PointLightPushConstants), &push);
+    vkCmdDraw(frameInfo.commandBuffer, 6, 1, 0, 0);
+  }
 }
 
 } // namespace lge

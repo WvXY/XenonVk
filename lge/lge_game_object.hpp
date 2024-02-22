@@ -23,6 +23,10 @@ struct TransformComponent {
   glm::mat3 normalMatrix();
 };
 
+struct PointLightComponent {
+  float intensity{1.0f};
+};
+
 class LgeGameObject {
 public:
   using id_t = unsigned int;
@@ -32,6 +36,9 @@ public:
     static id_t currentId = 0;
     return LgeGameObject{currentId++};
   }
+
+  static LgeGameObject makePointLight(
+      float intensity = 10.0f, float radius = 0.1f, glm::vec3 color = glm::vec3{1.0f});
 
   LgeGameObject(const LgeGameObject&) = delete;
 
@@ -44,6 +51,8 @@ public:
   id_t getId() { return id; }
 
   std::shared_ptr<LgeModel> model{};
+  std::unique_ptr<PointLightComponent> pointLight = nullptr;
+
   glm::vec3 color{};
   TransformComponent transform{};
 

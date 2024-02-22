@@ -46,4 +46,14 @@ glm::mat3 TransformComponent::normalMatrix() {
       {invScale.z * (c2 * s1), invScale.z * (-s2), invScale.z * (c1 * c2)}};
 }
 
+LgeGameObject
+LgeGameObject::makePointLight(float intensity, float radius, glm::vec3 color) {
+  LgeGameObject gameObject         = LgeGameObject::createGameObject();
+  gameObject.pointLight            = std::make_unique<PointLightComponent>();
+  gameObject.pointLight->intensity = intensity;
+  gameObject.color                 = color;
+  gameObject.transform.scale.x     = radius;
+  return gameObject;
+}
+
 } // namespace lge
