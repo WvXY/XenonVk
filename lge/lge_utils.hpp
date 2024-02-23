@@ -12,4 +12,6 @@ void hashCombine(std::size_t& seed, const T& v, const Rest&... rest) {
   (hashCombine(seed, rest), ...);
 }
 
+// TODO: add uv calculation function if uv is not present in the model
+
 } // namespace lge

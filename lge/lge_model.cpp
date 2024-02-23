@@ -119,7 +119,6 @@ LgeModel::Vertex::getAttributeDescriptions() {
           {2, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, normal)},
           {3, 0, VK_FORMAT_R32G32_SFLOAT, offsetof(Vertex, uv)}};
 }
-#pragma clang diagnostic pop
 
 void LgeModel::Builder::loadModel(const std::string& filepath) {
   tinyobj::attrib_t attrib;

@@ -14,6 +14,7 @@ struct PointLight {
 layout(set = 0, binding = 0) uniform GlobalUbo {
   mat4 projection;
   mat4 view;
+  mat4 inverseView;
   vec4 ambientLightColor;// w is intensity
   PointLight pointLights[16];
   int pointLightCount;
@@ -26,15 +27,28 @@ layout(push_constant) uniform Push {
 
 void main() {
   vec3 diffuseLight = ubo.ambientLightColor.xyz * ubo.ambientLightColor.w;
+  vec3 specularLight = vec3(0.0);
   vec3 surfaceNormal = normalize(fragNormalWorld);
+
+  vec3 cameraPosWorld = vec3(ubo.inverseView[3]);
+    vec3 viewDirection = normalize(cameraPosWorld - fragPosWorld);
 
   for (int i = 0; i < ubo.pointLightCount; i++) {
     PointLight light = ubo.pointLights[i];
     vec3 lightDirection = light.position.xyz - fragPosWorld;
     float attenuation = 1.0 / dot(lightDirection, lightDirection);
-    float cosAngle = max(dot(surfaceNormal, normalize(lightDirection)), 0);
-    diffuseLight += light.color.xyz * light.color.w * cosAngle * attenuation;
+    lightDirection = normalize(lightDirection);
+
+    float cosAngle = max(dot(surfaceNormal, lightDirection), 0);
+    vec3 intensity = light.color.xyz * light.color.w * attenuation;
+    diffuseLight += cosAngle * intensity;
+
+    vec3 halfAngle = normalize(lightDirection + viewDirection);
+    float blinnTerm = dot(surfaceNormal, halfAngle);
+    blinnTerm = clamp(blinnTerm, 0, 1);
+    blinnTerm = pow(blinnTerm, 512);
+    specularLight += intensity * blinnTerm;
   }
 
-  outColor = vec4(diffuseLight * fragColor, 1.0);
+  outColor = vec4(diffuseLight * fragColor + specularLight * fragColor, 1.0);
 }

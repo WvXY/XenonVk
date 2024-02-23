@@ -100,8 +100,9 @@ void FirstApp::run() {
 
       // update global UBO
       GlobalUbo ubo{};
-      ubo.projection = camera.getProjection();
-      ubo.view       = camera.getView();
+      ubo.projection  = camera.getProjection();
+      ubo.view        = camera.getView();
+      ubo.inverseView = camera.getInverseView();
       pointLightSystem.update(frameInfo, ubo);
       uboBuffers[frameIndex]->writeToBuffer(&ubo);
       uboBuffers[frameIndex]->flush();
@@ -137,9 +138,15 @@ void FirstApp::loadGameObjects() {
       x += .8f;
     } // bunny do not have uv coords, so it is rendered as a dark silhouette
 
-    gameObjects.at(0).transform.scale = {2.5f, 2.5f, 2.5f};
-    gameObjects.at(1).transform.scale = {0.2f, 0.2f, 0.2f};
-    gameObjects.at(2).transform.scale = {0.2f, 0.2f, 0.2f};
+    gameObjects.at(0).transform.scale      = {2.5f, 2.5f, 2.5f};
+    gameObjects.at(0).transform.rotation.z = glm::pi<float>();
+    gameObjects.at(1).transform.scale      = {0.2f, 0.2f, 0.2f};
+    gameObjects.at(2).transform.scale      = {0.2f, 0.2f, 0.2f};
+    gameObjects.at(3).transform.scale      = {2.f, 2.f, 2.f};
+    gameObjects.at(3).transform.translation.y += .2f;
+    gameObjects.at(4).transform.scale = {2.f, 2.f, 2.f};
+    gameObjects.at(4).transform.scale = {4.f, 2.f, 4.f};
+    gameObjects.at(4).transform.translation.y += .2f;
   }
 
   { // Floor
