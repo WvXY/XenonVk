@@ -10,6 +10,7 @@
 #include <array>
 #include <cassert>
 #include <stdexcept>
+#include <map>
 
 namespace lge {
 
@@ -57,6 +58,7 @@ void PointLightSystem::createPipeline(VkRenderPass renderPass) {
 
   PipelineConfigInfo pipelineConfig{};
   LgePipeline::defaultPipelineConfigInfo(pipelineConfig);
+  LgePipeline::enableAlphaBlending(pipelineConfig);
   pipelineConfig.renderPass     = renderPass;
   pipelineConfig.pipelineLayout = pipelineLayout;
   lgePipeline                   = std::make_unique<LgePipeline>(
@@ -88,20 +90,27 @@ void PointLightSystem::update(FrameInfo& frameInfo, GlobalUbo& globalUbo) {
 }
 
 void PointLightSystem::render(FrameInfo& frameInfo) {
-  lgePipeline->bind(frameInfo.commandBuffer);
+  std::map<float, LgeGameObject::id_t> sortedLights;
+  for (auto& kv : frameInfo.gameObjects) {
+    auto& go = kv.second;
+    if (go.pointLight == nullptr) { continue; }
 
+    float distance   = glm::length(frameInfo.camera.getPosition() - go.transform.translation);
+    sortedLights[distance] = go.getId();
+  }
+
+  lgePipeline->bind(frameInfo.commandBuffer);
   vkCmdBindDescriptorSets(
       frameInfo.commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1,
       &frameInfo.globalDescriptorSet, 0, nullptr);
 
-  for (auto& kv : frameInfo.gameObjects) {
-    auto& gov = kv.second;
-    if (gov.pointLight == nullptr) { continue; }
+  for (auto it = sortedLights.rbegin(); it != sortedLights.rend(); ++it) {
+    auto& go = frameInfo.gameObjects.at(it->second);
 
     PointLightPushConstants push{};
-    push.position = glm::vec4(gov.transform.translation, 1.0f);
-    push.color    = glm::vec4(gov.color, gov.pointLight->intensity);
-    push.radius   = gov.transform.scale.x;
+    push.position = glm::vec4(go.transform.translation, 1.0f);
+    push.color    = glm::vec4(go.color, go.pointLight->intensity);
+    push.radius   = go.transform.scale.x;
 
     vkCmdPushConstants(
         frameInfo.commandBuffer, pipelineLayout,
