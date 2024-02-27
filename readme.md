@@ -1,9 +1,8 @@
 # Little Game Engine
 
-### Install library
+**Under developing...**
 
-#### ArchLinux
+A vulkan game engine for personal study and interests.
 
-```bash
-sudo pacman -S vulkan-devel
-```
+## Reference
+https://youtu.be/Y9U9IE0gVHA?si=42keJCaEPE-R697P
