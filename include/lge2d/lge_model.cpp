@@ -51,10 +51,8 @@ std::vector<VkVertexInputBindingDescription> LgeModel::Vertex::getBindingDescrip
 
 std::vector<VkVertexInputAttributeDescription>
 LgeModel::Vertex::getAttributeDescriptions() {
-  return {
-  // location, binding, format, offset
-      {0, 0, VK_FORMAT_R32G32_SFLOAT,    offsetof(Vertex, position)},
-      {1, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, color)   }
-  };
+  return {// location, binding, format, offset
+          {0, 0, VK_FORMAT_R32G32_SFLOAT, offsetof(Vertex, position)},
+          {1, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, color)}};
 }
 } // namespace lge

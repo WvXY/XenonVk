@@ -9,8 +9,8 @@
 // std
 #include <array>
 #include <cassert>
-#include <stdexcept>
 #include <map>
+#include <stdexcept>
 
 namespace lge {
 
@@ -95,7 +95,8 @@ void PointLightSystem::render(FrameInfo& frameInfo) {
     auto& go = kv.second;
     if (go.pointLight == nullptr) { continue; }
 
-    float distance   = glm::length(frameInfo.camera.getPosition() - go.transform.translation);
+    float distance =
+        glm::length(frameInfo.camera.getPosition() - go.transform.translation);
     sortedLights[distance] = go.getId();
   }
 

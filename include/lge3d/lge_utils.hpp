@@ -1,6 +1,10 @@
 #pragma once
 
 #include <functional>
+#include <glm/glm.hpp>
+#include <vector>
+
+#include "lge_model.hpp"
 
 namespace lge {
 
@@ -11,7 +15,5 @@ void hashCombine(std::size_t& seed, const T& v, const Rest&... rest) {
   seed ^= hasher(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
   (hashCombine(seed, rest), ...);
 }
-
-// TODO: add uv calculation function if uv is not present in the model
 
 } // namespace lge

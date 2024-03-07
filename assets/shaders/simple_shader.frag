@@ -31,7 +31,7 @@ void main() {
   vec3 surfaceNormal = normalize(fragNormalWorld);
 
   vec3 cameraPosWorld = vec3(ubo.inverseView[3]);
-    vec3 viewDirection = normalize(cameraPosWorld - fragPosWorld);
+  vec3 viewDirection = normalize(cameraPosWorld - fragPosWorld);
 
   for (int i = 0; i < ubo.pointLightCount; i++) {
     PointLight light = ubo.pointLights[i];

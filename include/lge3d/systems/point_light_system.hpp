@@ -1,10 +1,10 @@
 #pragma once
 
-#include "../lge_camera.hpp"
-#include "../lge_device.hpp"
-#include "../lge_frame_info.hpp"
-#include "../lge_game_object.hpp"
-#include "../lge_pipeline.hpp"
+#include "lge_camera.hpp"
+#include "lge_device.hpp"
+#include "lge_frame_info.hpp"
+#include "lge_game_object.hpp"
+#include "lge_pipeline.hpp"
 
 // std
 #include <memory>

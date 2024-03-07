@@ -46,9 +46,8 @@ void FirstApp::run() {
 void FirstApp::loadGameObjects() {
   std::vector<LgeModel::Vertex> vertices{
       {{0.0f, -0.5f}, {1.0f, 0.0f, 0.0f}},
-      {{0.5f, 0.5f},  {0.0f, 1.0f, 0.0f}},
-      {{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}}
-  };
+      {{0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
+      {{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}}};
   auto lgeModel = std::make_shared<LgeModel>(lgeDevice, vertices);
 
   for (int i = 0; i < 20; i++) {

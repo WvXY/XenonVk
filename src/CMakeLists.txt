@@ -1,20 +1,20 @@
-cmake_minimum_required(VERSION 3.26)
-project(little-game-engine)
+project(LittleGameEngine3D)
 
 find_package(GLFW3 CONFIG REQUIRED) # move it to the top and run check for glfw3, same for below
 find_package(GLM CONFIG REQUIRED)
 find_package(Vulkan REQUIRED)
 
-find_path(TINY_OBJ_LOADER_PATH tiny_obj_loader.h
-        HINTS ${EXTERNAL_LIB_DIR} REQUIRED
-)
+include(${ROOT_DIR}/cmake/include_lge3d.cmake)
 
 file(GLOB_RECURSE SOURCES
         ${PROJECT_SOURCE_DIR}/*.cpp
         ${PROJECT_SOURCE_DIR}/*.hpp
 )
 
-add_executable(${PROJECT_NAME} ${SOURCES})
+add_executable(${PROJECT_NAME}
+        ${SOURCES}
+        ${LGE3D_SRC_FILES}
+)
 
 target_link_libraries(${PROJECT_NAME}
         PRIVATE glm::glm
@@ -23,9 +23,8 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 target_include_directories(${PROJECT_NAME}
-        PRIVATE ${TINY_OBJ_LOADER_PATH}
+        PRIVATE ${EXTERNAL_LIB_DIR}
+        PRIVATE ${LGE3D_INCLUDE_DIR}
 )
 
-add_subdirectory(shaders)
-
-
+add_dependencies(${PROJECT_NAME} Shaders)

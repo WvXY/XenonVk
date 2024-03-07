@@ -1,7 +1,7 @@
 #pragma once
 
-#include "lge_device.hpp"
 #include "lge_buffer.hpp"
+#include "lge_device.hpp"
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE

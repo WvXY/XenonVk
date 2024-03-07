@@ -3,8 +3,8 @@
 #include "kbd_controller.hpp"
 #include "lge_buffer.hpp"
 #include "lge_camera.hpp"
-#include "systems/point_light_system.hpp"
-#include "systems/simple_render_system.hpp"
+#include "point_light_system.hpp"
+#include "simple_render_system.hpp"
 
 // std
 #include <array>
@@ -125,15 +125,13 @@ void FirstApp::loadGameObjects() {
   std::shared_ptr<LgeModel> lgeModel;
   {
     std::vector<std::string> modelPaths = {
-        "../../models/bunny.obj", "../../models/cube.obj",
-        "../../models/colored_cube.obj", "../../models/smooth_vase.obj",
-        "../../models/flat_vase.obj"};
+        "bunny.obj", "cube.obj", "colored_cube.obj", "smooth_vase.obj", "flat_vase.obj"};
 
     float x = -2.f;
     for (std::string& modelPath : modelPaths) {
-      lgeModel         = LgeModel::createModelFromFile(lgeDevice, modelPath);
-      auto gameObject  = LgeGameObject::createGameObject();
-      gameObject.model = lgeModel;
+      lgeModel = LgeModel::createModelFromFile(lgeDevice, relativeModelPath + modelPath);
+      auto gameObject                  = LgeGameObject::createGameObject();
+      gameObject.model                 = lgeModel;
       gameObject.transform.translation = {x, 0.f, 0.0f};
       gameObject.transform.scale       = glm::vec3{1.0f};
       gameObjects.emplace(gameObject.getId(), std::move(gameObject));
@@ -152,19 +150,17 @@ void FirstApp::loadGameObjects() {
   }
 
   { // Floor
-    lgeModel         = LgeModel::createModelFromFile(lgeDevice, "../../models/quad.obj");
-    auto gameObject  = LgeGameObject::createGameObject();
-    gameObject.model = lgeModel;
+    lgeModel = LgeModel::createModelFromFile(lgeDevice, relativeModelPath + "quad.obj");
+    auto gameObject                  = LgeGameObject::createGameObject();
+    gameObject.model                 = lgeModel;
     gameObject.transform.translation = {0, 0.2f, 0.0f};
     gameObject.transform.scale       = glm::vec3{10.0f};
     gameObjects.emplace(gameObject.getId(), std::move(gameObject));
   }
 
   { // Point light
-    std::vector<glm::vec3> lightColors{
-        {1.f, .1f, .1f}, {.1f, .1f, 1.f}, {.1f, 1.f, .1f},
-        {1.f, 1.f, .1f}, {.1f, 1.f, 1.f}, {1.f, 1.f, 1.f} //
-    };
+    std::vector<glm::vec3> lightColors{{1.f, .1f, .1f}, {.1f, .1f, 1.f}, {.1f, 1.f, .1f},
+                                       {1.f, 1.f, .1f}, {.1f, 1.f, 1.f}, {1.f, 1.f, 1.f}};
 
     for (int i = 0; i < lightColors.size(); i++) {
       auto pointLight  = LgeGameObject::makePointLight(0.2f);

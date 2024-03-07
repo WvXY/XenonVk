@@ -45,7 +45,8 @@ void LgeModel::bind(VkCommandBuffer commandBuffer) {
   vkCmdBindVertexBuffers(commandBuffer, 0, 1, buffers, offsets);
 
   if (hasIndexBuffer) {
-    vkCmdBindIndexBuffer(commandBuffer, indexBuffer->getBuffer(), 0, VK_INDEX_TYPE_UINT32);
+    vkCmdBindIndexBuffer(
+        commandBuffer, indexBuffer->getBuffer(), 0, VK_INDEX_TYPE_UINT32);
   }
 }
 
@@ -74,7 +75,7 @@ void LgeModel::createVertexBuffers(const std::vector<Vertex>& vertices) {
 
   vertexBuffer = std::make_unique<LgeBuffer>(
       lgeDevice, vertexSize, vertexCount,
-      VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT ,
+      VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
       VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
   lgeDevice.copyBuffer(stagingBuffer.getBuffer(), vertexBuffer->getBuffer(), bufferSize);

@@ -14,10 +14,7 @@ struct Transform2dComponent {
   glm::mat2 mat2() {
     const float c = glm::cos(rotation);
     const float s = glm::sin(rotation);
-    glm::mat2 rotMat{
-        {c,  s},
-        {-s, c}
-    };
+    glm::mat2 rotMat{{c, s}, {-s, c}};
     glm::mat2 scaleMat{scale.x, 0.0f, 0.0f, scale.y};
     return rotMat * scaleMat;
   }
