@@ -5,6 +5,7 @@ find_package(GLM CONFIG REQUIRED)
 find_package(Vulkan REQUIRED)
 
 include(${ROOT_DIR}/cmake/include_lge3d.cmake)
+include(${ROOT_DIR}/cmake/include_core.cmake)
 
 file(GLOB_RECURSE SOURCES
         ${PROJECT_SOURCE_DIR}/*.cpp
@@ -25,6 +26,7 @@ target_link_libraries(${PROJECT_NAME}
 target_include_directories(${PROJECT_NAME}
         PRIVATE ${EXTERNAL_LIB_DIR}
         PRIVATE ${LGE3D_INCLUDE_DIR}
+        PRIVATE ${LGECore_INCLUDE_DIR}
 )
 
 add_dependencies(${PROJECT_NAME} Shaders)
