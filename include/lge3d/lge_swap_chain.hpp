@@ -48,6 +48,9 @@ public:
            swapChain.swapChainImageFormat == swapChainImageFormat;
   }
 
+  enum presentModeEnum { MAILBOX, FIFO_RELAXED, FIFO, IMMEDIATE };
+  void setPresentMode(presentModeEnum mode) { presentMode = mode; }
+
 private:
   void init();
   void createSwapChain();
@@ -57,9 +60,8 @@ private:
   void createFramebuffers();
   void createSyncObjects();
 
-  // 0: Mailbox, 1: FIFO_Relaxed, 2: FIFO(default), 3: Immediate (best to
-  // worst)
-  int presentMode = 0;
+  // 0: Mailbox, 1: FIFO_Relaxed, 2: FIFO(default), 3: Immediate
+  int presentMode{FIFO};
 
   // Helper functions
   VkSurfaceFormatKHR

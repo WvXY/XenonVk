@@ -73,6 +73,7 @@ void FirstApp::run() {
   KbdController kbdController{};
 
   auto currentTime = std::chrono::high_resolution_clock::now();
+  int32_t frameCount = 0;
 
   while (!lgeWindow.shouldClose()) {
     glfwPollEvents();
@@ -98,6 +99,12 @@ void FirstApp::run() {
           frameIndex, frameTime, commandBuffer, camera, globalDescriptorSets[frameIndex],
           gameObjects};
 
+      // step printing effect(only continuous movement), later make a component for ecs
+      if(frameCount % 40 == 0){
+        gameObjects.at(1).transform.rotation.y += 0.2f;
+        gameObjects.at(1).transform.rotation.z += 0.1f;
+      }
+
       // update global UBO
       GlobalUbo ubo{};
       ubo.projection  = camera.getProjection();
@@ -116,6 +123,7 @@ void FirstApp::run() {
       lgeRenderer.endSwapChainRenderPass(commandBuffer);
       lgeRenderer.endFrame();
     }
+    ++frameCount;
   }
 
   vkDeviceWaitIdle(lgeDevice.device());

@@ -61,6 +61,13 @@ Work in progress...
 - [ ] Physics Engine
 - [ ] Audio Engine(optional)
 
+## Current Problems
+
+1. When VSync off, the load of GPU is too high, especially on high resolution. I can hear whistle noise from the GPU.
+2. However, when VSync on, there is noticeable input and display lag.
+3. `validation layer: Validation Performance Warning: [ UNASSIGNED-CoreValidation-Shader-OutputNotConsumed ]` from
+   Vulkan SDK.
+
 ## Reference
 
 - https://vcpkg.io/en/
