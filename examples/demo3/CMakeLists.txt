@@ -20,9 +20,8 @@ if (NOT UNIX)
             PRIVATE Vulkan::Vulkan
     )
 else ()
-    include_directories(${GLFW3_INCLUDE_DIR})
     target_link_libraries(${PROJECT_NAME}
-            ${GLFW3_LIBRARY}
+            glfw
             PRIVATE Vulkan::Vulkan
     )
 endif ()
