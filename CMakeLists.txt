@@ -8,28 +8,21 @@ if (UNIX)
     set(GLFW_USE_WAYLAND ON)    # use wayland on linux
 endif ()
 
-# set global root directory
-set(ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
-set(ASSETS_DIR ${ROOT_DIR}/assets)
-
 # set vcpkg toolchain file
 set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
 
-set(CMAKE_FILE_DIR ${ROOT_DIR}/cmake)
-set(EXTERNAL_LIB_DIR ${ROOT_DIR}/external/lib)
-set(CUSTOM_INCLUDE_DIR ${ROOT_DIR}/include)
-
-# set output directory
-set(OUT_DIR ${CMAKE_BINARY_DIR}/${PROJECT_NAME})    # TODO: change this
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${OUT_DIR})
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${OUT_DIR})
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${OUT_DIR})
+# set directory paths
+set(AST_DIR ${CMAKE_SOURCE_DIR}/assets)
+set(CMK_DIR ${CMAKE_SOURCE_DIR}/cmake)
+set(EXT_DIR ${CMAKE_SOURCE_DIR}/external)
+set(SRC_DIR ${CMAKE_SOURCE_DIR}/src)
+set(SHA_DIR ${CMAKE_SOURCE_DIR}/shaders)
 
 # set shader output directory
-set(SHADER_SPIRV_OUTPUT_DIRECTORY ${OUT_DIR}/shaders)
+set(SPIRV_OUT_DIR ${PROJECT_BINARY_DIR}/shaders)
 
 # script to compile shaders
-include(${ROOT_DIR}/cmake/compile_shaders.cmake)
+include(cmake/compile_shaders.cmake)
 
-add_subdirectory(src)
-add_subdirectory(examples/lge2d)
+add_subdirectory(examples/demo2)
+add_subdirectory(examples/demo3)

@@ -1,11 +1,48 @@
-# Project exclude paths
-/cmake-build-*/
-**/cmake-build-*/
+# Prerequisites
+*.d
 
-# ide folder
-.idea
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
 
-# compiled files
-*.spv
+# Precompiled Headers
+*.gch
+*.pch
 
-/build
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+.vscode/
+.idea/
+.vs/
+
+*/cmake-build-debug/
+*/cmake-build-release/
+*/build/
+/cmake-build-debug/
+/cmake-build-release/
+
+!/assets/models
+
+.VSCodeCounter
+
+
