@@ -4,9 +4,16 @@ project(LittleGameEngine)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-if (UNIX)
-    set(GLFW_USE_WAYLAND ON)    # use wayland on linux
+#if (UNIX)
+#    set(GLFW_USE_WAYLAND ON)    # use wayland on linux
+#endif ()
+
+if (NOT UNIX)
+    find_package(GLFW3 REQUIRED)
 endif ()
+
+find_package(GLM REQUIRED)
+find_package(Vulkan REQUIRED)
 
 # set vcpkg toolchain file
 set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")

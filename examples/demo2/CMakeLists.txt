@@ -1,9 +1,5 @@
 project(LittleGameEngine2D)
 
-find_package(GLFW3 REQUIRED)
-find_package(GLM REQUIRED)
-find_package(Vulkan REQUIRED)
-
 include(${CMK_DIR}/include_lge2d.cmake)
 
 file(GLOB_RECURSE SOURCES

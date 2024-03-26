@@ -1,9 +1,5 @@
 project(LittleGameEngine3D)
 
-find_package(GLFW3 REQUIRED) # move it to the top and run check for glfw3, same for below
-find_package(GLM REQUIRED)
-find_package(Vulkan REQUIRED)
-
 include(${CMK_DIR}/include_lge3d.cmake)
 #include(${CMK_DIR}/include_core.cmake)
 
