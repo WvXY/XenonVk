@@ -12,11 +12,13 @@ add_executable(${PROJECT_NAME}
         ${LGE2D_SRC_FILES}
 )
 
-target_link_libraries(${PROJECT_NAME}
-        PRIVATE glm::glm
-        PRIVATE glfw
-        PRIVATE Vulkan::Vulkan
-)
+if (NOT UNIX)
+    target_link_libraries(${PROJECT_NAME}
+            PRIVATE glm::glm
+            PRIVATE glfw
+            PRIVATE Vulkan::Vulkan
+    )
+endif ()
 
 target_include_directories(${PROJECT_NAME}
         PRIVATE ${LGE2D_INCLUDE_DIR}
