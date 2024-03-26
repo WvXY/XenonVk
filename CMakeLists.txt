@@ -11,8 +11,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 if (NOT UNIX)
     find_package(GLFW3 REQUIRED)
     find_package(GLM REQUIRED)
-    find_package(Vulkan REQUIRED)
+#    find_package(Vulkan REQUIRED)
 endif ()
+
+find_package(Vulkan REQUIRED)
+
 
 # set vcpkg toolchain file
 set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")

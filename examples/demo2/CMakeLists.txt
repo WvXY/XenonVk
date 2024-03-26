@@ -18,6 +18,10 @@ if (NOT UNIX)
             PRIVATE glfw
             PRIVATE Vulkan::Vulkan
     )
+else ()
+    target_link_libraries(${PROJECT_NAME}
+            PRIVATE Vulkan::Vulkan
+    )
 endif ()
 
 target_include_directories(${PROJECT_NAME}
