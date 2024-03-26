@@ -21,7 +21,7 @@ if (NOT UNIX)
     )
 else ()
     target_link_libraries(${PROJECT_NAME}
-            glfw
+            PRIVATE glfw
             PRIVATE Vulkan::Vulkan
     )
 endif ()
