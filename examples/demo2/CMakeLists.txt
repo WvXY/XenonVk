@@ -1,7 +1,7 @@
 project(LittleGameEngine2D)
 
-find_package(GLFW3 CONFIG REQUIRED)
-find_package(GLM CONFIG REQUIRED)
+find_package(GLFW3 REQUIRED)
+find_package(GLM REQUIRED)
 find_package(Vulkan REQUIRED)
 
 include(${CMK_DIR}/include_lge2d.cmake)
