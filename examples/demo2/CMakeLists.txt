@@ -1,9 +1,5 @@
 project(LittleGameEngine2D)
 
-find_package(GLFW3 CONFIG REQUIRED)
-find_package(GLM CONFIG REQUIRED)
-find_package(Vulkan REQUIRED)
-
 include(${CMK_DIR}/include_lge2d.cmake)
 
 file(GLOB_RECURSE SOURCES
@@ -16,11 +12,18 @@ add_executable(${PROJECT_NAME}
         ${LGE2D_SRC_FILES}
 )
 
-target_link_libraries(${PROJECT_NAME}
-        PRIVATE glm::glm
-        PRIVATE glfw
-        PRIVATE Vulkan::Vulkan
-)
+if (UNIX)
+    target_link_libraries(${PROJECT_NAME}
+            PRIVATE glfw
+            PRIVATE Vulkan::Vulkan
+    )
+else ()
+    target_link_libraries(${PROJECT_NAME}
+            PRIVATE glm::glm
+            PRIVATE glfw
+            PRIVATE Vulkan::Vulkan
+    )
+endif ()
 
 target_include_directories(${PROJECT_NAME}
         PRIVATE ${LGE2D_INCLUDE_DIR}

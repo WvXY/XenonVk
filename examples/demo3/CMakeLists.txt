@@ -1,9 +1,5 @@
 project(LittleGameEngine3D)
 
-find_package(GLFW3 CONFIG REQUIRED) # move it to the top and run check for glfw3, same for below
-find_package(GLM CONFIG REQUIRED)
-find_package(Vulkan REQUIRED)
-
 include(${CMK_DIR}/include_lge3d.cmake)
 #include(${CMK_DIR}/include_core.cmake)
 
@@ -17,11 +13,18 @@ add_executable(${PROJECT_NAME}
         ${LGE3D_SRC_FILES}
 )
 
-target_link_libraries(${PROJECT_NAME}
-        PRIVATE glm::glm
-        PRIVATE glfw
-        PRIVATE Vulkan::Vulkan
-)
+if (UNIX)
+    target_link_libraries(${PROJECT_NAME}
+            PRIVATE glfw
+            PRIVATE Vulkan::Vulkan
+    )
+else ()
+    target_link_libraries(${PROJECT_NAME}
+            PRIVATE glm::glm
+            PRIVATE glfw
+            PRIVATE Vulkan::Vulkan
+    )
+endif ()
 
 target_include_directories(${PROJECT_NAME}
         PRIVATE ${EXT_DIR}
