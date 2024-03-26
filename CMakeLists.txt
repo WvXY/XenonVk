@@ -11,10 +11,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 if (NOT UNIX)
     find_package(GLFW3 REQUIRED)
     find_package(GLM REQUIRED)
-#    find_package(Vulkan REQUIRED)
 endif ()
 
-#find_package(GLFW3)
 find_package(Vulkan REQUIRED)
 
 

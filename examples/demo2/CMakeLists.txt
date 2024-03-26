@@ -12,14 +12,14 @@ add_executable(${PROJECT_NAME}
         ${LGE2D_SRC_FILES}
 )
 
-if (NOT UNIX)
+if (UNIX)
     target_link_libraries(${PROJECT_NAME}
-            PRIVATE glm::glm
             PRIVATE glfw
             PRIVATE Vulkan::Vulkan
     )
 else ()
     target_link_libraries(${PROJECT_NAME}
+            PRIVATE glm::glm
             PRIVATE glfw
             PRIVATE Vulkan::Vulkan
     )
