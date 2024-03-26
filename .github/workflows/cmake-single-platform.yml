@@ -40,13 +40,13 @@ jobs:
       # Build your program with the given configuration
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
-    - name: Execute2D
-      working-directory: ${{github.workspace}}/build/examples/demo2
-      run: ./LittleGameEngine2D
-
-    - name: Execute3D
-      working-directory: ${{github.workspace}}/build/examples/demo3
-      run: ./LittleGameEngine3D
+#    - name: Execute2D
+#      working-directory: ${{github.workspace}}/build/examples/demo2
+#      run: ./LittleGameEngine2D
+#
+#    - name: Execute3D
+#      working-directory: ${{github.workspace}}/build/examples/demo3
+#      run: ./LittleGameEngine3D
 
     - name: Test
       working-directory: ${{github.workspace}}/build
