@@ -14,6 +14,7 @@ if (NOT UNIX)
 #    find_package(Vulkan REQUIRED)
 endif ()
 
+find_package(GLFW3 REQUIRED)
 find_package(Vulkan REQUIRED)
 
 
