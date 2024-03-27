@@ -4,9 +4,9 @@ project(LittleGameEngine)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-#if (UNIX)
-#    set(GLFW_USE_WAYLAND ON)    # use wayland on linux
-#endif ()
+if (UNIX)
+    option(GLFW_USE_WAYLAND "Enable Wayland" ON)    # use wayland on linux
+endif ()
 
 if (NOT UNIX)
     find_package(GLFW3 REQUIRED)

@@ -109,8 +109,14 @@ void LgeDevice::pickPhysicalDevice() {
   std::cout << "Device count: " << deviceCount << std::endl;
   std::vector<VkPhysicalDevice> devices(deviceCount);
   vkEnumeratePhysicalDevices(instance, &deviceCount, devices.data());
+  const bool usingWayland = std::getenv("WAYLAND_DISPLAY");
 
   for (const auto& device : devices) {
+    // current nvidia gpu cannot create swap chain on wayland
+    VkPhysicalDeviceProperties deviceProperties;
+    vkGetPhysicalDeviceProperties(device, &deviceProperties);
+    if (usingWayland && deviceProperties.vendorID == 0x10DE) {continue;}
+
     if (isDeviceSuitable(device)) {
       physicalDevice = device;
       break;
