@@ -1,5 +1,7 @@
 #version 460
 
+#extension GL_EXT_fragment_shader_barycentric : require
+
 layout(location = 0) in vec3 fragColor;
 layout(location = 1) in vec3 fragPosWorld;
 layout(location = 2) in vec3 fragNormalWorld;
@@ -50,5 +52,14 @@ void main() {
     specularLight += intensity * blinnTerm;
   }
 
-  outColor = vec4(diffuseLight * fragColor + specularLight * fragColor, 1.0);
+  // draw wireframe
+  const vec3 barycentric = vec3(gl_BaryCoordEXT);
+  const float closestEdge = min(barycentric.x, min(barycentric.y, barycentric.z));
+
+  float edgeThreshold = 0.01;
+  if (closestEdge < edgeThreshold) {
+    outColor = vec4(0, 0, 0, 1);
+  } else {
+    outColor = vec4(diffuseLight * fragColor + specularLight * fragColor, 1.0);
+  }
 }
