@@ -11,31 +11,30 @@
 #include <vector>
 
 namespace lge {
-    class SimpleRenderSystem {
-    public:
-        SimpleRenderSystem(
-                LgeDevice &device, VkRenderPass renderPass,
-                VkDescriptorSetLayout globalSetLayout);
+class SimpleRenderSystem {
+public:
+  SimpleRenderSystem(
+      LgeDevice& device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);
 
-        ~SimpleRenderSystem();
+  ~SimpleRenderSystem();
 
-        SimpleRenderSystem(const SimpleRenderSystem &) = delete;
+  SimpleRenderSystem(const SimpleRenderSystem&) = delete;
 
-        SimpleRenderSystem &operator=(const SimpleRenderSystem &) = delete;
+  SimpleRenderSystem& operator=(const SimpleRenderSystem&) = delete;
 
-        void renderGameObjects(FrameInfo &frameInfo);
+  void renderGameObjects(FrameInfo& frameInfo);
 
-    private:
-        void createPipelineLayout(VkDescriptorSetLayout globalSetLayout);
+private:
+  void createPipelineLayout(VkDescriptorSetLayout globalSetLayout);
 
-        void createPipeline(VkRenderPass renderPass);
+  void createPipeline(VkRenderPass renderPass);
 
-        LgeDevice &lgeDevice;
+  LgeDevice& lgeDevice;
 
-        std::string vertShaderSrc = "../../shaders/simple_shader.vert.spv";
-        std::string fragShaderSrc = "../../shaders/simple_shader.frag.spv";
+  std::string vertShaderSrc = "../../shaders/simple_shader.vert.spv";
+  std::string fragShaderSrc = "../../shaders/simple_shader.frag.spv";
 
-        std::unique_ptr<LgePipeline> lgePipeline;
-        VkPipelineLayout pipelineLayout;
-    };
+  std::unique_ptr<LgePipeline> lgePipeline;
+  VkPipelineLayout pipelineLayout;
+};
 } // namespace lge
