@@ -100,10 +100,10 @@ void FirstApp::run() {
           gameObjects};
 
       // step printing effect(only continuous movement), later make a component for ecs
-//      if (frameCount % 40 == 0) {
-//        gameObjects.at(0).transform.rotation.y += 0.008f;
-//        gameObjects.at(0).transform.rotation.z += 0.01f;
-//      }
+      //      if (frameCount % 40 == 0) {
+      //        gameObjects.at(0).transform.rotation.y += 0.008f;
+      //        gameObjects.at(0).transform.rotation.z += 0.01f;
+      //      }
 
       // update global UBO
       GlobalUbo ubo{};
@@ -131,18 +131,29 @@ void FirstApp::run() {
 
 void FirstApp::loadGameObjects() {
   std::shared_ptr<LgeModel> lgeModel;
+  //  {
+  //    lgeModel = LgeModel::createModelFromFile(
+  //        lgeDevice, relativeModelPath + "HugeCity/hugeCity.obj");
+  //    auto gameObject                  = LgeGameObject::createGameObject();
+  //    gameObject.model                 = lgeModel;
+  //    gameObject.transform.translation = {0.f, 1.0f, 3.0f};
+  //    gameObject.transform.scale       = glm::vec3{0.0003f};
+  //    gameObject.transform.rotation.x  = glm::pi<float>();
+  //    gameObject.transform.rotation.y  = glm::pi<float>();
+  //    gameObjects.emplace(gameObject.getId(), std::move(gameObject));
+  //  }
   {
     lgeModel = LgeModel::createModelFromFile(
-        lgeDevice, relativeModelPath + "HugeCity/hugeCity.obj");
+        //        lgeDevice, relativeModelPath + "HugeCity/hugeCity.obj");
+        lgeDevice, relativeModelPath + "LowPolyIsometricRoom/Room #1.obj");
     auto gameObject                  = LgeGameObject::createGameObject();
     gameObject.model                 = lgeModel;
-    gameObject.transform.translation = {0.f, 1.0f, 3.0f};
-    gameObject.transform.scale       = glm::vec3{0.0003f};
+    gameObject.transform.translation = {0.f, 1.0f, 0.0f};
+    gameObject.transform.scale       = glm::vec3{0.3f};
     gameObject.transform.rotation.x  = glm::pi<float>();
-    gameObject.transform.rotation.y  = glm::pi<float>();
+    gameObject.transform.rotation.y  = glm::four_over_pi<float>();
     gameObjects.emplace(gameObject.getId(), std::move(gameObject));
   }
-
   //  {
   //    std::vector<std::string> modelPaths = {
   //        "bunny.obj", "cube.obj", "colored_cube.obj", "smooth_vase.obj",
@@ -178,7 +189,6 @@ void FirstApp::loadGameObjects() {
   //    gameObject.transform.scale       = glm::vec3{10.0f};
   //    gameObjects.emplace(gameObject.getId(), std::move(gameObject));
   //  }
-
   { // Point light
     std::vector<glm::vec3> lightColors{{1.f, .1f, .1f}, {.1f, .1f, 1.f}, {.1f, 1.f, .1f},
                                        {1.f, 1.f, .1f}, {.1f, 1.f, 1.f}, {1.f, 1.f, 1.f}};
