@@ -11,33 +11,32 @@
 #include <vector>
 
 namespace lge {
-    class PointLightSystem {
-    public:
-        PointLightSystem(
-                LgeDevice &device, VkRenderPass renderPass,
-                VkDescriptorSetLayout globalSetLayout);
+class PointLightSystem {
+public:
+  PointLightSystem(
+      LgeDevice& device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);
 
-        ~PointLightSystem();
+  ~PointLightSystem();
 
-        PointLightSystem(const PointLightSystem &) = delete;
+  PointLightSystem(const PointLightSystem&) = delete;
 
-        PointLightSystem &operator=(const PointLightSystem &) = delete;
+  PointLightSystem& operator=(const PointLightSystem&) = delete;
 
-        void update(FrameInfo &frameInfo, GlobalUbo &globalUbo);
+  void update(FrameInfo& frameInfo, GlobalUbo& globalUbo);
 
-        void render(FrameInfo &frameInfo);
+  void render(FrameInfo& frameInfo);
 
-    private:
-        void createPipelineLayout(VkDescriptorSetLayout globalSetLayout);
+private:
+  void createPipelineLayout(VkDescriptorSetLayout globalSetLayout);
 
-        void createPipeline(VkRenderPass renderPass);
+  void createPipeline(VkRenderPass renderPass);
 
-        LgeDevice &lgeDevice;
+  LgeDevice& lgeDevice;
 
-        std::string vertShaderSrc = "../../shaders/point_light.vert.spv";
-        std::string fragShaderSrc = "../../shaders/point_light.frag.spv";
+  std::string vertShaderSrc = "../../shaders/point_light.vert.spv";
+  std::string fragShaderSrc = "../../shaders/point_light.frag.spv";
 
-        std::unique_ptr<LgePipeline> lgePipeline;
-        VkPipelineLayout pipelineLayout;
-    };
+  std::unique_ptr<LgePipeline> lgePipeline;
+  VkPipelineLayout pipelineLayout;
+};
 } // namespace lge

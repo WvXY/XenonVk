@@ -5,7 +5,7 @@
 *.slo
 *.lo
 *.o
-*.obj
+#*.obj
 
 # Precompiled Headers
 *.gch
@@ -40,6 +40,7 @@
 */build/
 /cmake-build-debug/
 /cmake-build-release/
+/build/
 
 !/assets/models
 

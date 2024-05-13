@@ -23,36 +23,30 @@ namespace lge {
  *
  * @return VkResult of the buffer mapping call
  */
-    VkDeviceSize
-    LgeBuffer::getAlignment(VkDeviceSize instanceSize,
-                            VkDeviceSize minOffsetAlignment) {
-      if (minOffsetAlignment > 0) {
-        return (instanceSize + minOffsetAlignment - 1) &
-               ~(minOffsetAlignment - 1);
-      }
-      return instanceSize;
-    }
+VkDeviceSize
+LgeBuffer::getAlignment(VkDeviceSize instanceSize, VkDeviceSize minOffsetAlignment) {
+  if (minOffsetAlignment > 0) {
+    return (instanceSize + minOffsetAlignment - 1) & ~(minOffsetAlignment - 1);
+  }
+  return instanceSize;
+}
 
-    LgeBuffer::LgeBuffer(
-            LgeDevice &device, VkDeviceSize instanceSize,
-            uint32_t instanceCount,
-            VkBufferUsageFlags usageFlags,
-            VkMemoryPropertyFlags memoryPropertyFlags,
-            VkDeviceSize minOffsetAlignment)
-            : lgeDevice{device}, instanceSize{instanceSize},
-              instanceCount{instanceCount},
-              usageFlags{usageFlags}, memoryPropertyFlags{memoryPropertyFlags} {
-      alignmentSize = getAlignment(instanceSize, minOffsetAlignment);
-      bufferSize = alignmentSize * instanceCount;
-      device.createBuffer(bufferSize, usageFlags, memoryPropertyFlags, buffer,
-                          memory);
-    }
+LgeBuffer::LgeBuffer(
+    LgeDevice& device, VkDeviceSize instanceSize, uint32_t instanceCount,
+    VkBufferUsageFlags usageFlags, VkMemoryPropertyFlags memoryPropertyFlags,
+    VkDeviceSize minOffsetAlignment)
+    : lgeDevice{device}, instanceSize{instanceSize}, instanceCount{instanceCount},
+      usageFlags{usageFlags}, memoryPropertyFlags{memoryPropertyFlags} {
+  alignmentSize = getAlignment(instanceSize, minOffsetAlignment);
+  bufferSize    = alignmentSize * instanceCount;
+  device.createBuffer(bufferSize, usageFlags, memoryPropertyFlags, buffer, memory);
+}
 
-    LgeBuffer::~LgeBuffer() {
-      unmap();
-      vkDestroyBuffer(lgeDevice.device(), buffer, nullptr);
-      vkFreeMemory(lgeDevice.device(), memory, nullptr);
-    }
+LgeBuffer::~LgeBuffer() {
+  unmap();
+  vkDestroyBuffer(lgeDevice.device(), buffer, nullptr);
+  vkFreeMemory(lgeDevice.device(), memory, nullptr);
+}
 
 /**
  * Map a memory range of this buffer. If successful, mapped points to the specified buffer
@@ -64,22 +58,22 @@ namespace lge {
  *
  * @return VkResult of the buffer mapping call
  */
-    VkResult LgeBuffer::map(VkDeviceSize size, VkDeviceSize offset) {
-      assert(buffer && memory && "Called map on buffer before create");
-      return vkMapMemory(lgeDevice.device(), memory, offset, size, 0, &mapped);
-    }
+VkResult LgeBuffer::map(VkDeviceSize size, VkDeviceSize offset) {
+  assert(buffer && memory && "Called map on buffer before create");
+  return vkMapMemory(lgeDevice.device(), memory, offset, size, 0, &mapped);
+}
 
 /**
  * Unmap a mapped memory range
  *
  * @note Does not return a result as vkUnmapMemory can't fail
  */
-    void LgeBuffer::unmap() {
-      if (mapped) {
-        vkUnmapMemory(lgeDevice.device(), memory);
-        mapped = nullptr;
-      }
-    }
+void LgeBuffer::unmap() {
+  if (mapped) {
+    vkUnmapMemory(lgeDevice.device(), memory);
+    mapped = nullptr;
+  }
+}
 
 /**
  * Copies the specified data to the mapped buffer. Default value writes whole buffer range
@@ -90,18 +84,17 @@ namespace lge {
  * @param offset (Optional) Byte offset from beginning of mapped region
  *
  */
-    void LgeBuffer::writeToBuffer(void *data, VkDeviceSize size,
-                                  VkDeviceSize offset) {
-      assert(mapped && "Cannot copy to unmapped buffer");
+void LgeBuffer::writeToBuffer(void* data, VkDeviceSize size, VkDeviceSize offset) {
+  assert(mapped && "Cannot copy to unmapped buffer");
 
-      if (size == VK_WHOLE_SIZE) {
-        memcpy(mapped, data, bufferSize);
-      } else {
-        char *memOffset = (char *) mapped;
-        memOffset += offset;
-        memcpy(memOffset, data, size);
-      }
-    }
+  if (size == VK_WHOLE_SIZE) {
+    memcpy(mapped, data, bufferSize);
+  } else {
+    char* memOffset = (char*)mapped;
+    memOffset += offset;
+    memcpy(memOffset, data, size);
+  }
+}
 
 /**
  * Flush a memory range of the buffer to make it visible to the device
@@ -114,14 +107,14 @@ namespace lge {
  *
  * @return VkResult of the flush call
  */
-    VkResult LgeBuffer::flush(VkDeviceSize size, VkDeviceSize offset) {
-      VkMappedMemoryRange mappedRange = {};
-      mappedRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
-      mappedRange.memory = memory;
-      mappedRange.offset = offset;
-      mappedRange.size = size;
-      return vkFlushMappedMemoryRanges(lgeDevice.device(), 1, &mappedRange);
-    }
+VkResult LgeBuffer::flush(VkDeviceSize size, VkDeviceSize offset) {
+  VkMappedMemoryRange mappedRange = {};
+  mappedRange.sType               = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
+  mappedRange.memory              = memory;
+  mappedRange.offset              = offset;
+  mappedRange.size                = size;
+  return vkFlushMappedMemoryRanges(lgeDevice.device(), 1, &mappedRange);
+}
 
 /**
  * Invalidate a memory range of the buffer to make it visible to the host
@@ -134,15 +127,14 @@ namespace lge {
  *
  * @return VkResult of the invalidate call
  */
-    VkResult LgeBuffer::invalidate(VkDeviceSize size, VkDeviceSize offset) {
-      VkMappedMemoryRange mappedRange = {};
-      mappedRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
-      mappedRange.memory = memory;
-      mappedRange.offset = offset;
-      mappedRange.size = size;
-      return vkInvalidateMappedMemoryRanges(lgeDevice.device(), 1,
-                                            &mappedRange);
-    }
+VkResult LgeBuffer::invalidate(VkDeviceSize size, VkDeviceSize offset) {
+  VkMappedMemoryRange mappedRange = {};
+  mappedRange.sType               = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
+  mappedRange.memory              = memory;
+  mappedRange.offset              = offset;
+  mappedRange.size                = size;
+  return vkInvalidateMappedMemoryRanges(lgeDevice.device(), 1, &mappedRange);
+}
 
 /**
  * Create a buffer info descriptor
@@ -152,14 +144,13 @@ namespace lge {
  *
  * @return VkDescriptorBufferInfo of specified offset and range
  */
-    VkDescriptorBufferInfo
-    LgeBuffer::descriptorInfo(VkDeviceSize size, VkDeviceSize offset) {
-      return VkDescriptorBufferInfo{
-              buffer,
-              offset,
-              size,
-      };
-    }
+VkDescriptorBufferInfo LgeBuffer::descriptorInfo(VkDeviceSize size, VkDeviceSize offset) {
+  return VkDescriptorBufferInfo{
+      buffer,
+      offset,
+      size,
+  };
+}
 
 /**
  * Copies "instanceSize" bytes of data to the mapped buffer at an offset of index *
@@ -169,9 +160,9 @@ namespace lge {
  * @param index Used in offset calculation
  *
  */
-    void LgeBuffer::writeToIndex(void *data, int index) {
-      writeToBuffer(data, instanceSize, index * alignmentSize);
-    }
+void LgeBuffer::writeToIndex(void* data, int index) {
+  writeToBuffer(data, instanceSize, index * alignmentSize);
+}
 
 /**
  *  Flush the memory range at index * alignmentSize of the buffer to make it visible to
@@ -180,9 +171,9 @@ namespace lge {
  * @param index Used in offset calculation
  *
  */
-    VkResult LgeBuffer::flushIndex(int index) {
-      return flush(alignmentSize, index * alignmentSize);
-    }
+VkResult LgeBuffer::flushIndex(int index) {
+  return flush(alignmentSize, index * alignmentSize);
+}
 
 /**
  * Create a buffer info descriptor
@@ -191,9 +182,9 @@ namespace lge {
  *
  * @return VkDescriptorBufferInfo for instance at index
  */
-    VkDescriptorBufferInfo LgeBuffer::descriptorInfoForIndex(int index) {
-      return descriptorInfo(alignmentSize, index * alignmentSize);
-    }
+VkDescriptorBufferInfo LgeBuffer::descriptorInfoForIndex(int index) {
+  return descriptorInfo(alignmentSize, index * alignmentSize);
+}
 
 /**
  * Invalidate a memory range of the buffer to make it visible to the host
@@ -204,8 +195,8 @@ namespace lge {
  *
  * @return VkResult of the invalidate call
  */
-    VkResult LgeBuffer::invalidateIndex(int index) {
-      return invalidate(alignmentSize, index * alignmentSize);
-    }
+VkResult LgeBuffer::invalidateIndex(int index) {
+  return invalidate(alignmentSize, index * alignmentSize);
+}
 
 } // namespace lge
