@@ -14,52 +14,58 @@ struct PointLight {
 };
 
 layout(set = 0, binding = 0) uniform GlobalUbo {
-  mat4 projection;
-  mat4 view;
-  mat4 inverseView;
-  vec4 ambientLightColor;// w is intensity
-  PointLight pointLights[16];
-  int pointLightCount;
+    mat4 projection;
+    mat4 view;
+    mat4 inverseView;
+    vec4 ambientLightColor;// w is intensity
+    PointLight pointLights[16];
+    int pointLightCount;
 } ubo;
 
 layout(push_constant) uniform Push {
-  mat4 modelMatrix;
-  mat4 normalMatrix;
+    mat4 modelMatrix;
+    mat4 normalMatrix;
 } push;
 
 void main() {
-  vec3 diffuseLight = ubo.ambientLightColor.xyz * ubo.ambientLightColor.w;
-  vec3 specularLight = vec3(0.0);
-  vec3 surfaceNormal = normalize(fragNormalWorld);
+    vec3 diffuseLight = ubo.ambientLightColor.xyz * ubo.ambientLightColor.w;
+    vec3 specularLight = vec3(0.0);
+    vec3 surfaceNormal = normalize(fragNormalWorld);
 
-  vec3 cameraPosWorld = vec3(ubo.inverseView[3]);
-  vec3 viewDirection = normalize(cameraPosWorld - fragPosWorld);
+    vec3 cameraPosWorld = vec3(ubo.inverseView[3]);
+    vec3 viewDirection = normalize(cameraPosWorld - fragPosWorld);
 
-  for (int i = 0; i < ubo.pointLightCount; i++) {
-    PointLight light = ubo.pointLights[i];
-    vec3 lightDirection = light.position.xyz - fragPosWorld;
-    float attenuation = 1.0 / dot(lightDirection, lightDirection);
-    lightDirection = normalize(lightDirection);
+    for (int i = 0; i < ubo.pointLightCount; i++) {
+        PointLight light = ubo.pointLights[i];
+        vec3 lightDirection = light.position.xyz - fragPosWorld;
+        float attenuation = 1.0 / dot(lightDirection, lightDirection);
+        lightDirection = normalize(lightDirection);
 
-    float cosAngle = max(dot(surfaceNormal, lightDirection), 0);
-    vec3 intensity = light.color.xyz * light.color.w * attenuation;
-    diffuseLight += cosAngle * intensity;
+        float cosAngle = max(dot(surfaceNormal, lightDirection), 0);
+        vec3 intensity = light.color.xyz * light.color.w * attenuation;
+        diffuseLight += cosAngle * intensity;
 
-    vec3 halfAngle = normalize(lightDirection + viewDirection);
-    float blinnTerm = dot(surfaceNormal, halfAngle);
-    blinnTerm = clamp(blinnTerm, 0, 1);
-    blinnTerm = pow(blinnTerm, 512);
-    specularLight += intensity * blinnTerm;
-  }
+        vec3 halfAngle = normalize(lightDirection + viewDirection);
+        float blinnTerm = dot(surfaceNormal, halfAngle);
+        blinnTerm = clamp(blinnTerm, 0, 1);
+        blinnTerm = pow(blinnTerm, 512);
+        specularLight += intensity * blinnTerm;
+    }
 
-  // draw wireframe
-  const vec3 barycentric = vec3(gl_BaryCoordEXT);
-  const float closestEdge = min(barycentric.x, min(barycentric.y, barycentric.z));
+    // draw wireframe (https://wunkolo.github.io/post/2022/07/gl_ext_fragment_shader_barycentric-wireframe/)
+    const vec3 baryCoord = vec3(gl_BaryCoordEXT);
+    const vec3 dBaryCoordX = dFdx(baryCoord);
+    const vec3 dBaryCoordY = dFdy(baryCoord);
+    const vec3 dBaryCoord  = sqrt(dBaryCoordX * dBaryCoordX + dBaryCoordY * dBaryCoordY);
 
-  float edgeThreshold = 0.01;
-  if (closestEdge < edgeThreshold) {
-    outColor = vec4(0, 0, 0, 1);
-  } else {
-    outColor = vec4(diffuseLight * fragColor + specularLight * fragColor, 1.0);
-  }
+    float edgeThreshold = 0.01;
+    const float thickness = 10;// In pixels
+    const vec3 remap = smoothstep(vec3(0.0), dBaryCoord * thickness, baryCoord);
+    const float wireframe = min(remap.x, min(remap.y, remap.z));
+
+    if (wireframe < edgeThreshold) {
+        outColor = vec4(0, 0, 0, 1);
+    } else {
+        outColor = vec4(diffuseLight * fragColor + specularLight * fragColor, 1.0);
+    }
 }
