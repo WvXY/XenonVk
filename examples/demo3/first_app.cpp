@@ -100,10 +100,10 @@ void FirstApp::run() {
           gameObjects};
 
       // step printing effect(only continuous movement), later make a component for ecs
-      if (frameCount % 40 == 0) {
-        gameObjects.at(1).transform.rotation.y += 0.2f;
-        gameObjects.at(1).transform.rotation.z += 0.1f;
-      }
+//      if (frameCount % 40 == 0) {
+//        gameObjects.at(0).transform.rotation.y += 0.008f;
+//        gameObjects.at(0).transform.rotation.z += 0.01f;
+//      }
 
       // update global UBO
       GlobalUbo ubo{};
@@ -136,7 +136,7 @@ void FirstApp::loadGameObjects() {
         lgeDevice, relativeModelPath + "HugeCity/hugeCity.obj");
     auto gameObject                  = LgeGameObject::createGameObject();
     gameObject.model                 = lgeModel;
-    gameObject.transform.translation = {0, 0.0f, 0.0f};
+    gameObject.transform.translation = {0.f, 1.0f, 3.0f};
     gameObject.transform.scale       = glm::vec3{0.0003f};
     gameObject.transform.rotation.x  = glm::pi<float>();
     gameObject.transform.rotation.y  = glm::pi<float>();
