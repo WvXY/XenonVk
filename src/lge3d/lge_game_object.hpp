@@ -1,13 +1,13 @@
 #pragma once
 
-#include <glm/gtc/matrix_transform.hpp>
-#include <unordered_map>
-
 #include "lge_model.hpp"
+
 // #include <glm/gtc/quaternion.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 // std
 #include <memory>
+#include <unordered_map>
 
 namespace lge {
 struct TransformComponent {
