@@ -9,6 +9,9 @@
 #define TINYOBJLOADER_IMPLEMENTATION
 #include <tiny_obj_loader.h>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
+
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/hash.hpp>
 
@@ -35,7 +38,7 @@ std::unique_ptr<LgeModel>
 LgeModel::createModelFromFile(LgeDevice& device, const std::string& filepath) {
   Builder builder{};
   builder.loadModel(filepath);
-  std::cout << "Model has " << builder.vertices.size() << " vertices\n";
+  std::cout << "Model size= " << builder.vertices.size() << " vertices\n";
   return std::make_unique<LgeModel>(device, builder);
 }
 

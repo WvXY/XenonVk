@@ -1,4 +1,4 @@
-# Little Game Engine
+# Little Game Engine(Temp, WIP)
 
 **Under development...**
 
@@ -6,53 +6,46 @@
 
 A Vulkan game engine for personal study and interests.
 
-This project is first created by following the tutorial
-of [Little Vulkan Engine](https://youtu.be/Y9U9IE0gVHA?si=42keJCaEPE-R697P).
+This project was initially created by following the tutorial
+of [Little Vulkan Engine](https://youtu.be/Y9U9IE0gVHA?si=42keJCaEPE-R697P) for learning Vulkan and Game Engine.
+More features will be added soon.
 
 ## Installation
 
 ### Prerequisites
 
 - CMake
-- vcpkg(Recommend) or MinGW(MSYS2)
-- gcc or clang or msvc
-- Vulkan SDK : https://vulkan.lunarg.com/sdk/home
+- C++ compiler: g++ or clang++ or msvc
+- Vulkan SDK: https://vulkan.lunarg.com/sdk/home
 - GLFW3
 - GLM
 
-### Clion (for both Windows && Linux)
+### Install Dependencies(Linux)
 
-1. Open the project with Clion.
-2. Setup vcpkg:
-   https://www.jetbrains.com/help/clion/package-management.html
-3. Install the dependencies by vcpkg.
-4. Build and Run the project.
+```bash    
+sudo apt update
+sudo apt install -y libvulkan-dev vulkan-tools glslang-tools libglfw3-dev libeigen3-dev libglm-dev
+```
 
-### Visual Studio Code
+### Install Dependencies(Windows)
 
-1. Install the dependencies by vcpkg.
-2. Open the project with VSCode.
-3. Install the CMake Tools, C/C++ extensions.
-4. Build and Run the project.
+You can use [vcpkg](https://vcpkg.io/en/) or [MSYS2](https://www.msys2.org/) to install the dependencies.
 
-### Vcpkg Install Packages
+If you use vcpkg on Clion, follow the [official guide](https://www.jetbrains.com/help/clion/package-management.html) to integrate vcpkg with Clion.
 
-If not installed yet, install vcpkg by following the instructions here:
 
-https://learn.microsoft.com/en-us/vcpkg/get_started/get-started?pivots=shell-cmd
+## External Libraries
 
-Then install the dependencies using
-`vcpkg install [PACKAGE_NAME]`
+The following libraries are used and pre-installed in this project.
 
-### MinGW(MSYS2) Install Packages
-
-Work in progress...
+| File              | Version | Project Link                                   |
+|-------------------|---------|------------------------------------------------|
+| stb_image.h       | v2.29   | https://github.com/nothings/stb                |
+| tiny_obj_loader.h | v2.0.0  | https://github.com/tinyobjloader/tinyobjloader |
 
 ## TODO
 
-- [ ] This name is too common. Change it to something unique.
-- [ ] Separate 2D into a new project that only for 2D. This one is for 3D.
-- [ ] Refactor to make it more modular.
+- [ ] Rename the project
 - [ ] Feature: Texture
 - [ ] Feature: Shadow
 - [ ] Feature: PBR
@@ -63,13 +56,11 @@ Work in progress...
 
 ## Current Problems
 
-1. When VSync off, the load of GPU is too high, especially on high resolution. I can hear whistle noise from the GPU.
-2. However, when VSync on, there is noticeable input and display lag.
-3. `validation layer: Validation Performance Warning: [ UNASSIGNED-CoreValidation-Shader-OutputNotConsumed ]` from
-   Vulkan SDK.
+1. [Performance] When VSync off, the load of GPU is too high, especially on high resolution. There are whistle noise from the GPU. However, when VSync on, there is noticeable input and display lag.
+2. [VLayer]`validation layer: Validation Performance Warning: [ UNASSIGNED-CoreValidation-Shader-OutputNotConsumed ]`
+3. [Object Model] On large models, some faces are missing. 
 
 ## Reference
 
-- https://vcpkg.io/en/
 - https://youtu.be/Y9U9IE0gVHA?si=42keJCaEPE-R697P
 - https://austinmorlan.com/posts/entity_component_system/
