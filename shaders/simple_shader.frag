@@ -1,6 +1,6 @@
 #version 460
 
-#extension GL_EXT_fragment_shader_barycentric : require
+#extension GL_EXT_fragment_shader_barycentric : enable
 
 layout(location = 0) in vec3 fragColor;
 layout(location = 1) in vec3 fragPosWorld;
