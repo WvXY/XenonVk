@@ -1,10 +1,10 @@
 # This starter workflow is for a CMake project running on a single platform. There is a different starter workflow if you need cross-platform coverage.
 # See: https://github.com/actions/starter-workflows/blob/main/ci/cmake-multi-platform.yml
-name: (XEK) CMake Build on Ubuntu
+name: (XEV) CMake Build on Ubuntu
 
 on:
   push:
-    branches: [ "master", "texture" ]
+    branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
 
@@ -39,14 +39,6 @@ jobs:
     - name: Build
       # Build your program with the given configuration
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
-
-#    - name: Execute2D
-#      working-directory: ${{github.workspace}}/build/examples/demo2
-#      run: ./LittleGameEngine2D
-#
-#    - name: Execute3D
-#      working-directory: ${{github.workspace}}/build/examples/demo3
-#      run: ./LittleGameEngine3D
 
     - name: Test
       working-directory: ${{github.workspace}}/build
