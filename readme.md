@@ -1,10 +1,10 @@
-# Little Game Engine(Temp, WIP)
+# XenonVk
 
 **Under development...**
 
 ## Description
 
-A Vulkan game engine for personal study and interests.
+A 3D Vulkan game engine for personal study and interests.
 
 This project was initially created by following the tutorial
 of [Little Vulkan Engine](https://youtu.be/Y9U9IE0gVHA?si=42keJCaEPE-R697P) for learning Vulkan and Game Engine.
