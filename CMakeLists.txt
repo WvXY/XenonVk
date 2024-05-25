@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.26)
-project(LittleGameEngine)
+project(XenonVk)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -32,5 +32,4 @@ set(SPIRV_OUT_DIR ${PROJECT_BINARY_DIR}/shaders)
 # script to compile shaders
 include(cmake/compile_shaders.cmake)
 
-add_subdirectory(examples/demo2)
-add_subdirectory(examples/demo3)
+add_subdirectory(src)
