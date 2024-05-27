@@ -57,8 +57,7 @@ The following libraries are used and pre-installed in this project.
 ## Current Problems
 
 1. [Performance] When VSync off, the load of GPU is too high, especially on high resolution. There are whistle noise from the GPU. However, when VSync on, there is noticeable input and display lag.
-2. [VLayer]`validation layer: Validation Performance Warning: [ UNASSIGNED-CoreValidation-Shader-OutputNotConsumed ]`
-3. [Object Model] On large models, some faces are missing. 
+2. [Object Model] On large models, some faces are missing. 
 
 ## Reference
 
