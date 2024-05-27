@@ -37,21 +37,14 @@ public:
 
   // Not copyable or movable
   XevDevice(const XevDevice&) = delete;
-
   XevDevice& operator=(const XevDevice&) = delete;
-
   XevDevice(XevDevice&&) = delete;
-
   XevDevice& operator=(XevDevice&&) = delete;
 
   VkCommandPool getCommandPool() { return commandPool; }
-
   VkDevice device() { return device_; }
-
   VkSurfaceKHR surface() { return surface_; }
-
   VkQueue graphicsQueue() { return graphicsQueue_; }
-
   VkQueue presentQueue() { return presentQueue_; }
 
   SwapChainSupportDetails getSwapChainSupport() {
@@ -74,11 +67,9 @@ public:
       VkBuffer& buffer, VkDeviceMemory& bufferMemory);
 
   VkCommandBuffer beginSingleTimeCommands();
-
   void endSingleTimeCommands(VkCommandBuffer commandBuffer);
 
   void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
-
   void copyBufferToImage(
       VkBuffer buffer, VkImage image, uint32_t width, uint32_t height,
       uint32_t layerCount);
@@ -91,31 +82,23 @@ public:
 
 private:
   void createInstance();
-
   void setupDebugMessenger();
-
   void createSurface();
-
   void pickPhysicalDevice();
-
   void createLogicalDevice();
-
   void createCommandPool();
 
   // helper functions
   bool isDeviceSuitable(VkPhysicalDevice device);
 
   std::vector<const char*> getRequiredExtensions();
-
   bool checkValidationLayerSupport();
 
   QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
-
   void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
-
   void hasGflwRequiredInstanceExtensions();
-
   bool checkDeviceExtensionSupport(VkPhysicalDevice device);
+  bool checkFragmentShaderBarycentricExtensionSupport(VkPhysicalDevice device);
 
   SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device);
 

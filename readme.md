@@ -58,6 +58,7 @@ The following libraries are used and pre-installed in this project.
 
 1. [Performance] When VSync off, the load of GPU is too high, especially on high resolution. There are whistle noise from the GPU. However, when VSync on, there is noticeable input and display lag.
 2. [Object Model] On large models, some faces are missing. 
+3. `vkCreateShaderModule():  SPIR-V Capability FragmentBarycentricKHR was declared, but one of the following requirements is required (VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV::fragmentShaderBarycentric).`
 
 ## Reference
 
