@@ -35,17 +35,12 @@ public:
   XevPipeline(
       XevDevice& device, const std::string& vertex_shader_path,
       const std::string& fragment_shader_path, const PipelineConfigInfo& configInfo);
-
   ~XevPipeline();
-
-  XevPipeline(const XevPipeline&) = delete;
-
+  XevPipeline(const XevPipeline&)            = delete;
   XevPipeline& operator=(const XevPipeline&) = delete;
 
   void bind(VkCommandBuffer commandBuffer);
-
   static void defaultPipelineConfigInfo(PipelineConfigInfo& configInfo);
-
   static void enableAlphaBlending(PipelineConfigInfo& configInfo);
 
 private:

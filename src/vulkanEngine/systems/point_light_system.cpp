@@ -54,11 +54,16 @@ void PointLightSystem::createPipelineLayout(VkDescriptorSetLayout globalSetLayou
   }
 }
 
+void PointLightSystem::getAttributeDescriptions(PipelineConfigInfo& configInfo) {
+  configInfo.attributeDescriptions = std::vector<VkVertexInputAttributeDescription>{};
+} // don't need any attributes
+
 void PointLightSystem::createPipeline(VkRenderPass renderPass) {
   assert(pipelineLayout != nullptr && "Cannot create pipeline before pipeline layout");
 
   PipelineConfigInfo pipelineConfig{};
   XevPipeline::defaultPipelineConfigInfo(pipelineConfig);
+  getAttributeDescriptions(pipelineConfig);
   XevPipeline::enableAlphaBlending(pipelineConfig);
   pipelineConfig.renderPass     = renderPass;
   pipelineConfig.pipelineLayout = pipelineLayout;

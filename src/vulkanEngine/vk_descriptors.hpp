@@ -70,18 +70,13 @@ public:
   XevDescriptorPool(
       XevDevice& xevDevice, uint32_t maxSets, VkDescriptorPoolCreateFlags poolFlags,
       const std::vector<VkDescriptorPoolSize>& poolSizes);
-
   ~XevDescriptorPool();
-
   XevDescriptorPool(const XevDescriptorPool&) = delete;
-
   XevDescriptorPool& operator=(const XevDescriptorPool&) = delete;
 
   bool allocateDescriptor(
       const VkDescriptorSetLayout descriptorSetLayout, VkDescriptorSet& descriptor) const;
-
   void freeDescriptors(std::vector<VkDescriptorSet>& descriptors) const;
-
   void resetPool();
 
 private:
@@ -94,13 +89,10 @@ private:
 class XevDescriptorWriter {
 public:
   XevDescriptorWriter(XevDescriptorSetLayout& setLayout, XevDescriptorPool& pool);
-
   XevDescriptorWriter& writeBuffer(uint32_t binding, VkDescriptorBufferInfo* bufferInfo);
-
   XevDescriptorWriter& writeImage(uint32_t binding, VkDescriptorImageInfo* imageInfo);
 
   bool build(VkDescriptorSet& set);
-
   void overwrite(VkDescriptorSet& set);
 
 private:

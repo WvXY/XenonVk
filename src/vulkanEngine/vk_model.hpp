@@ -22,7 +22,6 @@ public:
     glm::vec2 uv{};
 
     static std::vector<VkVertexInputBindingDescription> getBindingDescriptions();
-
     static std::vector<VkVertexInputAttributeDescription> getAttributeDescriptions();
 
     bool operator==(const Vertex& other) const {
@@ -38,24 +37,19 @@ public:
     void loadModel(const std::string& filepath);
   };
 
-  XevModel(XevDevice& device, const XevModel::Builder& builder);
-
+  XevModel(XevDevice& device, const Builder& builder);
   ~XevModel();
-
-  XevModel(const XevModel&) = delete;
-
+  XevModel(const XevModel&)            = delete;
   XevModel& operator=(const XevModel&) = delete;
 
   static std::unique_ptr<XevModel>
   createModelFromFile(XevDevice& device, const std::string& filepath);
 
   void bind(VkCommandBuffer commandBuffer);
-
   void draw(VkCommandBuffer commandBuffer);
 
 private:
   void createVertexBuffers(const std::vector<Vertex>& vertices);
-
   void createIndexBuffers(const std::vector<uint32_t>& indices);
 
   XevDevice& xevDevice;

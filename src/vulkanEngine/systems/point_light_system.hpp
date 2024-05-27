@@ -15,21 +15,18 @@ class PointLightSystem {
 public:
   PointLightSystem(
       XevDevice& device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);
-
   ~PointLightSystem();
-
   PointLightSystem(const PointLightSystem&) = delete;
-
   PointLightSystem& operator=(const PointLightSystem&) = delete;
 
   void update(FrameInfo& frameInfo, GlobalUbo& globalUbo);
-
   void render(FrameInfo& frameInfo);
 
 private:
   void createPipelineLayout(VkDescriptorSetLayout globalSetLayout);
-
   void createPipeline(VkRenderPass renderPass);
+
+  void getAttributeDescriptions(PipelineConfigInfo& configInfo);
 
   XevDevice& xevDevice;
 

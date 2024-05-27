@@ -15,11 +15,8 @@ class SimpleRenderSystem {
 public:
   SimpleRenderSystem(
       XevDevice& device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);
-
   ~SimpleRenderSystem();
-
   SimpleRenderSystem(const SimpleRenderSystem&) = delete;
-
   SimpleRenderSystem& operator=(const SimpleRenderSystem&) = delete;
 
   void renderGameObjects(FrameInfo& frameInfo);
