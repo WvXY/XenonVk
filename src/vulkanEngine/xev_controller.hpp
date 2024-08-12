@@ -4,7 +4,7 @@
 #include "vk_window.hpp"
 
 namespace xev {
-class KbdController {
+class XevController { // handle mouse and keyboard input
 public:
   struct KeyMappings {
     int left      = GLFW_KEY_A;
@@ -22,10 +22,29 @@ public:
   };
 
   void moveInPlaneXZ(GLFWwindow* window, float dt, XevGameObject& gameObject);
+  void mouseLook(
+      GLFWwindow* window, float dt, float xoffset, float yoffset,
+      XevGameObject& gameObject, bool constrainPitch = true);
+
+  void setFov(float fov) { fov = fov; }
 
   KeyMappings keys{};
+
+  // not sure if I put this here
+  // glm::vec2 getMouseDelta(glm::vec2 currentMousePos) {
+  //   mouseDelta   = currentMousePos - lastMousePos;
+  //   lastMousePos = currentMousePos;
+  //   return mouseDelta;
+  // }
+
+private:
+  float mouseSensitivity{2.4f};
   float moveSpeed{2.0f};
   float lookSpeed{0.5f};
+
+  // glm::vec2 mousePos{0.f};
+  // glm::vec2 mouseDelta{0.f};
+  // glm::vec2 lastMousePos{0.f};
 };
 
 } // namespace xev

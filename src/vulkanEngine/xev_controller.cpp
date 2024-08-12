@@ -1,8 +1,8 @@
-#include "kbd_controller.hpp"
+#include "xev_controller.hpp"
 
 namespace xev {
 
-void KbdController::moveInPlaneXZ(
+void XevController::moveInPlaneXZ(
     GLFWwindow* window, float dt, XevGameObject& gameObject) {
   glm::vec3 rotate{0};
   if (glfwGetKey(window, keys.lookUp) == GLFW_PRESS) { rotate.x += 1.f; }
@@ -35,6 +35,23 @@ void KbdController::moveInPlaneXZ(
   if (glm::dot(moveDir, moveDir) > std::numeric_limits<float>::epsilon()) {
     gameObject.transform.translation += moveSpeed * dt * glm::normalize(moveDir);
   }
+}
+void XevController::mouseLook(
+    GLFWwindow* window, float dt, float xoffset, float yoffset, XevGameObject& gameObject,
+    bool constrainPitch) {
+  if (glfwGetInputMode(window, GLFW_CURSOR) != GLFW_CURSOR_DISABLED) { return; }
+
+  glm::vec3 rotate{-yoffset, xoffset, 0.f};
+  if (glm::dot(rotate, rotate) > std::numeric_limits<float>::epsilon()) {
+    gameObject.transform.rotation += mouseSensitivity * dt * glm::normalize(rotate);
+  }
+
+  if (constrainPitch)
+    gameObject.transform.rotation.x =
+        glm::clamp(gameObject.transform.rotation.x, -1.5f, 1.5f);
+
+  gameObject.transform.rotation.y =
+      glm::mod(gameObject.transform.rotation.y, glm::two_pi<float>());
 }
 
 } // namespace xev
