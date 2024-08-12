@@ -15,6 +15,9 @@ struct TransformComponent {
   glm::vec3 scale{1.0f, 1.0f, 1.0f};
   glm::vec3 rotation{};
 
+  float& yaw() { return rotation.y; }
+  float& pitch() { return rotation.x; }
+
   // Matrix corrsponds to Translate * Ry * Rx * Rz * Scale
   // Rotations correspond to Tait-bryan angles of Y(1), X(2), Z(3)
   // https://en.wikipedia.org/wiki/Euler_angles#Rotation_matrix
@@ -41,11 +44,8 @@ public:
       float intensity = 10.0f, float radius = 0.1f, glm::vec3 color = glm::vec3{1.0f});
 
   XevGameObject(const XevGameObject&) = delete;
-
   XevGameObject& operator=(const XevGameObject&) = delete;
-
   XevGameObject(XevGameObject&&) = default;
-
   XevGameObject& operator=(XevGameObject&&) = default;
 
   id_t getId() { return id; }

@@ -17,31 +17,21 @@ public:
   static constexpr int MAX_FRAMES_IN_FLIGHT = 2;
 
   XevSwapChain(XevDevice& deviceRef, VkExtent2D windowExtent);
-
   XevSwapChain(
       XevDevice& deviceRef, VkExtent2D windowExtent,
       std::shared_ptr<XevSwapChain> previous);
-
   ~XevSwapChain();
-
-  XevSwapChain(const XevSwapChain&) = delete;
-
+  XevSwapChain(const XevSwapChain&)            = delete;
   XevSwapChain& operator=(const XevSwapChain&) = delete;
 
   VkFramebuffer getFrameBuffer(int index) { return swapChainFramebuffers[index]; }
-
   VkRenderPass getRenderPass() { return renderPass; }
-
   VkImageView getImageView(int index) { return swapChainImageViews[index]; }
-
-  size_t imageCount() { return swapChainImages.size(); }
-
   VkFormat getSwapChainImageFormat() { return swapChainImageFormat; }
-
   VkExtent2D getSwapChainExtent() { return swapChainExtent; }
 
+  size_t imageCount() { return swapChainImages.size(); }
   uint32_t width() { return swapChainExtent.width; }
-
   uint32_t height() { return swapChainExtent.height; }
 
   float extentAspectRatio() {
@@ -50,37 +40,27 @@ public:
   }
 
   VkFormat findDepthFormat();
-
   VkResult acquireNextImage(uint32_t* imageIndex);
-
   VkResult submitCommandBuffers(const VkCommandBuffer* buffers, uint32_t* imageIndex);
-
   bool compareSwapFormats(const XevSwapChain& swapChain) const {
     return swapChain.swapChainDepthFormat == swapChainDepthFormat &&
            swapChain.swapChainImageFormat == swapChainImageFormat;
   }
 
   enum presentModeEnum { MAILBOX, FIFO_RELAXED, FIFO, IMMEDIATE };
-
   void setPresentMode(presentModeEnum mode) { presentMode = mode; }
 
 private:
   void init();
-
   void createSwapChain();
-
   void createImageViews();
-
   void createDepthResources();
-
   void createRenderPass();
-
   void createFramebuffers();
-
   void createSyncObjects();
 
   // 0: Mailbox, 1: FIFO_Relaxed, 2: FIFO(default), 3: Immediate
-  int presentMode{FIFO};
+  int presentMode{MAILBOX};
 
   // Helper functions
   VkSurfaceFormatKHR
