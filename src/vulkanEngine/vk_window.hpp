@@ -4,43 +4,58 @@
 
 #include <GLFW/glfw3.h>
 
+#include <glm/vec2.hpp>
 #include <string>
 
 namespace xev {
 class XevWindow {
 public:
   XevWindow(std::string windowName, int width, int height);
-
   ~XevWindow();
-
-  XevWindow(const XevWindow&) = delete;
-
+  XevWindow(const XevWindow&)            = delete;
   XevWindow& operator=(const XevWindow&) = delete;
 
   bool shouldClose() { return glfwWindowShouldClose(window); }
 
+  GLFWwindow* getGLFWwindow() { return window; }
   VkExtent2D getExtent() {
     return {static_cast<uint32_t>(width), static_cast<uint32_t>(height)};
   }
 
   bool wasWindowResized() { return framebufferResized; }
-
+  bool wasMouseMoved() { return mouseMoved; }
+  bool wasMouseScrolled() { return mouseScrolled; }
   void resetWindowResizedFlag() { framebufferResized = false; }
-
-  GLFWwindow* getGLFWwindow() { return window; }
-
+  void resetMouseMovedFlag() {
+    mouseMoved = false;
+    mouseDelta = {0.f, 0.f};
+  }
+  void resetMouseScrolledFlag() {
+    mouseScrolled = false;
+    scrollDelta   = 0.f;
+  }
   void createWindowSurface(VkInstance instance, VkSurfaceKHR* surface);
+
+  glm::vec2 getMousePos() { return mousePos; }
+  glm::vec2 getMouseDelta() { return mouseDelta; }
+  float getScrollDelta() { return scrollDelta; }
 
 private:
   static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
-
-  void initWindow();
+  static void mouseCallback(GLFWwindow* window, double xpos, double ypos);
+  static void scrollCallback(GLFWwindow* window, double xoffset, double yoffset);
 
   int width;
   int height;
-  bool framebufferResized = false;
+  void initWindow();
+  GLFWwindow* window{};
   std::string windowName;
 
-  GLFWwindow* window{};
+  glm::vec2 mousePos{0.f};
+  glm::vec2 mouseDelta{0.f};
+  float scrollDelta{0.f};
+  bool mouseMoved         = false;
+  bool mouseScrolled      = false;
+  bool framebufferResized = false;
 };
 } // namespace xev

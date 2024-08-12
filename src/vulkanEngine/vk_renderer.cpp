@@ -100,6 +100,9 @@ void XevRenderer::endFrame() {
     throw std::runtime_error("failed to present swap chain image!");
   }
 
+  if (xevWindow.wasMouseMoved()) xevWindow.resetMouseMovedFlag();
+  if (xevWindow.wasMouseScrolled()) xevWindow.resetMouseScrolledFlag();
+
   isFrameStarted    = false;
   currentFrameIndex = (currentFrameIndex + 1) % XevSwapChain::MAX_FRAMES_IN_FLIGHT;
 }

@@ -1,5 +1,6 @@
 #include "vk_window.hpp"
 
+#include <iostream>
 #include <stdexcept>
 #include <utility>
 
@@ -22,6 +23,10 @@ void XevWindow::initWindow() {
   window = glfwCreateWindow(width, height, windowName.c_str(), nullptr, nullptr);
   glfwSetWindowUserPointer(window, this);
   glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
+  // mouse input
+  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+  glfwSetCursorPosCallback(window, mouseCallback);
+  glfwSetScrollCallback(window, scrollCallback);
 }
 
 void XevWindow::createWindowSurface(VkInstance instance, VkSurfaceKHR* surface) {
@@ -35,5 +40,18 @@ void XevWindow::framebufferResizeCallback(GLFWwindow* window, int width, int hei
   xevWindow->framebufferResized = true;
   xevWindow->width              = width;
   xevWindow->height             = height;
+}
+
+void XevWindow::mouseCallback(GLFWwindow* window, double xpos, double ypos) {
+  auto xevWindow        = reinterpret_cast<XevWindow*>(glfwGetWindowUserPointer(window));
+  xevWindow->mouseMoved = true;
+  xevWindow->mouseDelta = {xpos - xevWindow->mousePos.x, ypos - xevWindow->mousePos.y};
+  xevWindow->mousePos   = {xpos, ypos};
+}
+
+void XevWindow::scrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
+  auto xevWindow = reinterpret_cast<XevWindow*>(glfwGetWindowUserPointer(window));
+  xevWindow->mouseScrolled = true;
+  xevWindow->scrollDelta   = yoffset;
 }
 } // namespace xev
