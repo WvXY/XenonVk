@@ -397,8 +397,8 @@ VkPresentModeKHR XevSwapChain::chooseSwapPresentMode(
     }
   case 1:
     for (const auto& availablePresentMode : availablePresentModes) {
-      if (availablePresentMode == VK_PRESENT_MODE_FIFO_RELAXED_KHR) {
-        std::cout << "Present mode: FIFO_RELAXED(Adaptive Vsync)" << std::endl;
+      if (availablePresentMode == VK_PRESENT_MODE_IMMEDIATE_KHR) {
+        std::cout << "Present mode: Immediate(Vsync Off)" << std::endl;
         return availablePresentMode;
       }
     }
@@ -406,9 +406,9 @@ VkPresentModeKHR XevSwapChain::chooseSwapPresentMode(
     std::cout << "Present mode: FIFO(Vsync)" << std::endl;
     return VK_PRESENT_MODE_FIFO_KHR;
   case 3:
-    for (const auto& availablePresentMode : availablePresentModes) {
-      if (availablePresentMode == VK_PRESENT_MODE_IMMEDIATE_KHR) {
-        std::cout << "Present mode: Immediate(Vsync Off)" << std::endl;
+     for (const auto& availablePresentMode : availablePresentModes) {
+      if (availablePresentMode == VK_PRESENT_MODE_FIFO_RELAXED_KHR) {
+        std::cout << "Present mode: FIFO_RELAXED(Adaptive Vsync)" << std::endl;
         return availablePresentMode;
       }
     }
