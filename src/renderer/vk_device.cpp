@@ -109,17 +109,18 @@ void XevDevice::pickPhysicalDevice() {
   std::cout << "Device count: " << deviceCount << std::endl;
   std::vector<VkPhysicalDevice> devices(deviceCount);
   vkEnumeratePhysicalDevices(instance, &deviceCount, devices.data());
-  const bool usingWayland = std::getenv("WAYLAND_DISPLAY");
+  const bool usingWayland = std::getenv("WAYLAND_DISPLAY") != nullptr;
 
   for (const auto& device : devices) {
-    // current nvidia gpu cannot create swap chain on wayland
     VkPhysicalDeviceProperties deviceProperties;
     vkGetPhysicalDeviceProperties(device, &deviceProperties);
-    if (usingWayland && deviceProperties.vendorID == 0x10DE) { continue; }
+
+    if (usingWayland && deviceProperties.vendorID == 0x10DE)
+      continue; // Skip NVIDIA GPUs on Wayland (for now)
 
     if (isDeviceSuitable(device)) {
       physicalDevice = device;
-      break;
+      if (!usingWayland && deviceProperties.vendorID == 0x10DE) break; // Use NVIDIA GPU
     }
   }
 
