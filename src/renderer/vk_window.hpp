@@ -45,6 +45,8 @@ public:
   }
   float getScrollDelta() { return scrollDelta; }
 
+  void addInfoToTitle(const std::string& info);
+
 private:
   static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
   static void mouseCallback(GLFWwindow* window, double xpos, double ypos);

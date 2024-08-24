@@ -55,4 +55,8 @@ void XevWindow::scrollCallback(GLFWwindow* window, double xoffset, double yoffse
   xevWindow->mouseScrolled = true;
   xevWindow->scrollDelta   = yoffset;
 }
+
+void XevWindow::addInfoToTitle(const std::string& info) {
+  glfwSetWindowTitle(window, (windowName + " | " + info).c_str());
+}
 } // namespace xev
