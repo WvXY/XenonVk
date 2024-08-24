@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../primitive/vk_game_object.hpp"
+#include "vk_game_object.hpp"
 #include "vk_camera.hpp"
 #include "vk_device.hpp"
 #include "vk_frame_info.hpp"
