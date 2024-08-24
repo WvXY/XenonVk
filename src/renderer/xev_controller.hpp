@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../primitive/vk_game_object.hpp"
+#include "vk_game_object.hpp"
 #include "vk_window.hpp"
 
 namespace xev {
@@ -29,6 +29,10 @@ public:
   void setFov(float fov) { fov = fov; }
 
   KeyMappings keys{};
+
+  // void processInputs(GLFWwindow* window, float dt, XevGameObject& gameObject) {
+  //   moveInPlaneXZ(window, dt, gameObject);
+  // }
 
   // not sure if I put this here
   // glm::vec2 getMouseDelta(glm::vec2 currentMousePos) {
