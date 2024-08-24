@@ -1,8 +1,10 @@
 #pragma once
 
 #include "../renderer/vk_model.hpp"
+#include "physics.hpp"
 
 // #include <glm/gtc/quaternion.hpp>
+
 #include <glm/gtc/matrix_transform.hpp>
 
 // std
@@ -48,14 +50,17 @@ public:
   XevGameObject(XevGameObject&&) = default;
   XevGameObject& operator=(XevGameObject&&) = default;
 
-  id_t getId() { return id; }
+  id_t getId() const { return id; }
+
+  glm::vec3 color{};
 
   std::shared_ptr<XevModel> model{};
   std::unique_ptr<PointLightComponent> pointLight = nullptr;
-
-  glm::vec3 color{};
   TransformComponent transform{};
+  MotionComponent motion{};
 
+  void update(float dt);
+  void fixedUpdate(float dt);
 
 private:
   id_t id{};

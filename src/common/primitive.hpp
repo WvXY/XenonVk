@@ -3,8 +3,7 @@
 #include <functional>
 #include <vector>
 
-#include "../global_alias.hpp"
-
+#include "global_alias.hpp"
 
 namespace xev_geo {
 
