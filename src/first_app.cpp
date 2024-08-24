@@ -2,6 +2,7 @@
 
 #include "point_light_system.hpp"
 #include "simple_render_system.hpp"
+#include "time_manager.hpp"
 #include "vk_buffer.hpp"
 #include "vk_camera.hpp"
 #include "xev_controller.hpp"
@@ -18,8 +19,6 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
-
-#define MAX_FRAME_TIME 0.5f
 
 namespace xev {
 
@@ -72,19 +71,14 @@ void FirstApp::run() {
   viewerObject.transform.translation.z = -2.f;
   XevController xevController{};
 
-  auto currentTime   = std::chrono::high_resolution_clock::now();
-  int32_t frameCount = 0;
+  // Time management
+  timeManager.start();
+  auto& frameTime = timeManager.frameTime;
 
   while (!xevWindow.shouldClose()) {
     glfwPollEvents();
 
-    // Time management
-    auto newTime = std::chrono::high_resolution_clock::now();
-    float frameTime =
-        std::chrono::duration<float, std::chrono::seconds::period>(newTime - currentTime)
-            .count();
-    currentTime = newTime;
-    frameTime   = std::min(frameTime, MAX_FRAME_TIME);
+    xevWindow.addInfoToTitle("FPS: " + std::to_string(timeManager.getFps()));
 
     // Input handling
     glm::vec2 mouseDelta = xevWindow.getMouseAccumDelta();
@@ -96,22 +90,19 @@ void FirstApp::run() {
         viewerObject.transform.translation, viewerObject.transform.rotation);
 
     // Update Camera
-    float aspect = xevRenderer.getAspectRatio();
-    float fov    = camera.updateFov(xevWindow.getScrollDelta());
+    float fov = camera.updateFov(xevWindow.getScrollDelta());
     //    camera.setOrthographicProjection(-aspect, aspect, -1, 1, -1, 1);
-    camera.setPerspectiveProjection(glm::radians(fov), aspect, 0.1f, 100.f);
+    camera.setPerspectiveProjection(
+        glm::radians(fov), xevRenderer.getAspectRatio(), 0.1f, 100.f);
+
+    // updateGameObjects(frameTime);
+    fixedUpdateGameObjects(timeManager.timeLag);
 
     if (auto commandBuffer = xevRenderer.beginFrame()) {
       int frameIndex = xevRenderer.getFrameIndex();
       FrameInfo frameInfo{
           frameIndex, frameTime, commandBuffer, camera, globalDescriptorSets[frameIndex],
           gameObjects};
-
-      // step printing effect(only continuous movement), later make a component for ecs
-      //      if (frameCount % 40 == 0) {
-      //        gameObjects.at(0).transform.rotation.y += 0.008f;
-      //        gameObjects.at(0).transform.rotation.z += 0.01f;
-      //      }
 
       // update global UBO
       GlobalUbo ubo{};
@@ -131,7 +122,7 @@ void FirstApp::run() {
       xevRenderer.endSwapChainRenderPass(commandBuffer);
       xevRenderer.endFrame();
     }
-    ++frameCount;
+    timeManager.step();
   }
 
   vkDeviceWaitIdle(xevDevice.device());
@@ -213,4 +204,21 @@ void FirstApp::loadGameObjects() {
     }
   }
 }
+
+void FirstApp::updateGameObjects(float dt) {
+  for (auto& obj : gameObjects) {
+    obj.second.update(dt);
+  }
+}
+
+void FirstApp::fixedUpdateGameObjects(float& timeLag) {
+  while (timeLag >= TimeManager::FIXED_TIME_STEP) {
+
+    // updatePhysics(TimeManager::FIXED_TIME_STEP);
+    updateGameObjects(TimeManager::FIXED_TIME_STEP);
+
+    timeLag -= TimeManager::FIXED_TIME_STEP;
+  }
+}
+
 } // namespace xev

@@ -4,11 +4,13 @@
 #include <string>
 #include <vector>
 
-#include "primitive/vk_game_object.hpp"
+#include "vk_game_object.hpp"
 #include "vk_descriptors.hpp"
 #include "vk_device.hpp"
 #include "vk_renderer.hpp"
 #include "vk_window.hpp"
+#include "time_manager.hpp"
+
 
 namespace xev {
   class FirstApp {
@@ -24,11 +26,14 @@ namespace xev {
     void run();
 
   private:
-    XevWindow xevWindow{ "VkDemo3", WIDTH, HEIGHT };
+    XevWindow xevWindow{ "XenonAppDemo", WIDTH, HEIGHT };
     XevDevice xevDevice{ xevWindow };
     XevRenderer xevRenderer{ xevWindow, xevDevice };
+    TimeManager timeManager{};
 
     void loadGameObjects();
+    void updateGameObjects(float dt);
+    void fixedUpdateGameObjects(float& timeLag);
 
     std::unique_ptr<XevDescriptorPool> globalPool{};
     XevGameObject::Map gameObjects;

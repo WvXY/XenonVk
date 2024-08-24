@@ -45,20 +45,19 @@ The following libraries are used and pre-installed in this project.
 
 ## TODO
 
-- [ ] Rename the project
+- [ ] Refactor the project: naming, structure
 - [ ] Feature: Texture
 - [ ] Feature: Shadow
 - [ ] Feature: PBR
 - [ ] GUI: ImGUI
-- [ ] Mouse Input
-- [ ] Physics Engine
+- [ ] Physics Engine (Working on)
 - [ ] Audio Engine(optional)
 
 ## Current Problems
 
-1. [Performance] When VSync off, the load of GPU is too high, especially on high resolution. There are whistle noise from the GPU. However, when VSync on, there is noticeable input and display lag.
-2. [Object Model] On large models, some faces are missing. 
-3. `vkCreateShaderModule():  SPIR-V Capability FragmentBarycentricKHR was declared, but one of the following requirements is required (VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV::fragmentShaderBarycentric).`
+1. [Object Model] On large models, some faces are missing. 
+2. `vkCreateShaderModule():  SPIR-V Capability FragmentBarycentricKHR was declared, but one of the following requirements is required (VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV::fragmentShaderBarycentric).`
+3. GitHub CI is not working properly
 
 ## Reference
 

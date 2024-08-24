@@ -57,10 +57,13 @@ public:
   std::shared_ptr<XevModel> model{};
   std::unique_ptr<PointLightComponent> pointLight = nullptr;
   TransformComponent transform{};
-  MotionComponent motion{};
+  MotionComponent motion{transform.translation};
 
-  void update(float dt);
-  void fixedUpdate(float dt);
+  void update(float dt) {
+    motion.setPos(transform.translation);
+    motion.update(dt);
+    transform.translation = motion.getPosition();
+  }
 
 private:
   id_t id{};
