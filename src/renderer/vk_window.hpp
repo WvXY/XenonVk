@@ -38,6 +38,11 @@ public:
 
   glm::vec2 getMousePos() { return mousePos; }
   glm::vec2 getMouseDelta() { return mouseDelta; }
+  glm::vec2 getMouseAccumDelta() {
+    glm::vec2 delta = mouseAccumDelta;
+    mouseAccumDelta = {0.f, 0.f};
+    return delta;
+  }
   float getScrollDelta() { return scrollDelta; }
 
 private:
@@ -53,6 +58,7 @@ private:
 
   glm::vec2 mousePos{0.f};
   glm::vec2 mouseDelta{0.f};
+  glm::vec2 mouseAccumDelta{0.f};
   float scrollDelta{0.f};
   bool mouseMoved         = false;
   bool mouseScrolled      = false;

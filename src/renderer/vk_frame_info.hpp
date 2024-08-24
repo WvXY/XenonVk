@@ -2,8 +2,8 @@
 
 #include <vulkan/vulkan.h>
 
+#include "../primitive/vk_game_object.hpp"
 #include "vk_camera.hpp"
-#include "vk_game_object.hpp"
 
 namespace xev {
 

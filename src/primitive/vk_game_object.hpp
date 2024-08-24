@@ -1,6 +1,6 @@
 #pragma once
 
-#include "vk_model.hpp"
+#include "../renderer/vk_model.hpp"
 
 // #include <glm/gtc/quaternion.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -55,6 +55,7 @@ public:
 
   glm::vec3 color{};
   TransformComponent transform{};
+
 
 private:
   id_t id{};

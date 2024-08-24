@@ -78,6 +78,7 @@ void FirstApp::run() {
   while (!xevWindow.shouldClose()) {
     glfwPollEvents();
 
+    // Time management
     auto newTime = std::chrono::high_resolution_clock::now();
     float frameTime =
         std::chrono::duration<float, std::chrono::seconds::period>(newTime - currentTime)
@@ -85,7 +86,8 @@ void FirstApp::run() {
     currentTime = newTime;
     frameTime   = std::min(frameTime, MAX_FRAME_TIME);
 
-    glm::vec2 mouseDelta = xevWindow.getMouseDelta();
+    // Input handling
+    glm::vec2 mouseDelta = xevWindow.getMouseAccumDelta();
     xevController.mouseLook(
         xevWindow.getGLFWwindow(), frameTime, mouseDelta.x, mouseDelta.y, viewerObject);
     xevController.moveInPlaneXZ(xevWindow.getGLFWwindow(), frameTime, viewerObject);
@@ -93,8 +95,9 @@ void FirstApp::run() {
     camera.setViewYXZ(
         viewerObject.transform.translation, viewerObject.transform.rotation);
 
+    // Update Camera
     float aspect = xevRenderer.getAspectRatio();
-    float fov = camera.updateFov(xevWindow.getScrollDelta());
+    float fov    = camera.updateFov(xevWindow.getScrollDelta());
     //    camera.setOrthographicProjection(-aspect, aspect, -1, 1, -1, 1);
     camera.setPerspectiveProjection(glm::radians(fov), aspect, 0.1f, 100.f);
 

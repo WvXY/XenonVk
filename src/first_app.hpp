@@ -4,9 +4,9 @@
 #include <string>
 #include <vector>
 
+#include "primitive/vk_game_object.hpp"
 #include "vk_descriptors.hpp"
 #include "vk_device.hpp"
-#include "vk_game_object.hpp"
 #include "vk_renderer.hpp"
 #include "vk_window.hpp"
 

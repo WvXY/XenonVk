@@ -51,6 +51,7 @@ public:
 private:
   void createVertexBuffers(const std::vector<Vertex>& vertices);
   void createIndexBuffers(const std::vector<uint32_t>& indices);
+  void createTextureImage(const std::string& filepath);
 
   XevDevice& xevDevice;
 
@@ -60,5 +61,7 @@ private:
   bool hasIndexBuffer = false;
   std::unique_ptr<XevBuffer> indexBuffer;
   uint32_t indexCount;
+
+  std::unique_ptr<XevBuffer> textureBuffer;
 };
 } // namespace xev

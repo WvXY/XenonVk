@@ -107,6 +107,33 @@ void XevModel::createIndexBuffers(const std::vector<uint32_t>& indices) {
   xevDevice.copyBuffer(stagingBuffer.getBuffer(), indexBuffer->getBuffer(), bufferSize);
 }
 
+void XevModel::createTextureImage(const std::string& filepath) {
+  int texWidth, texHeight, texChannels;
+  stbi_uc* pixels =
+      stbi_load(filepath.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+  if (!pixels) { throw std::runtime_error("failed to load texture image!"); }
+
+  uint32_t imageSize      = texWidth * texHeight * 4;
+  size_t pixelSize        = sizeof(pixels[0]);
+  VkDeviceSize bufferSize = sizeof(pixels[0]) * imageSize;
+
+  XevBuffer stagingBuffer{
+      xevDevice, pixelSize, imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+      VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT};
+
+  stagingBuffer.map();
+  stagingBuffer.writeToBuffer((void*)pixels);
+
+  textureBuffer = std::make_unique<XevBuffer>(
+      xevDevice, pixelSize, imageSize,
+      VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT,
+      VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+
+  stbi_image_free(pixels);
+
+  xevDevice.copyBuffer(stagingBuffer.getBuffer(), textureBuffer->getBuffer(), bufferSize);
+}
+
 std::vector<VkVertexInputBindingDescription> XevModel::Vertex::getBindingDescriptions() {
   std::vector<VkVertexInputBindingDescription> bindingDescriptions(1);
   bindingDescriptions[0].binding   = 0;
@@ -174,4 +201,5 @@ void XevModel::Builder::loadModel(const std::string& filepath) {
     }
   }
 }
+
 } // namespace xev

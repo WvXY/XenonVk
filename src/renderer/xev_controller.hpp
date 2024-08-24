@@ -1,6 +1,6 @@
 #pragma once
 
-#include "vk_game_object.hpp"
+#include "../primitive/vk_game_object.hpp"
 #include "vk_window.hpp"
 
 namespace xev {

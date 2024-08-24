@@ -47,6 +47,7 @@ void XevWindow::mouseCallback(GLFWwindow* window, double xpos, double ypos) {
   xevWindow->mouseMoved = true;
   xevWindow->mouseDelta = {xpos - xevWindow->mousePos.x, ypos - xevWindow->mousePos.y};
   xevWindow->mousePos   = {xpos, ypos};
+  xevWindow->mouseAccumDelta += xevWindow->mouseDelta;
 }
 
 void XevWindow::scrollCallback(GLFWwindow* window, double xoffset, double yoffset) {

@@ -1,7 +1,6 @@
 project(XenonApp)
 
-include(${CMK_DIR}/include_vke.cmake)
-#include(${CMK_DIR}/include_core.cmake)
+include(${CMK_DIR}/include_xev.cmake)
 
 file(GLOB_RECURSE SOURCES
         ${PROJECT_SOURCE_DIR}/*.cpp
@@ -10,7 +9,7 @@ file(GLOB_RECURSE SOURCES
 
 add_executable(${PROJECT_NAME}
         ${SOURCES}
-        ${VKE_SRC_FILES}
+#        ${VKE_SRC_FILES}
 )
 
 if (UNIX)
@@ -28,7 +27,7 @@ endif ()
 
 target_include_directories(${PROJECT_NAME}
         PRIVATE ${EXT_DIR}
-        PRIVATE ${VKE_INCLUDE_DIR}
+        PRIVATE ${XEV_INCLUDE_DIR}
 )
 
 add_dependencies(${PROJECT_NAME} CompileShaders)
