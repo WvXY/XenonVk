@@ -7,6 +7,7 @@ set(XEV_INCLUDE_DIR
         ${XEV_INCLUDE_ROOT}/renderer/systems/
         ${XEV_INCLUDE_ROOT}/common/
         ${XEV_INCLUDE_ROOT}/physics/
+        ${XEV_INCLUDE_ROOT}/math/
 )
 
 file(GLOB_RECURSE XEV_INCLUDE_FILES
