@@ -19,6 +19,9 @@ public:
     int lookRight = GLFW_KEY_RIGHT;
     int rollLeft  = GLFW_KEY_Z;
     int rollRight = GLFW_KEY_C;
+    int speedUp   = GLFW_KEY_LEFT_SHIFT;
+
+    int endApp  = GLFW_KEY_ESCAPE;
   };
 
   void moveInPlaneXZ(GLFWwindow* window, float dt, XevGameObject& gameObject);
@@ -27,6 +30,8 @@ public:
       XevGameObject& gameObject, bool constrainPitch = true);
 
   void setFov(float fov) { fov = fov; }
+
+  bool isPressed(GLFWwindow* window, int key) {return glfwGetKey(window, key) == GLFW_PRESS;}
 
   KeyMappings keys{};
 
@@ -43,8 +48,9 @@ public:
 
 private:
   float mouseSensitivity{2.4f};
-  float moveSpeed{2.0f};
+  float moveSpeed{4.0f};
   float lookSpeed{0.5f};
+  float speedUpMultiplier{4.0f};
 
   // glm::vec2 mousePos{0.f};
   // glm::vec2 mouseDelta{0.f};

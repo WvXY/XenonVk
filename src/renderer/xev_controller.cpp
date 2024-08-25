@@ -32,8 +32,12 @@ void XevController::moveInPlaneXZ(
   if (glfwGetKey(window, keys.up) == GLFW_PRESS) { moveDir += upDir; }
   if (glfwGetKey(window, keys.down) == GLFW_PRESS) { moveDir -= upDir; }
 
+  float _moveSpeed;
+  if (glfwGetKey(window, keys.speedUp) == GLFW_PRESS) _moveSpeed = moveSpeed * speedUpMultiplier;
+  else _moveSpeed = moveSpeed;
+
   if (glm::dot(moveDir, moveDir) > std::numeric_limits<float>::epsilon()) {
-    gameObject.transform.translation += moveSpeed * dt * glm::normalize(moveDir);
+    gameObject.transform.translation += _moveSpeed * dt * glm::normalize(moveDir);
   }
 }
 void XevController::mouseLook(
