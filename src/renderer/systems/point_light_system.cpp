@@ -82,8 +82,8 @@ void PointLightSystem::update(FrameInfo& frameInfo, GlobalUbo& globalUbo) {
 
     assert(lightIndex < MAX_LIGHTS && "Too many point lights!");
 
-    gov.transform.translation =
-        glm::vec3(rotateLight * glm::vec4(gov.transform.translation, 1.0f));
+    // gov.transform.translation =
+    //     glm::vec3(rotateLight * glm::vec4(gov.transform.translation, 1.0f));
 
     auto& pointLight    = globalUbo.pointLights[lightIndex];
     pointLight.position = glm::vec4(gov.transform.translation, 1.0f);
