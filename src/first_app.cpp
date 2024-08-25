@@ -67,18 +67,28 @@ void FirstApp::run() {
   glm::vec3 cameraTarget = gameObjects.at(0).transform.translation;
   camera.setViewTarget({-1.f, -3.f, 1.f}, cameraTarget);
 
-  auto viewerObject                    = XevGameObject::createGameObject();
-  viewerObject.transform.translation.z = -2.f;
+  auto viewerObject                  = XevGameObject::createGameObject();
+  viewerObject.transform.translation = {-158.547, -26.2754, -5.83202};
   XevController xevController{};
 
   // Time management
   timeManager.start();
   auto& frameTime = timeManager.frameTime;
 
-  while (!xevWindow.shouldClose()) {
+  while (!xevWindow.shouldClose() &&
+         !xevController.isPressed(xevWindow.getGLFWwindow(), GLFW_KEY_ESCAPE)) {
     glfwPollEvents();
 
     xevWindow.addInfoToTitle("FPS: " + std::to_string(timeManager.getFps()));
+
+    // for debugging
+    if (xevController.isPressed(xevWindow.getGLFWwindow(), GLFW_KEY_Z))
+      // std::cout << "Current Position: " << viewerObject.transform.translation.x << ", "
+      //           << viewerObject.transform.translation.y << ", "
+      //           << viewerObject.transform.translation.z << std::endl;
+      std::cout << "Sun Pos" << gameObjects.at(1).transform.translation.x << ", "
+                << gameObjects.at(1).transform.translation.y << ", "
+                << gameObjects.at(1).transform.translation.z << std::endl;
 
     // Input handling
     glm::vec2 mouseDelta = xevWindow.getMouseAccumDelta();
@@ -93,7 +103,7 @@ void FirstApp::run() {
     float fov = camera.updateFov(xevWindow.getScrollDelta());
     //    camera.setOrthographicProjection(-aspect, aspect, -1, 1, -1, 1);
     camera.setPerspectiveProjection(
-        glm::radians(fov), xevRenderer.getAspectRatio(), 0.1f, 100.f);
+        glm::radians(fov), xevRenderer.getAspectRatio(), 0.1f, 1e10);
 
     // updateGameObjects(frameTime);
     fixedUpdateGameObjects(timeManager.timeLag);
@@ -143,14 +153,11 @@ void FirstApp::loadGameObjects() {
   //  }
   {
     xevModel = XevModel::createModelFromFile(
-        //        xevDevice, relativeModelPath + "HugeCity/hugeCity.obj");
-        xevDevice, relativeModelPath + "LowPolyIsometricRoom/Room #1.obj");
-    auto gameObject                  = XevGameObject::createGameObject();
-    gameObject.model                 = xevModel;
-    gameObject.transform.translation = {0.f, 1.0f, 0.0f};
-    gameObject.transform.scale       = glm::vec3{0.3f};
-    gameObject.transform.rotation.x  = glm::pi<float>();
-    gameObject.transform.rotation.y  = glm::four_over_pi<float>();
+        xevDevice, relativeModelPath + "Center city Sci-Fi/Center City Sci-Fi.obj");
+    // xevDevice, relativeModelPath + "LowPolyIsometricRoom/Room #1.obj");
+    auto gameObject  = XevGameObject::createGameObject();
+    gameObject.model = xevModel;
+    gameObject.transform.correctRotation();
     gameObjects.emplace(gameObject.getId(), std::move(gameObject));
   }
   //  {
@@ -188,27 +195,32 @@ void FirstApp::loadGameObjects() {
   //    gameObject.transform.scale       = glm::vec3{10.0f};
   //    gameObjects.emplace(gameObject.getId(), std::move(gameObject));
   //  }
-  { // Point light
-    std::vector<glm::vec3> lightColors{{1.f, .1f, .1f}, {.1f, .1f, 1.f}, {.1f, 1.f, .1f},
-                                       {1.f, 1.f, .1f}, {.1f, 1.f, 1.f}, {1.f, 1.f, 1.f}};
-
-    for (int i = 0; i < lightColors.size(); i++) {
-      auto pointLight  = XevGameObject::makePointLight(0.2f);
-      pointLight.color = lightColors[i];
-      auto rotateLight = glm::rotate(
-          glm::mat4(1.f), (i * glm::two_pi<float>()) / lightColors.size(),
-          {0.f, -1.f, 0.f});
-      pointLight.transform.translation =
-          glm::vec3(rotateLight * glm::vec4(-1.f, -1.f, -1.f, 1.f));
-      gameObjects.emplace(pointLight.getId(), std::move(pointLight));
-    }
+  // { // Point light
+  //   std::vector<glm::vec3> lightColors{{1.f, .1f, .1f}, {.1f, .1f, 1.f}, {.1f, 1.f,
+  //   .1f},
+  //                                      {1.f, 1.f, .1f}, {.1f, 1.f, 1.f},
+  //                                      {1.f, 1.f, 1.f}};
+  //
+  //   for (int i = 0; i < lightColors.size(); i++) {
+  //     auto pointLight  = XevGameObject::makePointLight(10.f);
+  //     pointLight.color = lightColors[i % lightColors.size()];
+  //     auto rotateLight = glm::rotate(
+  //          glm::mat4(1.f), (i * glm::two_pi<float>()) / lightColors.size(),
+  //          {0.f, -1.f, 0.f});
+  //     pointLight.transform.translation =rotateLight * vec4(-158.547, -26.2754,
+  //     -5.83202, 1); gameObjects.emplace(pointLight.getId(), std::move(pointLight));
+  //   }
+  // }
+  { // Sun
+    auto sunLight =
+        XevGameObject::makePointLight(1000.f, 1000.f, vec3{255, 221, 64} / 255.f);
+    sunLight.transform.translation = {2400.f, -3000.f, 6000.f};
+    gameObjects.emplace(sunLight.getId(), std::move(sunLight));
   }
 }
 
 void FirstApp::updateGameObjects(float dt) {
-  for (auto& obj : gameObjects) {
-    obj.second.update(dt);
-  }
+  for (auto& obj : gameObjects) { obj.second.update(dt); }
 }
 
 void FirstApp::fixedUpdateGameObjects(float& timeLag) {
