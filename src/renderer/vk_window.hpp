@@ -22,9 +22,9 @@ public:
     return {static_cast<uint32_t>(width), static_cast<uint32_t>(height)};
   }
 
-  bool wasWindowResized() { return framebufferResized; }
-  bool wasMouseMoved() { return mouseMoved; }
-  bool wasMouseScrolled() { return mouseScrolled; }
+  bool wasWindowResized() const { return framebufferResized; }
+  bool wasMouseMoved() const { return mouseMoved; }
+  bool wasMouseScrolled() const { return mouseScrolled; }
   void resetWindowResizedFlag() { framebufferResized = false; }
   void resetMouseMovedFlag() {
     mouseMoved = false;
