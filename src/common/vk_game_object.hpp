@@ -20,6 +20,8 @@ struct TransformComponent {
   float& yaw() { return rotation.y; }
   float& pitch() { return rotation.x; }
 
+  void correctRotation() { rotation.x = glm::pi<float>(); }
+
   // Matrix corrsponds to Translate * Ry * Rx * Rz * Scale
   // Rotations correspond to Tait-bryan angles of Y(1), X(2), Z(3)
   // https://en.wikipedia.org/wiki/Euler_angles#Rotation_matrix
@@ -45,10 +47,10 @@ public:
   static XevGameObject makePointLight(
       float intensity = 10.0f, float radius = 0.1f, glm::vec3 color = glm::vec3{1.0f});
 
-  XevGameObject(const XevGameObject&) = delete;
+  XevGameObject(const XevGameObject&)            = delete;
   XevGameObject& operator=(const XevGameObject&) = delete;
-  XevGameObject(XevGameObject&&) = default;
-  XevGameObject& operator=(XevGameObject&&) = default;
+  XevGameObject(XevGameObject&&)                 = default;
+  XevGameObject& operator=(XevGameObject&&)      = default;
 
   id_t getId() const { return id; }
 
@@ -60,9 +62,9 @@ public:
   MotionComponent motion{transform.translation};
 
   void update(float dt) {
-    motion.setPos(transform.translation);
-    motion.update(dt);
-    transform.translation = motion.getPosition();
+    // motion.setPos(transform.translation);
+    // motion.update(dt);
+    // transform.translation = motion.getPosition();
   }
 
 private:
