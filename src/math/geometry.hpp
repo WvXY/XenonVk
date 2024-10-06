@@ -4,6 +4,8 @@
 #include <glm/glm.hpp>
 #include <vector>
 
+#include "primitive2.hpp"
+
 #include <typeinfo>
 
 #define EPSILON 1e-3
@@ -56,6 +58,9 @@ public:
   getNormal(const glm::vec3& p0, const glm::vec3& p1, const glm::vec3& p2) {
     return normalize(cross(p1 - p0, p2 - p0));
   }
+
+  // intersect
+  static bool isIntersectLines(Line line1, Line line2) {}
 
 protected:
   template <typename T>

@@ -73,7 +73,7 @@ void FirstApp::run() {
 
   // Time management
   timeManager.start();
-  auto& frameTime = timeManager.frameTime;
+  auto& frameTime = timeManager.getFrameTime();
 
   while (!xevWindow.shouldClose() &&
          !xevController.isPressed(xevWindow.getGLFWwindow(), GLFW_KEY_ESCAPE)) {
@@ -106,7 +106,7 @@ void FirstApp::run() {
         glm::radians(fov), xevRenderer.getAspectRatio(), 0.1f, 1e10);
 
     // updateGameObjects(frameTime);
-    fixedUpdateGameObjects(timeManager.timeLag);
+    fixedUpdateGameObjects(timeManager.getTimeLag());
 
     if (auto commandBuffer = xevRenderer.beginFrame()) {
       int frameIndex = xevRenderer.getFrameIndex();
@@ -134,6 +134,7 @@ void FirstApp::run() {
     }
     timeManager.step();
   }
+  std::cout << "Average FPS: " << timeManager.getFps() << std::endl;
 
   vkDeviceWaitIdle(xevDevice.device());
 }
