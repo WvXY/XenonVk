@@ -28,10 +28,10 @@ add_custom_target(CompileShaders
 
 message(DEBUG "SPIRV files have been written to ${SPIRV_OUT_DIR}")
 
-if(MSVC)
-    add_custom_command(TARGET CompileShaders POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/shaders
-            COMMAND ${CMAKE_COMMAND} -E copy_directory ${SPIRV_OUT_DIR} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>/shaders
-            DEPENDS CompileShaders
-    )
-endif(MSVC)
+#if(MSVC)
+#    add_custom_command(TARGET CompileShaders POST_BUILD
+#            COMMAND ${CMAKE_COMMAND} -E make_directory ${PROJECT_BINARY_DIR}/shaders
+#            COMMAND ${CMAKE_COMMAND} -E copy_directory ${SPIRV_OUT_DIR} ${PROJECT_BINARY_DIR}/$<CONFIG>/shaders
+#            DEPENDS CompileShaders
+#    )
+#endif(MSVC)
