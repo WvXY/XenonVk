@@ -50,7 +50,7 @@ public:
   XevGameObject(const XevGameObject&)            = delete;
   XevGameObject& operator=(const XevGameObject&) = delete;
   XevGameObject(XevGameObject&&)                 = default;
-  XevGameObject& operator=(XevGameObject&&)      = default;
+  XevGameObject& operator=(XevGameObject&&)      = delete;
 
   id_t getId() const { return id; }
 

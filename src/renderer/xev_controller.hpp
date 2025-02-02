@@ -47,10 +47,10 @@ public:
   // }
 
 private:
-  float mouseSensitivity{2.4f};
-  float moveSpeed{4.0f};
-  float lookSpeed{0.5f};
-  float speedUpMultiplier{4.0f};
+  float mouseSensitivity{6.f};
+  float moveSpeed{8.f};
+  float lookSpeed{1.6f};
+  float speedUpMultiplier{2.f};
 
   // glm::vec2 mousePos{0.f};
   // glm::vec2 mouseDelta{0.f};
