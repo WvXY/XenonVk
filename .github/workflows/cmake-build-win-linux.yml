@@ -7,7 +7,7 @@ on:
     branches: [ "master" ]
 
 env:
-  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  # Set the desired build type (Release, Debug, etc.)
   BUILD_TYPE: Release
 
 jobs:
@@ -29,8 +29,15 @@ jobs:
         uses: humbletim/setup-vulkan-sdk@v1.2.0
         with:
           vulkan-query-version: 1.3.204.0
-          vulkan-components: Vulkan-Headers, Vulkan-Loader
+          # Include Vulkan-Tools so that glslangValidator.exe is installed.
+          vulkan-components: Vulkan-Headers, Vulkan-Loader, Vulkan-Tools
           vulkan-use-cache: true
+
+      - name: Verify Vulkan SDK contents
+        # List the contents of the Vulkan SDK Bin directory to ensure glslangValidator.exe is present.
+        run: |
+          echo "Listing Vulkan SDK Bin directory:"
+          ls "$VULKAN_SDK/Bin"
 
       - name: Add Vulkan SDK Bin to PATH
         run: |
@@ -38,7 +45,9 @@ jobs:
           echo "${VULKAN_SDK}\\Bin" >> $GITHUB_PATH
 
       - name: Configure CMake
-        run: cmake -B build -S . -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
+        run: |
+          cmake -B build -S . \
+            -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
 
       - name: Build
         run: cmake --build build --config ${{ env.BUILD_TYPE }}
@@ -51,13 +60,17 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          echo 'Installing dependencies...'
           sudo apt update
           sudo apt install -y libvulkan-dev vulkan-tools glslang-tools
-      #    sudo apt install -y libglfw3-dev libeigen3-dev libglm-dev
+      # Uncomment the lines below if your project depends on these libraries:
+      #          sudo apt install -y libglfw3-dev libeigen3-dev libglm-dev
 
       - name: Configure CMake
-        run: cmake -B build -S . -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
+        run: |
+          cmake -B build -S . \
+            -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
+            -DGLFW_BUILD_WAYLAND=ON \
+            -DGLFW_BUILD_X11=ON
 
       - name: Build
         run: cmake --build build --config ${{ env.BUILD_TYPE }}
