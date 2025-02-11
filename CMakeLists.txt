@@ -17,9 +17,9 @@ set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(glfw)
 
-if (UNIX)
-    option(GLFW_USE_WAYLAND "Enable Wayland" ON)    # use wayland on linux
-endif ()
+#if (UNIX)
+#    option(GLFW_USE_WAYLAND "Enable Wayland" ON)    # use wayland on linux
+#endif ()
 
 # Math lib: GLM
 FetchContent_Declare(glm GIT_REPOSITORY	https://github.com/g-truc/glm.git GIT_TAG master)
