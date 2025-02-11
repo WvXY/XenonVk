@@ -25,7 +25,6 @@ jobs:
         with:
           arch: amd64
 
-#      https://github.com/marketplace/actions/setup-vulkan-sdk
       - name: Prepare Vulkan SDK
         uses: humbletim/setup-vulkan-sdk@v1.2.0
         with:
@@ -33,12 +32,16 @@ jobs:
           vulkan-components: Vulkan-Headers, Vulkan-Loader
           vulkan-use-cache: true
 
+      - name: Add Vulkan SDK Bin to PATH
+        run: |
+          echo "VULKAN_SDK is $VULKAN_SDK"
+          echo "${VULKAN_SDK}\\Bin" >> $GITHUB_PATH
+
       - name: Configure CMake
         run: cmake -B build -S . -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
 
-      - name: build
-        run: |
-          cmake --build build --config ${{ env.BUILD_TYPE }}
+      - name: Build
+        run: cmake --build build --config ${{ env.BUILD_TYPE }}
 
   ubuntu:
     runs-on: ubuntu-latest
@@ -50,11 +53,8 @@ jobs:
         run: |
           echo 'Installing dependencies...'
           sudo apt update
-          sudo apt install -y libvulkan-dev vulkan-tools
-          sudo apt install -y glslang-tools
-#          sudo apt install -y libglfw3-dev
-#          sudo apt install -y libeigen3-dev
-#          sudo apt install -y libglm-dev
+          sudo apt install -y libvulkan-dev vulkan-tools glslang-tools
+      #    sudo apt install -y libglfw3-dev libeigen3-dev libglm-dev
 
       - name: Configure CMake
         run: cmake -B build -S . -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
