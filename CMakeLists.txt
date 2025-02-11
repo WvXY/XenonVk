@@ -4,21 +4,28 @@ project(XenonVk)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# ------------------- Dependencies -------------------
+# Vulkan SDK
+find_package(Vulkan REQUIRED)
+
+include(FetchContent)
+
+# GLFWCMakeTemplate https://github.com/SasLuca/GLFWCMakeTemplate
+FetchContent_Declare(glfw GIT_REPOSITORY https://github.com/glfw/glfw.git GIT_TAG master)
+set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(glfw)
+
 if (UNIX)
     option(GLFW_USE_WAYLAND "Enable Wayland" ON)    # use wayland on linux
 endif ()
 
-if (NOT UNIX)
-    find_package(GLFW3 REQUIRED)
-    find_package(GLM REQUIRED)
-endif ()
+# Math lib: GLM
+FetchContent_Declare(glm GIT_REPOSITORY	https://github.com/g-truc/glm.git GIT_TAG master)
+FetchContent_MakeAvailable(glm)
 
-find_package(Vulkan REQUIRED)
-
-
-# set vcpkg toolchain file
-set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
-
+# ------------------- Project -------------------
 # set directory paths
 set(AST_DIR ${CMAKE_SOURCE_DIR}/assets)
 set(CMK_DIR ${CMAKE_SOURCE_DIR}/cmake)
