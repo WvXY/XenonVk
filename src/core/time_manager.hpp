@@ -59,8 +59,8 @@ private:
   time_point currentTime;
   time_point pausedTime;
   float frameTime = MAX_FRAME_TIME;
-  float timeLag;
-  float offset;
+  float timeLag{};
+  float offset{};
 
   bool isRunning = false;
   bool isPaused  = false;

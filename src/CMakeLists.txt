@@ -5,6 +5,7 @@ include(${CMK_DIR}/include_xev.cmake)
 file(GLOB_RECURSE SOURCES
         ${PROJECT_SOURCE_DIR}/*.cpp
         ${PROJECT_SOURCE_DIR}/*.hpp
+        ${PROJECT_SOURCE_DIR}/*.h
 )
 
 add_executable(${PROJECT_NAME}
