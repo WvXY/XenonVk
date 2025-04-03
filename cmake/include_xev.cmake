@@ -5,7 +5,7 @@ set(XEV_INCLUDE_DIR
         ${XEV_INCLUDE_ROOT}
         ${XEV_INCLUDE_ROOT}/renderer/
         ${XEV_INCLUDE_ROOT}/renderer/systems/
-        ${XEV_INCLUDE_ROOT}/common/
+        ${XEV_INCLUDE_ROOT}/core/
         ${XEV_INCLUDE_ROOT}/physics/
         ${XEV_INCLUDE_ROOT}/math/
 )
