@@ -80,7 +80,7 @@ _The following dependencies will be installed **automatically** by CMake._
 ## TODO
 
 - [ ] Physics Engine (Working on)
-- [ ] ECS: Entity Component System
+- [X] ECS: Entity Component System
 - [ ] Refactor: naming, structure
 - [ ] Rendering: Texture
 - [ ] Rendering: Better Lighting System including Shadow Mapping, Reflection, etc.
@@ -92,8 +92,11 @@ _The following dependencies will be installed **automatically** by CMake._
 1. GitHub CI is not working properly: enabled extensions in shaders
 2. Some function calls are not in the proper place.
 
-## Reference
+------
+
+## Reference & Resources
 
 - Little Vulkan Engine: https://youtu.be/Y9U9IE0gVHA?si=42keJCaEPE-R697P
 - ECS: https://austinmorlan.com/posts/entity_component_system/
 - Game Loop: https://gameprogrammingpatterns.com/game-loop.html
+- Asset Models from https://free3d.com/3d-models/obj?page=7
