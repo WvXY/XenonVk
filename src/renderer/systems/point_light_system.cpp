@@ -76,9 +76,16 @@ void PointLightSystem::update(FrameInfo& frameInfo, GlobalUbo& globalUbo) {
       glm::rotate(glm::mat4(1.f), 0.5f * frameInfo.frameTime, {0.f, -1.f, 0.f});
 
   int lightIndex = 0;
-  for (auto& kv : frameInfo.gameObjects) {
-    auto& gov = kv.second;
-    if (gov.pointLight == nullptr) { continue; }
+
+  auto entitiesWithReqComps =
+      frameInfo.entityManager
+          .getEntitiesWithComponents<PointLightComponent, TransformComponent>();
+
+  for (const auto& entity : entitiesWithReqComps) {
+    auto& pointLightComponent =
+        frameInfo.entityManager.getComponent<PointLightComponent>(entity);
+    auto& transformComponent =
+        frameInfo.entityManager.getComponent<TransformComponent>(entity);
 
     assert(lightIndex < MAX_LIGHTS && "Too many point lights!");
 
@@ -86,8 +93,9 @@ void PointLightSystem::update(FrameInfo& frameInfo, GlobalUbo& globalUbo) {
     //     glm::vec3(rotateLight * glm::vec4(gov.transform.translation, 1.0f));
 
     auto& pointLight    = globalUbo.pointLights[lightIndex];
-    pointLight.position = glm::vec4(gov.transform.translation, 1.0f);
-    pointLight.color    = glm::vec4(gov.color, gov.pointLight->intensity);
+    pointLight.position = glm::vec4(transformComponent.translation, 1.0f);
+    pointLight.color =
+        glm::vec4(pointLightComponent.color, pointLightComponent.intensity);
 
     lightIndex++;
   }
@@ -95,33 +103,51 @@ void PointLightSystem::update(FrameInfo& frameInfo, GlobalUbo& globalUbo) {
 }
 
 void PointLightSystem::render(FrameInfo& frameInfo) {
-  std::map<float, XevGameObject::id_t> sortedLights;
-  for (auto& kv : frameInfo.gameObjects) {
-    auto& go = kv.second;
-    if (go.pointLight == nullptr) { continue; }
+  std::map<float, Entity> sortedLights;
 
-    float distance =
-        glm::length(frameInfo.camera.getPosition() - go.transform.translation);
-    sortedLights[distance] = go.getId();
+  // Get entities that have both PointLightComponent and TransformComponent
+  for (auto& entity :
+       frameInfo.entityManager
+           .getEntitiesWithComponents<TransformComponent, PointLightComponent>()) {
+
+    TransformComponent& transform =
+        frameInfo.entityManager.getComponent<TransformComponent>(entity);
+    PointLightComponent& pointLight =
+        frameInfo.entityManager.getComponent<PointLightComponent>(entity);
+
+    // Skip lights with no pointLight component or invalid transform
+    if (pointLight.intensity <= 0) { continue; }
+
+    // Calculate distance between camera and the light source
+    float distance = glm::length(frameInfo.camera.getPosition() - transform.translation);
+    sortedLights[distance] = entity;
   }
 
+  // for rendering
   xevPipeline->bind(frameInfo.commandBuffer);
   vkCmdBindDescriptorSets(
       frameInfo.commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1,
       &frameInfo.globalDescriptorSet, 0, nullptr);
 
+  // Sorted by distance (farthest to closest)
   for (auto it = sortedLights.rbegin(); it != sortedLights.rend(); ++it) {
-    auto& go = frameInfo.gameObjects.at(it->second);
+    Entity entity = it->second;
+
+    TransformComponent& transform =
+        frameInfo.entityManager.getComponent<TransformComponent>(entity);
+    PointLightComponent& pointLight =
+        frameInfo.entityManager.getComponent<PointLightComponent>(entity);
 
     PointLightPushConstants push{};
-    push.position = glm::vec4(go.transform.translation, 1.0f);
-    push.color    = glm::vec4(go.color, go.pointLight->intensity);
-    push.radius   = go.transform.scale.x;
+    push.position = glm::vec4(transform.translation, 1.0f);
+    push.color    = glm::vec4(pointLight.color, pointLight.intensity);
+    push.radius   = transform.scale.x;
 
     vkCmdPushConstants(
         frameInfo.commandBuffer, pipelineLayout,
         VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0,
         sizeof(PointLightPushConstants), &push);
+
     vkCmdDraw(frameInfo.commandBuffer, 6, 1, 0, 0);
   }
 }

@@ -4,6 +4,8 @@
 
 #include "vk_game_object.hpp"
 #include "vk_camera.hpp"
+#include "entity_manager.hpp"
+#include "game_object_manager.hpp"
 
 namespace xev {
 
@@ -29,7 +31,8 @@ struct FrameInfo {
   VkCommandBuffer commandBuffer;
   XevCamera& camera;
   VkDescriptorSet globalDescriptorSet;
-  XevGameObject::Map& gameObjects;
+  GameObjectManager& gameObjectManager;   // TODO: remove this
+  EntityManager& entityManager;           // TODO: remove this
 };
 
 } // namespace xev

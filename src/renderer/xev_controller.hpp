@@ -2,6 +2,9 @@
 
 #include "vk_game_object.hpp"
 #include "vk_window.hpp"
+#include "entity_manager.hpp"
+
+// TODO: maybe inherit from GameObject or make it a Component
 
 namespace xev {
 class XevController { // handle mouse and keyboard input
@@ -11,8 +14,8 @@ public:
     int right     = GLFW_KEY_D;
     int forward   = GLFW_KEY_W;
     int back      = GLFW_KEY_S;
-    int up        = GLFW_KEY_Q;
-    int down      = GLFW_KEY_E;
+    int up        = GLFW_KEY_E;
+    int down      = GLFW_KEY_Q;
     int lookUp    = GLFW_KEY_UP;
     int lookDown  = GLFW_KEY_DOWN;
     int lookLeft  = GLFW_KEY_LEFT;
@@ -24,10 +27,10 @@ public:
     int endApp  = GLFW_KEY_ESCAPE;
   };
 
-  void moveInPlaneXZ(GLFWwindow* window, float dt, XevGameObject& gameObject);
+  void moveInPlaneXZ(GLFWwindow* window, float dt, TransformComponent& viewTransform);
   void mouseLook(
       GLFWwindow* window, float dt, float xoffset, float yoffset,
-      XevGameObject& gameObject, bool constrainPitch = true);
+      TransformComponent& viewTransform, bool constrainPitch = true);
 
   void setFov(float fov) { fov = fov; }
 
@@ -47,14 +50,16 @@ public:
   // }
 
 private:
-  float mouseSensitivity{6.f};
-  float moveSpeed{8.f};
-  float lookSpeed{1.6f};
-  float speedUpMultiplier{2.f};
+  float mouseSensitivity{2.f};
+  float moveSpeed{12.f};
+  float lookSpeed{1.f};
+  float speedUpMultiplier{8.f};
 
   // glm::vec2 mousePos{0.f};
   // glm::vec2 mouseDelta{0.f};
   // glm::vec2 lastMousePos{0.f};
+
+  EntityManager& entityManager = EntityManager::instance();
 };
 
 } // namespace xev
