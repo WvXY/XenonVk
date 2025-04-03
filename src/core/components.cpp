@@ -1,7 +1,7 @@
-#include "vk_game_object.hpp"
+#include "components.hpp"
 
 namespace xev {
-glm::mat4 TransformComponent::mat4() {
+glm::mat4 TransformComponent::getMat4() const {
   const float c3 = glm::cos(rotation.z);
   const float s3 = glm::sin(rotation.z);
   const float c2 = glm::cos(rotation.x);
@@ -30,7 +30,7 @@ glm::mat4 TransformComponent::mat4() {
       {translation.x, translation.y, translation.z, 1.0f}};
 }
 
-glm::mat3 TransformComponent::normalMatrix() {
+glm::mat3 TransformComponent::getNormalMat3() const {
   const float c3           = glm::cos(rotation.z);
   const float s3           = glm::sin(rotation.z);
   const float c2           = glm::cos(rotation.x);
@@ -46,14 +46,14 @@ glm::mat3 TransformComponent::normalMatrix() {
       {invScale.z * (c2 * s1), invScale.z * (-s2), invScale.z * (c1 * c2)}};
 }
 
-XevGameObject
-XevGameObject::makePointLight(float intensity, float radius, glm::vec3 color) {
-  XevGameObject gameObject         = XevGameObject::createGameObject();
-  gameObject.pointLight            = std::make_unique<PointLightComponent>();
-  gameObject.pointLight->intensity = intensity;
-  gameObject.color                 = color;
-  gameObject.transform.scale.x     = radius;
-  return gameObject;
-}
+// XevGameObject
+// XevGameObject::makePointLight(float intensity, float radius, glm::vec3 color) {
+//   XevGameObject gameObject         = XevGameObject::createGameObject();
+//   gameObject.pointLight            = std::make_unique<PointLightComponent>();
+//   gameObject.pointLight->intensity = intensity;
+//   gameObject.color                 = color;
+//   gameObject.transform.scale.x     = radius;
+//   return gameObject;
+// }
 
 } // namespace xev
