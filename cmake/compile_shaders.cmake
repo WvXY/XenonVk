@@ -1,10 +1,16 @@
 # Compile GLSL shaders into SPIR-V
 
-if(WIN32)
+# GlslValidator setup (Manually set this in your environment)
+if(WIN32)   # Windows
     set(GLSL_VALIDATOR "$ENV{VULKAN_SDK}/Bin/glslangValidator.exe")
-elseif(UNIX)
+elseif(APPLE)   # MacOS
+    set(GLSL_VALIDATOR "$ENV{HOME}/.dev/VulkanSDK/1.4.309.0/macOS/bin/glslangValidator")
+elseif(UNIX)    # Linux
     set(GLSL_VALIDATOR "/bin/glslangValidator")
+else()  # Unsupported platform
+    message(FATAL_ERROR "Unsupported platform for glslangValidator")
 endif()
+message(STATUS "Using glslangValidator from Vulkan SDK: ${GLSL_VALIDATOR}")
 
 file(GLOB_RECURSE GLSL_SOURCE_FILES
         "${SHA_DIR}/*.frag"
