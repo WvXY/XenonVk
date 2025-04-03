@@ -68,7 +68,7 @@ void FirstApp::run() {
   camera.setViewTarget({-1.f, -3.f, 1.f}, cameraTarget);
 
   auto viewerObject                  = XevGameObject::createGameObject();
-  viewerObject.transform.translation = {-158.547, -26.2754, -5.83202};
+  viewerObject.transform.translation = {0, 0, 0};
   XevController xevController{};
 
   // Time management
@@ -141,83 +141,63 @@ void FirstApp::run() {
 
 void FirstApp::loadGameObjects() {
   std::shared_ptr<XevModel> xevModel;
-  //  {
-  //    xevModel = XevModel::createModelFromFile(
-  //        xevDevice, relativeModelPath + "HugeCity/hugeCity.obj");
-  //    auto gameObject                  = XevGameObject::createGameObject();
-  //    gameObject.model                 = xevModel;
-  //    gameObject.transform.translation = {0.f, 1.0f, 3.0f};
-  //    gameObject.transform.scale       = glm::vec3{0.0003f};
-  //    gameObject.transform.rotation.x  = glm::pi<float>();
-  //    gameObject.transform.rotation.y  = glm::pi<float>();
-  //    gameObjects.emplace(gameObject.getId(), std::move(gameObject));
-  //  }
+
   {
-    xevModel = XevModel::createModelFromFile(
-        xevDevice, relativeModelPath + "Center city Sci-Fi/Center City Sci-Fi.obj");
-    // xevDevice, relativeModelPath + "LowPolyIsometricRoom/Room #1.obj");
-    auto gameObject  = XevGameObject::createGameObject();
-    gameObject.model = xevModel;
-    gameObject.transform.correctRotation();
+    std::vector<std::string> modelPaths = {
+        "bunny.obj", "cube.obj", "colored_cube.obj", "smooth_vase.obj", "flat_vase.obj"};
+
+    float x = -2.f;
+    for (std::string& modelPath : modelPaths) {
+      xevModel = XevModel::createModelFromFile(xevDevice, relativeModelPath + modelPath);
+      auto gameObject                  = XevGameObject::createGameObject();
+      gameObject.model                 = xevModel;
+      gameObject.transform.translation = {x, 0.f, 0.0f};
+      gameObject.transform.scale       = glm::vec3{1.0f};
+      gameObjects.emplace(gameObject.getId(), std::move(gameObject));
+      x += .8f;
+    } // bunny do not have uv coords, so it is rendered as a dark silhouette
+
+    gameObjects.at(0).transform.scale      = {2.5f, 2.5f, 2.5f};
+    gameObjects.at(0).transform.rotation.z = glm::pi<float>();
+    gameObjects.at(1).transform.scale      = {0.2f, 0.2f, 0.2f};
+    gameObjects.at(2).transform.scale      = {0.2f, 0.2f, 0.2f};
+    gameObjects.at(3).transform.scale      = {2.f, 2.f, 2.f};
+    gameObjects.at(3).transform.translation.y += .2f;
+    gameObjects.at(4).transform.scale = {2.f, 2.f, 2.f};
+    gameObjects.at(4).transform.scale = {4.f, 2.f, 4.f};
+    gameObjects.at(4).transform.translation.y += .2f;
+  }
+
+  { // Floor
+    xevModel = XevModel::createModelFromFile(xevDevice, relativeModelPath +
+    "quad.obj"); auto gameObject                  = XevGameObject::createGameObject();
+    gameObject.model                 = xevModel;
+    gameObject.transform.translation = {0, 0.2f, 0.0f};
+    gameObject.transform.scale       = glm::vec3{10.0f};
     gameObjects.emplace(gameObject.getId(), std::move(gameObject));
   }
-  //  {
-  //    std::vector<std::string> modelPaths = {
-  //        "bunny.obj", "cube.obj", "colored_cube.obj", "smooth_vase.obj",
-  //        "flat_vase.obj"};
-  //
-  //    float x = -2.f;
-  //    for (std::string& modelPath : modelPaths) {
-  //      xevModel = XevModel::createModelFromFile(xevDevice, relativeModelPath +
-  //      modelPath); auto gameObject                  =
-  //      XevGameObject::createGameObject(); gameObject.model                 = xevModel;
-  //      gameObject.transform.translation = {x, 0.f, 0.0f};
-  //      gameObject.transform.scale       = glm::vec3{1.0f};
-  //      gameObjects.emplace(gameObject.getId(), std::move(gameObject));
-  //      x += .8f;
-  //    } // bunny do not have uv coords, so it is rendered as a dark silhouette
-  //
-  //    gameObjects.at(0).transform.scale      = {2.5f, 2.5f, 2.5f};
-  //    gameObjects.at(0).transform.rotation.z = glm::pi<float>();
-  //    gameObjects.at(1).transform.scale      = {0.2f, 0.2f, 0.2f};
-  //    gameObjects.at(2).transform.scale      = {0.2f, 0.2f, 0.2f};
-  //    gameObjects.at(3).transform.scale      = {2.f, 2.f, 2.f};
-  //    gameObjects.at(3).transform.translation.y += .2f;
-  //    gameObjects.at(4).transform.scale = {2.f, 2.f, 2.f};
-  //    gameObjects.at(4).transform.scale = {4.f, 2.f, 4.f};
-  //    gameObjects.at(4).transform.translation.y += .2f;
-  //  }
-  //
-  //  { // Floor
-  //    xevModel = XevModel::createModelFromFile(xevDevice, relativeModelPath +
-  //    "quad.obj"); auto gameObject                  = XevGameObject::createGameObject();
-  //    gameObject.model                 = xevModel;
-  //    gameObject.transform.translation = {0, 0.2f, 0.0f};
-  //    gameObject.transform.scale       = glm::vec3{10.0f};
-  //    gameObjects.emplace(gameObject.getId(), std::move(gameObject));
-  //  }
-  // { // Point light
-  //   std::vector<glm::vec3> lightColors{{1.f, .1f, .1f}, {.1f, .1f, 1.f}, {.1f, 1.f,
-  //   .1f},
-  //                                      {1.f, 1.f, .1f}, {.1f, 1.f, 1.f},
-  //                                      {1.f, 1.f, 1.f}};
-  //
-  //   for (int i = 0; i < lightColors.size(); i++) {
-  //     auto pointLight  = XevGameObject::makePointLight(10.f);
-  //     pointLight.color = lightColors[i % lightColors.size()];
-  //     auto rotateLight = glm::rotate(
-  //          glm::mat4(1.f), (i * glm::two_pi<float>()) / lightColors.size(),
-  //          {0.f, -1.f, 0.f});
-  //     pointLight.transform.translation =rotateLight * vec4(-158.547, -26.2754,
-  //     -5.83202, 1); gameObjects.emplace(pointLight.getId(), std::move(pointLight));
-  //   }
-  // }
-  { // Sun
-    auto sunLight =
-        XevGameObject::makePointLight(1000.f, 1000.f, vec3{255, 221, 64} / 255.f);
-    sunLight.transform.translation = {2400.f, -3000.f, 6000.f};
-    gameObjects.emplace(sunLight.getId(), std::move(sunLight));
+
+  { // Point light
+    std::vector<glm::vec3> lightColors{{1.f, .1f, .1f}, {.1f, .1f, 1.f}, {.1f, 1.f, .1f},
+                                       {1.f, 1.f, .1f}, {.1f, 1.f, 1.f}, {1.f, 1.f, 1.f}};
+
+    for (int i = 0; i < lightColors.size(); i++) {
+      auto pointLight  = XevGameObject::makePointLight(10.f);
+      pointLight.color = lightColors[i % lightColors.size()];
+      auto rotateLight = glm::rotate(
+          glm::mat4(1.f), (i * glm::two_pi<float>()) / lightColors.size(),
+          {0.f, -1.f, 0.f});
+      pointLight.transform.translation =
+          rotateLight * vec4(-158.547, -26.2754, -5.83202, 1);
+      gameObjects.emplace(pointLight.getId(), std::move(pointLight));
+    }
   }
+  // { // Sun
+  //   auto sunLight =
+  //       XevGameObject::makePointLight(1000.f, 1000.f, vec3{255, 221, 64} / 255.f);
+  //   sunLight.transform.translation = {2400.f, -3000.f, 6000.f};
+  //   gameObjects.emplace(sunLight.getId(), std::move(sunLight));
+  // }
 }
 
 void FirstApp::updateGameObjects(float dt) {

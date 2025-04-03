@@ -10,10 +10,10 @@ find_package(Vulkan REQUIRED)
 
 include(FetchContent)
 
-# GLFWCMakeTemplate https://github.com/SasLuca/GLFWCMakeTemplate
-if (UNIX)
-    option(GLFW_USE_WAYLAND "Enable Wayland" ON)    # use wayland on linux
-endif ()
+## GLFWCMakeTemplate https://github.com/SasLuca/GLFWCMakeTemplate
+#if (UNIX)
+#    option(GLFW_USE_WAYLAND "Enable Wayland" ON)    # use wayland on linux
+#endif ()
 
 FetchContent_Declare(glfw GIT_REPOSITORY https://github.com/glfw/glfw.git GIT_TAG master)
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
