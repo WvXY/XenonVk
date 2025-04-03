@@ -1,1 +1,0 @@
-Source: https://free3d.com/3d-model/low-poly-isometric-room-1-704614.html
