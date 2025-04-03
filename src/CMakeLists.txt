@@ -9,21 +9,16 @@ file(GLOB_RECURSE SOURCES
 
 add_executable(${PROJECT_NAME}
         ${SOURCES}
-#        ${VKE_SRC_FILES}
+        #        ${VKE_SRC_FILES}
 )
 
-if (UNIX)
-    target_link_libraries(${PROJECT_NAME}
-            PRIVATE glfw
-            PRIVATE Vulkan::Vulkan
-    )
-else ()
-    target_link_libraries(${PROJECT_NAME}
-            PRIVATE glm::glm
-            PRIVATE glfw
-            PRIVATE Vulkan::Vulkan
-    )
-endif ()
+
+target_link_libraries(${PROJECT_NAME}
+        PRIVATE glm::glm
+        PRIVATE glfw
+        PRIVATE Vulkan::Vulkan
+)
+
 
 target_include_directories(${PROJECT_NAME}
         PRIVATE ${EXT_DIR}
