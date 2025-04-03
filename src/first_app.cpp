@@ -1,5 +1,6 @@
 #include "first_app.hpp"
 
+#include "components.hpp"
 #include "point_light_system.hpp"
 #include "simple_render_system.hpp"
 #include "time_manager.hpp"
@@ -63,13 +64,16 @@ void FirstApp::run() {
       globalSetLayout->getDescriptorSetLayout()};
 
   XevCamera camera{};
-  //    camera.setViewDirection({0.f, 0.f, 0.f}, {1.f, 0.f, 1.f});
-  glm::vec3 cameraTarget = gameObjects.at(0).transform.translation;
+  glm::vec3 cameraTarget = {1.f, 0.f, 1.f};
   camera.setViewTarget({-1.f, -3.f, 1.f}, cameraTarget);
 
-  auto viewerObject                  = XevGameObject::createGameObject();
-  viewerObject.transform.translation = {0, 0, 0};
   XevController xevController{};
+
+  // Manage view by ECS
+  Entity viewEntity = entityManager.createEntity();
+  TransformComponent viewTransform;
+  viewTransform.translation = glm::vec3{0, 0, 0};
+  entityManager.addComponent(viewEntity, viewTransform);
 
   // Time management
   timeManager.start();
@@ -81,23 +85,13 @@ void FirstApp::run() {
 
     xevWindow.addInfoToTitle("FPS: " + std::to_string(timeManager.getFps()));
 
-    // for debugging
-    if (xevController.isPressed(xevWindow.getGLFWwindow(), GLFW_KEY_Z))
-      // std::cout << "Current Position: " << viewerObject.transform.translation.x << ", "
-      //           << viewerObject.transform.translation.y << ", "
-      //           << viewerObject.transform.translation.z << std::endl;
-      std::cout << "Sun Pos" << gameObjects.at(1).transform.translation.x << ", "
-                << gameObjects.at(1).transform.translation.y << ", "
-                << gameObjects.at(1).transform.translation.z << std::endl;
-
     // Input handling
     glm::vec2 mouseDelta = xevWindow.getMouseAccumDelta();
     xevController.mouseLook(
-        xevWindow.getGLFWwindow(), frameTime, mouseDelta.x, mouseDelta.y, viewerObject);
-    xevController.moveInPlaneXZ(xevWindow.getGLFWwindow(), frameTime, viewerObject);
+        xevWindow.getGLFWwindow(), frameTime, mouseDelta.x, mouseDelta.y, viewTransform);
+    xevController.moveInPlaneXZ(xevWindow.getGLFWwindow(), frameTime, viewTransform);
 
-    camera.setViewYXZ(
-        viewerObject.transform.translation, viewerObject.transform.rotation);
+    camera.setViewYXZ(viewTransform.translation, viewTransform.rotation);
 
     // Update Camera
     float fov = camera.updateFov(xevWindow.getScrollDelta());
@@ -110,9 +104,13 @@ void FirstApp::run() {
 
     if (auto commandBuffer = xevRenderer.beginFrame()) {
       int frameIndex = xevRenderer.getFrameIndex();
-      FrameInfo frameInfo{
-          frameIndex, frameTime, commandBuffer, camera, globalDescriptorSets[frameIndex],
-          gameObjects};
+      FrameInfo frameInfo{frameIndex,
+                          frameTime,
+                          commandBuffer,
+                          camera,
+                          globalDescriptorSets[frameIndex],
+                          gameObjectManager,
+                          entityManager};
 
       // update global UBO
       GlobalUbo ubo{};
@@ -141,57 +139,66 @@ void FirstApp::run() {
 
 void FirstApp::loadGameObjects() {
   std::shared_ptr<XevModel> xevModel;
+  {
+    std::string modelPath = "MountainTerrain.obj";
+    xevModel = XevModel::createModelFromFile(xevDevice, relativeModelPath + modelPath);
+
+    Entity terrainEntity = entityManager.createEntity();
+
+    TransformComponent terrainTransform;
+    terrainTransform.scale       = glm::vec3{1.0f};
+    terrainTransform.translation = glm::vec3{0, 0, 0};
+    terrainTransform.rotation.x  = glm::radians(180.f); // TODO: auto rotation on load
+    entityManager.addComponent(terrainEntity, terrainTransform);
+
+    // Set ModelComponent for the terrain (the model loaded earlier)
+    ModelComponent terrainModel;
+    terrainModel.model = xevModel;
+    entityManager.addComponent(terrainEntity, terrainModel);
+  }
 
   {
-    std::vector<std::string> modelPaths = {
-        "bunny.obj", "cube.obj", "colored_cube.obj", "smooth_vase.obj", "flat_vase.obj"};
+    std::string modelPath = "Hogwarts.obj";
+    xevModel = XevModel::createModelFromFile(xevDevice, relativeModelPath + modelPath);
+    Entity hogwartsEntity = entityManager.createEntity();
 
-    float x = -2.f;
-    for (std::string& modelPath : modelPaths) {
-      xevModel = XevModel::createModelFromFile(xevDevice, relativeModelPath + modelPath);
-      auto gameObject                  = XevGameObject::createGameObject();
-      gameObject.model                 = xevModel;
-      gameObject.transform.translation = {x, 0.f, 0.0f};
-      gameObject.transform.scale       = glm::vec3{1.0f};
-      gameObjects.emplace(gameObject.getId(), std::move(gameObject));
-      x += .8f;
-    } // bunny do not have uv coords, so it is rendered as a dark silhouette
+    TransformComponent hogwartsTransform;
+    hogwartsTransform.scale       = glm::vec3{0.01f};
+    hogwartsTransform.rotation.x  = glm::radians(180.f);
+    hogwartsTransform.translation = glm::vec3{0, 0, 0};
+    entityManager.addComponent(hogwartsEntity, hogwartsTransform);
 
-    gameObjects.at(0).transform.scale      = {2.5f, 2.5f, 2.5f};
-    gameObjects.at(0).transform.rotation.z = glm::pi<float>();
-    gameObjects.at(1).transform.scale      = {0.2f, 0.2f, 0.2f};
-    gameObjects.at(2).transform.scale      = {0.2f, 0.2f, 0.2f};
-    gameObjects.at(3).transform.scale      = {2.f, 2.f, 2.f};
-    gameObjects.at(3).transform.translation.y += .2f;
-    gameObjects.at(4).transform.scale = {2.f, 2.f, 2.f};
-    gameObjects.at(4).transform.scale = {4.f, 2.f, 4.f};
-    gameObjects.at(4).transform.translation.y += .2f;
+    ModelComponent hogwartsModel;
+    hogwartsModel.model = xevModel;
+    entityManager.addComponent(hogwartsEntity, hogwartsModel);
   }
 
-  { // Floor
-    xevModel = XevModel::createModelFromFile(xevDevice, relativeModelPath +
-    "quad.obj"); auto gameObject                  = XevGameObject::createGameObject();
-    gameObject.model                 = xevModel;
-    gameObject.transform.translation = {0, 0.2f, 0.0f};
-    gameObject.transform.scale       = glm::vec3{10.0f};
-    gameObjects.emplace(gameObject.getId(), std::move(gameObject));
-  }
+  // { // Floor
+  //   xevModel = XevModel::createModelFromFile(xevDevice, relativeModelPath +
+  //   "quad.obj"); auto gameObject                  = XevGameObject::createGameObject();
+  //   gameObject.model                 = xevModel;
+  //   gameObject.transform.translation = {0, 0.2f, 0.0f};
+  //   gameObject.transform.scale       = glm::vec3{10.0f};
+  //   gameObjects.emplace(gameObject.getId(), std::move(gameObject));
+  // }
 
-  { // Point light
-    std::vector<glm::vec3> lightColors{{1.f, .1f, .1f}, {.1f, .1f, 1.f}, {.1f, 1.f, .1f},
-                                       {1.f, 1.f, .1f}, {.1f, 1.f, 1.f}, {1.f, 1.f, 1.f}};
-
-    for (int i = 0; i < lightColors.size(); i++) {
-      auto pointLight  = XevGameObject::makePointLight(10.f);
-      pointLight.color = lightColors[i % lightColors.size()];
-      auto rotateLight = glm::rotate(
-          glm::mat4(1.f), (i * glm::two_pi<float>()) / lightColors.size(),
-          {0.f, -1.f, 0.f});
-      pointLight.transform.translation =
-          rotateLight * vec4(-158.547, -26.2754, -5.83202, 1);
-      gameObjects.emplace(pointLight.getId(), std::move(pointLight));
-    }
-  }
+  // { // Point light
+  //   std::vector<glm::vec3> lightColors{{1.f, .1f, .1f}, {.1f, .1f, 1.f}, {.1f, 1.f,
+  //   .1f},
+  //                                      {1.f, 1.f, .1f}, {.1f, 1.f, 1.f},
+  //                                      {1.f, 1.f, 1.f}};
+  //
+  //   for (int i = 0; i < lightColors.size(); i++) {
+  //     auto pointLight  = XevGameObject::makePointLight(1000.f);
+  //     pointLight.color = lightColors[i % lightColors.size()];
+  //     auto rotateLight = glm::rotate(
+  //         glm::mat4(1.f), (i * glm::two_pi<float>()) / lightColors.size(),
+  //         {0.f, -1.f, 0.f});
+  //     pointLight.transform.translation =
+  //         rotateLight * vec4(0.f, 0.f, -1.f, 10.f) * 100.f;
+  //     gameObjects.emplace(pointLight.getId(), std::move(pointLight));
+  //   }
+  // }
   // { // Sun
   //   auto sunLight =
   //       XevGameObject::makePointLight(1000.f, 1000.f, vec3{255, 221, 64} / 255.f);
@@ -201,7 +208,17 @@ void FirstApp::loadGameObjects() {
 }
 
 void FirstApp::updateGameObjects(float dt) {
-  for (auto& obj : gameObjects) { obj.second.update(dt); }
+  for (auto& kv : gameObjectManager.getGameObjects()) {
+    auto& gameObject = kv.second;
+    if (entityManager.hasComponent<TransformComponent>(gameObject.getEntityId())) {
+      auto& transform =
+          entityManager.getComponent<TransformComponent>(gameObject.getEntityId());
+
+      transform.translation += glm::vec3{0.f, 0.f, 0.1f} * dt;
+
+      // TODO: use systems to manage update(physics, etc)
+    }
+  }
 }
 
 void FirstApp::fixedUpdateGameObjects(float& timeLag) {

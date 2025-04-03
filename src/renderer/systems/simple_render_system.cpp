@@ -70,19 +70,29 @@ void SimpleRenderSystem::renderGameObjects(FrameInfo& frameInfo) {
       frameInfo.commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1,
       &frameInfo.globalDescriptorSet, 0, nullptr);
 
-  for (auto& kv : frameInfo.gameObjects) {
-    auto& obj = kv.second;
-    if (obj.model == nullptr) continue;
+  auto entitiesWithReqComps =
+      frameInfo.entityManager
+          .getEntitiesWithComponents<ModelComponent, TransformComponent>();
+
+  for (const auto& entity : entitiesWithReqComps) {
+    auto& modelComponent = frameInfo.entityManager.getComponent<ModelComponent>(entity);
+    auto& transformComponent =
+        frameInfo.entityManager.getComponent<TransformComponent>(entity);
+
+    if (modelComponent.model == nullptr) continue;
+
     SimplePushConstantData push{};
-    push.modelMatrix  = obj.transform.mat4();
-    push.normalMatrix = obj.transform.normalMatrix();
+    push.modelMatrix  = transformComponent.getMat4();
+    push.normalMatrix = transformComponent.getNormalMat3();
 
     vkCmdPushConstants(
         frameInfo.commandBuffer, pipelineLayout,
         VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0,
         sizeof(SimplePushConstantData), &push);
-    obj.model->bind(frameInfo.commandBuffer);
-    obj.model->draw(frameInfo.commandBuffer);
+
+    // Bind the model and draw
+    modelComponent.model->bind(frameInfo.commandBuffer);
+    modelComponent.model->draw(frameInfo.commandBuffer);
   }
 }
 
