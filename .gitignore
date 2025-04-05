@@ -46,4 +46,5 @@
 
 .VSCodeCounter
 
-
+.DS_Store
+*.DotSettings
