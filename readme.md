@@ -23,7 +23,7 @@ More features will be added in the future.
 
 ### Install Vulkan(Linux)
 
-This project has set up [GitHub Actions](.github/workflows/cmake-build-win-linux.yml),
+This project has set up [GitHub Actions](.github/workflows/cmake-build-multi.yml),
 follow the instruction to install the dependencies and build.
 
 ```bash    
@@ -61,7 +61,7 @@ Or you can use **Clion IDE** or **VS Code** to build and run the project.(Tested
 
 ## External Libraries
 
-The following libraries are used and pre-installed in this project [External](./external) folder.
+The following libraries are used and pre-installed in this project [External](Engine/External) folder.
 
 | File              | Version | Project Link                                   |
 |-------------------|---------|------------------------------------------------|
@@ -81,11 +81,12 @@ _The following dependencies will be installed **automatically** by CMake._
 
 - [ ] Physics Engine (Working on)
 - [X] ECS: Entity Component System
-- [ ] Refactor: naming, structure
+- [X] Refactor#2: naming, structure
 - [ ] Rendering: Texture
 - [ ] Rendering: Better Lighting System including Shadow Mapping, Reflection, etc.
 - [ ] GUI: ImGUI
 - [ ] Asset Importer: OpenVDB, FBX, etc.
+- [ ] Refactor#3: cleanup, structure
 
 ## Current Problems
 

@@ -42,7 +42,7 @@
 /cmake-build-release/
 /build/
 
-!/assets/models
+!/Assets/models
 
 .VSCodeCounter
 
