@@ -85,13 +85,8 @@ _The following dependencies will be installed **automatically** by CMake._
 - [ ] Rendering: Texture
 - [ ] Rendering: Better Lighting System including Shadow Mapping, Reflection, etc.
 - [ ] GUI: ImGUI
-- [ ] Asset Importer: OpenVDB, FBX, etc.
+- [ ] Asset Importer: USD, FBX, etc.
 - [ ] Refactor#3: cleanup, structure
-
-## Current Problems
-
-1. GitHub CI is not working properly: enabled extensions in shaders
-2. Some function calls are not in the proper place.
 
 ------
 
