@@ -1,0 +1,55 @@
+name: CMake Build on Windows-MSYS2-UCRT64
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  BUILD_TYPE: Release
+
+
+jobs:
+  win-build:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install msys2-ucrt64
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          install: git mingw-w64-ucrt-x86_64-gcc
+
+      - name: Install CMake
+        run: |
+          pacman -S --noconfirm mingw-w64-ucrt-x86_64-cmake
+
+      - name: Install Dependencies
+        run: |
+          pacman -Syu --noconfirm
+          pacman -Su --noconfirm
+          pacman -S --noconfirm mingw-w64-ucrt-x86_64-glslang
+          pacman -S --noconfirm mingw-w64-ucrt-x86_64-glfw
+          pacman -S --noconfirm mingw-w64-ucrt-x86_64-glm
+          pacman -S --noconfirm mingw-w64-ucrt-x86_64-vulkan-headers
+          pacman -S --noconfirm mingw-w64-ucrt-x86_64-vulkan
+          pacman -S --noconfirm mingw-w64-ucrt-x86_64-vulkan-validation-layers
+
+      - name: Set Vulkan SDK path
+        run: |
+          echo "VULKAN_SDK=D:/a/_temp/msys64/ucrt64" >> $GITHUB_ENV
+
+      - name: CI-Build
+        run: |
+          echo 'Running in MSYS2!'
+
+      - name: build
+        run: |
+          cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+          cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
