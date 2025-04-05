@@ -1,8 +1,0 @@
-
-namespace xev {
-
-class XeRigidBody {
-
-};
-
-}

@@ -4,39 +4,24 @@ project(XenonVk)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# ------------------- Dependencies -------------------
-# Vulkan SDK
-find_package(Vulkan REQUIRED)
-
-include(FetchContent)
-
-## GLFWCMakeTemplate https://github.com/SasLuca/GLFWCMakeTemplate
-#if (UNIX)
-#    option(GLFW_USE_WAYLAND "Enable Wayland" ON)    # use wayland on linux
-#endif ()
-
-FetchContent_Declare(glfw GIT_REPOSITORY https://github.com/glfw/glfw.git GIT_TAG master)
-set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-FetchContent_MakeAvailable(glfw)
-
-# Math lib: GLM
-FetchContent_Declare(glm GIT_REPOSITORY	https://github.com/g-truc/glm.git GIT_TAG master)
-FetchContent_MakeAvailable(glm)
-
-# ------------------- Project -------------------
-# set directory paths
+# -----------------   Paths   -------------------
 set(AST_DIR ${CMAKE_SOURCE_DIR}/assets)
 set(CMK_DIR ${CMAKE_SOURCE_DIR}/cmake)
-set(EXT_DIR ${CMAKE_SOURCE_DIR}/external)
-set(SRC_DIR ${CMAKE_SOURCE_DIR}/src)
-set(SHA_DIR ${CMAKE_SOURCE_DIR}/shaders)
+set(EXT_DIR ${CMAKE_SOURCE_DIR}/Engine/External)
+set(SRC_DIR ${CMAKE_SOURCE_DIR}/Engine)
+set(SHA_DIR ${CMAKE_SOURCE_DIR}/Engine/Renderer/Shaders)
+set(SPIRV_OUT_DIR ${PROJECT_BINARY_DIR}/spirv)
 
-# set shader output directory
-set(SPIRV_OUT_DIR ${PROJECT_BINARY_DIR}/shaders)
+# ------------------- Options -------------------
+## GLFWCMakeTemplate https://github.com/SasLuca/GLFWCMakeTemplate
+#if (UNIX)   # use wayland on linux
+#    option(GLFW_USE_WAYLAND "Enable Wayland" ON)
+#endif ()
 
-# script to compile shaders
-include(cmake/compile_shaders.cmake)
+# -------------- Dependencies -------------------
+include(CMake/autoconfig-dependencies.cmake)
+include(CMake/precompile-shaders.cmake)
 
-add_subdirectory(src)
+# ------------------- Project -------------------
+add_subdirectory(Engine)
+add_subdirectory(Example)
