@@ -10,7 +10,7 @@ public:
 private:
   virtual void load() = 0;
   virtual void tick(float) {}
-  virtual void fixedTick(float& timeLag) = 0;
+  virtual void fixedTick(float) = 0;
 };
 
 } // namespace xev

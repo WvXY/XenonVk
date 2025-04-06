@@ -85,7 +85,7 @@ void DemoApp::run() {
 
     xevWindow.addInfoToTitle("FPS: " + std::to_string(timeManager.getFps()));
 
-    // Input handling
+    // Input handling TODO: use component
     glm::vec2 mouseDelta = xevWindow.getMouseAccumDelta();
     xevController.mouseLook(
         xevWindow.getGLFWwindow(), frameTime, mouseDelta.x, mouseDelta.y, viewTransform);
@@ -93,15 +93,15 @@ void DemoApp::run() {
 
     camera.setViewYXZ(viewTransform.translation, viewTransform.rotation);
 
-    // Update Camera
+    // Update Camera  TODO: use component
     float fov = camera.updateFov(xevWindow.getScrollDelta());
     //    camera.setOrthographicProjection(-aspect, aspect, -1, 1, -1, 1);
     camera.setPerspectiveProjection(
         glm::radians(fov), xevRenderer.getAspectRatio(), 0.1f, 1e10);
 
-    // updateGameObjects(frameTime);
-    fixedTick(timeManager.getTimeLag());
+    fixedTick(frameTime);
 
+    // TODO: emcapsulate this in a function
     if (auto commandBuffer = xevRenderer.beginFrame()) {
       int frameIndex = xevRenderer.getFrameIndex();
       FrameInfo frameInfo{
@@ -134,94 +134,100 @@ void DemoApp::run() {
 
 void DemoApp::load() {
   std::shared_ptr<XevModel> xevModel;
-  {
-    std::string modelPath = "MountainTerrain.obj";
-    xevModel = XevModel::createModelFromFile(xevDevice, relativeModelPath + modelPath);
 
-    Entity terrainEntity = entityManager.createEntity();
-
-    TransformComponent terrainTransform;
-    terrainTransform.scale       = glm::vec3{1.0f};
-    terrainTransform.translation = glm::vec3{0, 0, 0};
-    terrainTransform.rotation.x  = glm::radians(180.f); // TODO: auto rotation on load
-    entityManager.addComponent(terrainEntity, terrainTransform);
-
-    // Set ModelComponent for the terrain (the model loaded earlier)
-    ModelComponent terrainModel;
-    terrainModel.model = xevModel;
-    entityManager.addComponent(terrainEntity, terrainModel);
-  }
-
-  {
-    std::string modelPath = "Hogwarts.obj";
-    xevModel = XevModel::createModelFromFile(xevDevice, relativeModelPath + modelPath);
-    Entity hogwartsEntity = entityManager.createEntity();
-
-    TransformComponent hogwartsTransform;
-    hogwartsTransform.scale       = glm::vec3{0.01f};
-    hogwartsTransform.rotation.x  = glm::radians(180.f);
-    hogwartsTransform.translation = glm::vec3{0, 0, 0};
-    entityManager.addComponent(hogwartsEntity, hogwartsTransform);
-
-    ModelComponent hogwartsModel;
-    hogwartsModel.model = xevModel;
-    entityManager.addComponent(hogwartsEntity, hogwartsModel);
-  }
-
-  // { // Floor
-  //   xevModel = XevModel::createModelFromFile(xevDevice, relativeModelPath +
-  //   "quad.obj"); auto gameObject                  = XevGameObject::createGameObject();
-  //   gameObject.model                 = xevModel;
-  //   gameObject.transform.translation = {0, 0.2f, 0.0f};
-  //   gameObject.transform.scale       = glm::vec3{10.0f};
-  //   gameObjects.emplace(gameObject.getId(), std::move(gameObject));
-  // }
-
-  // { // Point light
-  //   std::vector<glm::vec3> lightColors{{1.f, .1f, .1f}, {.1f, .1f, 1.f}, {.1f, 1.f,
-  //   .1f},
-  //                                      {1.f, 1.f, .1f}, {.1f, 1.f, 1.f},
-  //                                      {1.f, 1.f, 1.f}};
+  // {
+  //   std::string modelPath = "MountainTerrain.obj";
+  //   xevModel = XevModel::createModelFromFile(xevDevice, relativeModelPath + modelPath);
   //
-  //   for (int i = 0; i < lightColors.size(); i++) {
-  //     auto pointLight  = XevGameObject::makePointLight(1000.f);
-  //     pointLight.color = lightColors[i % lightColors.size()];
-  //     auto rotateLight = glm::rotate(
-  //         glm::mat4(1.f), (i * glm::two_pi<float>()) / lightColors.size(),
-  //         {0.f, -1.f, 0.f});
-  //     pointLight.transform.translation =
-  //         rotateLight * vec4(0.f, 0.f, -1.f, 10.f) * 100.f;
-  //     gameObjects.emplace(pointLight.getId(), std::move(pointLight));
-  //   }
+  //   Entity terrainEntity = entityManager.createEntity();
+  //
+  //   TransformComponent terrainTransform;
+  //   terrainTransform.scale       = glm::vec3{1.0f};
+  //   terrainTransform.translation = glm::vec3{0, 0, 0};
+  //   terrainTransform.rotation.x  = glm::radians(180.f); // TODO: auto rotation on load
+  //   entityManager.addComponent(terrainEntity, terrainTransform);
+  //
+  //   // Set ModelComponent for the terrain (the model loaded earlier)
+  //   ModelComponent terrainModel;
+  //   terrainModel.model = xevModel;
+  //   entityManager.addComponent(terrainEntity, terrainModel);
   // }
-  // { // Sun
-  //   auto sunLight =
-  //       XevGameObject::makePointLight(1000.f, 1000.f, vec3{255, 221, 64} / 255.f);
-  //   sunLight.transform.translation = {2400.f, -3000.f, 6000.f};
-  //   gameObjects.emplace(sunLight.getId(), std::move(sunLight));
+  //
+  // {
+  //   std::string modelPath = "Hogwarts.obj";
+  //   xevModel = XevModel::createModelFromFile(xevDevice, relativeModelPath + modelPath);
+  //   Entity hogwartsEntity = entityManager.createEntity();
+  //
+  //   TransformComponent hogwartsTransform;
+  //   hogwartsTransform.scale       = glm::vec3{0.01f};
+  //   hogwartsTransform.rotation.x  = glm::radians(180.f);
+  //   hogwartsTransform.translation = glm::vec3{0, 0, 0};
+  //   entityManager.addComponent(hogwartsEntity, hogwartsTransform);
+  //
+  //   ModelComponent hogwartsModel;
+  //   hogwartsModel.model = xevModel;
+  //   entityManager.addComponent(hogwartsEntity, hogwartsModel);
   // }
-}
 
-void DemoApp::tick(float dt) {
-  for (auto& kv : actorManager.getActors()) {
-    auto& gameObject = kv.second;
-    if (entityManager.hasComponent<TransformComponent>(gameObject.getEntityId())) {
-      auto& transform =
-          entityManager.getComponent<TransformComponent>(gameObject.getEntityId());
+  { // Floor
+    Entity floorEntity = entityManager.createEntity();
+    xevModel = XevModel::createModelFromFile(xevDevice, relativeModelPath + "quad.obj");
+    ModelComponent floorModel;
+    floorModel.model = xevModel;
+    entityManager.addComponent(floorEntity, floorModel);
 
-      transform.translation += glm::vec3{0.f, 0.f, 0.1f} * dt;
+    TransformComponent floorTransform;
+    floorTransform.translation = glm::vec3{0, 10, 0};
+    floorTransform.scale       = glm::vec3{1000.f};
+    entityManager.addComponent(floorEntity, floorTransform);
+  }
 
-      // TODO: use systems to manage update(physics, etc)
+  { // Point light
+    std::vector<glm::vec3> lightColors{{1.f, .1f, .1f}, {.1f, .1f, 1.f}, {.1f, 1.f, .1f},
+                                       {1.f, 1.f, .1f}, {.1f, 1.f, 1.f}, {1.f, 1.f, 1.f}};
+
+    for (int i = 0; i < lightColors.size(); i++) {
+      Entity pointLightEntity = entityManager.createEntity();
+
+      PointLightComponent pointLight;
+      pointLight.color     = lightColors[i % lightColors.size()];
+      pointLight.intensity = 100.f;
+      entityManager.addComponent(pointLightEntity, pointLight);
+
+      TransformComponent pointLightTransform;
+      auto rotateLight = glm::rotate(
+          glm::mat4(1.f), (i * glm::two_pi<float>()) / lightColors.size(),
+          {0.f, -1.f, 0.f});
+      pointLightTransform.translation =
+          rotateLight * glm::vec4(0.f, 0.f, -1.f, 10.f) * 10.f;
+      entityManager.addComponent(pointLightEntity, pointLightTransform);
     }
   }
 }
 
-void DemoApp::fixedTick(float& timeLag) {
+void DemoApp::tick(float dt) {
+
+  float theta = dt * 2;
+  glm::mat3 rot;
+  rot[0] = {cos(theta), 0, sin(theta)};
+  rot[1] = {0, 1, 0};
+  rot[2] = {-sin(theta), 0, cos(theta)};
+
+  for (auto entity :
+       entityManager
+           .getEntitiesWithComponents<PointLightComponent, TransformComponent>()) {
+    auto& transform       = entityManager.getComponent<TransformComponent>(entity);
+    transform.translation = rot * transform.translation;
+  }
+}
+
+void DemoApp::fixedTick(float dt) {
+  // maybe better implementation
+  static float timeLag = 0;
+  timeLag += dt;
+
   while (timeLag >= TimeManager::FIXED_TIME_STEP) {
-
-    // updatePhysics(TimeManager::FIXED_TIME_STEP);
     tick(TimeManager::FIXED_TIME_STEP);
-
     timeLag -= TimeManager::FIXED_TIME_STEP;
   }
 }

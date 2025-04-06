@@ -27,7 +27,6 @@ public:
     auto newTime = std::chrono::high_resolution_clock::now();
     frameTime    = std::chrono::duration<float>(newTime - currentTime).count();
     currentTime  = newTime;
-    timeLag += frameTime; // in seconds
     frameTime = std::min(frameTime, MAX_FRAME_TIME);
     frameCount++;
   }
@@ -44,7 +43,6 @@ public:
     offset += duration(pausedTime, std::chrono::high_resolution_clock::now());
   }
 
-  float& getTimeLag() { return timeLag; }
   float& getFrameTime() { return frameTime; }
   float getFps() const { return 1.f / frameTime; }
   int64_t& getFrameCount() { return frameCount; }
@@ -59,7 +57,6 @@ private:
   time_point currentTime;
   time_point pausedTime;
   float frameTime = MAX_FRAME_TIME;
-  float timeLag{};
   float offset{};
 
   bool isRunning = false;
@@ -69,7 +66,6 @@ private:
     frameCount           = 0;
     currentTime          = std::chrono::high_resolution_clock::now();
     const auto startTime = currentTime;
-    timeLag              = 0.0f;
   }
 
   static float duration(time_point start, time_point end) {

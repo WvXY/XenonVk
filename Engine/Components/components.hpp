@@ -14,9 +14,9 @@ struct ModelComponent {
 };
 
 struct TransformComponent {
-  glm::vec3 translation{};
-  glm::vec3 scale{1.0f, 1.0f, 1.0f};
-  glm::vec3 rotation{};
+  glm::vec3 translation{0.f};
+  glm::vec3 scale{1.0f};
+  glm::vec3 rotation{0.f};
 
   float& yaw() { return rotation.y; }
   float& pitch() { return rotation.x; }

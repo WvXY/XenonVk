@@ -1,6 +1,6 @@
 #version 460
 
-#extension GL_EXT_fragment_shader_barycentric : enable
+//#extension GL_EXT_fragment_shader_barycentric : enable
 
 layout(location = 0) in vec3 fragColor;
 layout(location = 1) in vec3 fragPosWorld;
@@ -52,20 +52,20 @@ void main() {
         specularLight += intensity * blinnTerm;
     }
 
-    // draw wireframe (https://wunkolo.github.io/post/2022/07/gl_ext_fragment_shader_barycentric-wireframe/)
-    const vec3 baryCoord = vec3(gl_BaryCoordEXT);
-    const vec3 dBaryCoordX = dFdx(baryCoord);
-    const vec3 dBaryCoordY = dFdy(baryCoord);
-    const vec3 dBaryCoord  = sqrt(dBaryCoordX * dBaryCoordX + dBaryCoordY * dBaryCoordY);
+//    // draw wireframe (https://wunkolo.github.io/post/2022/07/gl_ext_fragment_shader_barycentric-wireframe/)
+//    const vec3 baryCoord = vec3(gl_BaryCoordEXT);
+//    const vec3 dBaryCoordX = dFdx(baryCoord);
+//    const vec3 dBaryCoordY = dFdy(baryCoord);
+//    const vec3 dBaryCoord  = sqrt(dBaryCoordX * dBaryCoordX + dBaryCoordY * dBaryCoordY);
+//
+//    float edgeThreshold = 0.01;
+//    const float thickness = 10;// In pixels
+//    const vec3 remap = smoothstep(vec3(0.0), dBaryCoord * thickness, baryCoord);
+//    const float wireframe = min(remap.x, min(remap.y, remap.z));
 
-    float edgeThreshold = 0.01;
-    const float thickness = 10;// In pixels
-    const vec3 remap = smoothstep(vec3(0.0), dBaryCoord * thickness, baryCoord);
-    const float wireframe = min(remap.x, min(remap.y, remap.z));
-
-    if (wireframe < edgeThreshold) {
-        outColor = vec4(0, 0, 0, 1);
-    } else {
+//    if (wireframe < edgeThreshold) {
+//        outColor = vec4(0, 0, 0, 1);
+//    } else {
         outColor = vec4(diffuseLight * fragColor + specularLight * fragColor, 1.0);
-    }
+//    }
 }

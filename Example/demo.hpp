@@ -36,7 +36,7 @@ private:
 
   void load() override;
   void tick(float dt) override;
-  void fixedTick(float& timeLag) override;
+  void fixedTick(float dt) override;
 
   std::unique_ptr<XevDescriptorPool> globalPool{};
   // XevGameObject::Map gameObjects;
