@@ -10,7 +10,7 @@
 A simple 3D Vulkan game engine for my personal study and interests.
 
 This project was initially created by following the tutorial
-of [**Little Vulkan Engine**](https://youtu.be/Y9U9IE0gVHA?si=42keJCaEPE-R697P) 
+of [**Little Vulkan Engine**](https://youtu.be/Y9U9IE0gVHA?si=42keJCaEPE-R697P)
 for learning Vulkan and game engine structure.
 More features will be added in the future.
 
@@ -91,6 +91,10 @@ _The following dependencies will be installed **automatically** by CMake._
 - [ ] GUI: ImGUI
 - [ ] Asset Importer: USD, FBX, etc.
 - [ ] Refactor#3: cleanup, structure
+
+## Problems
+
+- SIGSEGV error on main.cpp when using unique_ptr for App class
 
 ------
 

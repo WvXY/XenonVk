@@ -79,9 +79,13 @@ void DemoApp::run() {
   timeManager.start();
   auto& frameTime = timeManager.getFrameTime();
 
-  while (!xevWindow.shouldClose() &&
-         !xevController.isPressed(xevWindow.getGLFWwindow(), GLFW_KEY_ESCAPE)) {
+  while (!xevWindow.shouldClose()) {
     glfwPollEvents();
+
+    // check ESC key for closing window
+    if (xevController.isPressed(xevWindow.getGLFWwindow(), GLFW_KEY_ESCAPE)) {
+      glfwSetWindowShouldClose(xevWindow.getGLFWwindow(), GLFW_TRUE);
+    }
 
     xevWindow.addInfoToTitle("FPS: " + std::to_string(timeManager.getFps()));
 
@@ -171,9 +175,8 @@ void DemoApp::load() {
 
   // { // Floor
   //   Entity floorEntity = entityManager.createEntity();
-  //   xevModel = XevModel::createModelFromFile(xevDevice, relativeModelPath + "quad.obj");
-  //   ModelComponent floorModel;
-  //   floorModel.model = xevModel;
+  //   xevModel = XevModel::createModelFromFile(xevDevice, relativeModelPath +
+  //   "quad.obj"); ModelComponent floorModel; floorModel.model = xevModel;
   //   entityManager.addComponent(floorEntity, floorModel);
   //
   //   TransformComponent floorTransform;
