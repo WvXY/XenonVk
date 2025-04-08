@@ -57,20 +57,27 @@ void BasicRenderSystem::createPipelineLayout(VkDescriptorSetLayout globalSetLayo
 void BasicRenderSystem::createPipeline(VkRenderPass renderPass) {
   assert(pipelineLayout != nullptr && "Cannot create pipeline before pipeline layout");
 
+  // Fill pipeline
   PipelineConfigInfo fillConfig{};
   XevPipeline::defaultPipelineConfigInfo(fillConfig);
-  fillConfig.renderPass = renderPass;
-  fillConfig.pipelineLayout = pipelineLayout;
+  fillConfig.renderPass                    = renderPass;
+  fillConfig.pipelineLayout                = pipelineLayout;
   fillConfig.rasterizationInfo.polygonMode = VK_POLYGON_MODE_FILL;
   // fillConfig.rasterizationInfo.cullMode = VK_CULL_MODE_BACK_BIT;
 
-  fillPipeline = std::make_unique<XevPipeline>(
-      xevDevice, vertShaderSrc, fragShaderSrc, fillConfig);
+  fillPipeline =
+      std::make_unique<XevPipeline>(xevDevice, vertShaderSrc, fragShaderSrc, fillConfig);
 
+  // Wireframe pipeline
   PipelineConfigInfo wireConfig = fillConfig;
+  wireConfig.dynamicStateEnables.push_back(VK_DYNAMIC_STATE_LINE_WIDTH);
+  wireConfig.dynamicStateInfo.pDynamicStates = wireConfig.dynamicStateEnables.data();
+  wireConfig.dynamicStateInfo.dynamicStateCount =
+      static_cast<uint32_t>(wireConfig.dynamicStateEnables.size());
+
   wireConfig.rasterizationInfo.polygonMode = VK_POLYGON_MODE_LINE;
-  wireConfig.rasterizationInfo.cullMode = VK_CULL_MODE_NONE;
-  wireConfig.rasterizationInfo.lineWidth = 2.0f;
+  wireConfig.rasterizationInfo.cullMode    = VK_CULL_MODE_NONE;
+  wireConfig.rasterizationInfo.lineWidth   = 2.0f;
 
   // Optional: Use depth bias to prevent z-fighting
   wireConfig.rasterizationInfo.depthBiasEnable = VK_TRUE;
@@ -92,12 +99,12 @@ void BasicRenderSystem::render(FrameInfo& frameInfo) {
       &frameInfo.globalDescriptorSet, 0, nullptr);
 
   for (const auto& entity : entitiesWithReqComps) {
-    auto& modelComponent = entityManager.getComponent<ModelComponent>(entity);
+    auto& modelComponent     = entityManager.getComponent<ModelComponent>(entity);
     auto& transformComponent = entityManager.getComponent<TransformComponent>(entity);
     if (modelComponent.model == nullptr) continue;
 
     SimplePushConstantData push{};
-    push.modelMatrix = transformComponent.getMat4();
+    push.modelMatrix  = transformComponent.getMat4();
     push.normalMatrix = transformComponent.getNormalMat3();
 
     vkCmdPushConstants(
@@ -116,12 +123,12 @@ void BasicRenderSystem::render(FrameInfo& frameInfo) {
       &frameInfo.globalDescriptorSet, 0, nullptr);
 
   for (const auto& entity : entitiesWithReqComps) {
-    auto& modelComponent = entityManager.getComponent<ModelComponent>(entity);
+    auto& modelComponent     = entityManager.getComponent<ModelComponent>(entity);
     auto& transformComponent = entityManager.getComponent<TransformComponent>(entity);
     if (modelComponent.model == nullptr) continue;
 
     SimplePushConstantData push{};
-    push.modelMatrix = transformComponent.getMat4();
+    push.modelMatrix  = transformComponent.getMat4();
     push.normalMatrix = transformComponent.getNormalMat3();
 
     vkCmdPushConstants(
@@ -133,6 +140,5 @@ void BasicRenderSystem::render(FrameInfo& frameInfo) {
     modelComponent.model->draw(frameInfo.commandBuffer);
   }
 }
-
 
 } // namespace xev
