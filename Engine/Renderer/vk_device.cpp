@@ -6,6 +6,8 @@
 #include <set>
 #include <unordered_set>
 
+#include <vulkan/vulkan_beta.h>
+
 namespace xev {
 
 // local callback functions
@@ -71,22 +73,25 @@ void XevDevice::createInstance() {
   appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
   appInfo.pEngineName        = "No Engine";
   appInfo.engineVersion      = VK_MAKE_VERSION(1, 0, 0);
-  appInfo.apiVersion         = VK_API_VERSION_1_0;
+  appInfo.apiVersion         = VK_API_VERSION_1_4;
 
   VkInstanceCreateInfo createInfo = {};
   createInfo.sType                = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
   createInfo.pApplicationInfo     = &appInfo;
 
-  auto extensions = getRequiredExtensions();
+  auto instanceExtensions = getRequiredInstanceExtensions();
 
-// Add VK_KHR_portability_enumeration extension if on macOS
+  // Add VK_KHR_portability extensions if on macOS
+  // https://www.reddit.com/r/vulkan/comments/17ecxkg/beginner_having_trouble_enabling_vk_khr/
 #ifdef __APPLE__
-  extensions.push_back(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME);
+  deviceExtensions.push_back(VK_KHR_PORTABILITY_SUBSET_EXTENSION_NAME);
+  instanceExtensions.push_back(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME);
+  instanceExtensions.push_back(VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME);
   createInfo.flags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
 #endif
 
-  createInfo.enabledExtensionCount   = static_cast<uint32_t>(extensions.size());
-  createInfo.ppEnabledExtensionNames = extensions.data();
+  createInfo.enabledExtensionCount   = static_cast<uint32_t>(instanceExtensions.size());
+  createInfo.ppEnabledExtensionNames = instanceExtensions.data();
 
   VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo;
   if (enableValidationLayers) {
@@ -159,7 +164,7 @@ void XevDevice::createLogicalDevice() {
   VkPhysicalDeviceFeatures deviceFeatures = {};
   deviceFeatures.samplerAnisotropy        = VK_TRUE;
   deviceFeatures.fillModeNonSolid         = VK_TRUE;
-  deviceFeatures.wideLines                = VK_TRUE;
+  // deviceFeatures.wideLines                = VK_TRUE;
 
   VkDeviceCreateInfo createInfo = {};
   createInfo.sType              = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
@@ -271,7 +276,7 @@ bool XevDevice::checkValidationLayerSupport() {
   return true;
 }
 
-std::vector<const char*> XevDevice::getRequiredExtensions() {
+std::vector<const char*> XevDevice::getRequiredInstanceExtensions() {
   uint32_t glfwExtensionCount = 0;
   const char** glfwExtensions;
   glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
@@ -298,7 +303,7 @@ void XevDevice::hasGflwRequiredInstanceExtensions() {
   }
 
   std::cout << "required extensions:" << std::endl;
-  auto requiredExtensions = getRequiredExtensions();
+  auto requiredExtensions = getRequiredInstanceExtensions();
   for (const auto& required : requiredExtensions) {
     std::cout << "\t" << required << std::endl;
     if (available.find(required) == available.end()) {
