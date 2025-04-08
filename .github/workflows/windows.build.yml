@@ -1,4 +1,4 @@
-name: CMake Build on Windows-MSYS2-UCRT64
+name: CMake Build on Win-msys2
 
 on:
   push:

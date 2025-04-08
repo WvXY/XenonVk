@@ -2,6 +2,9 @@
 
 **Under development...**
 
+[![CI - Linux](https://github.com/WvXY/XenonVk/actions/workflows/ubuntu.build.yml/badge.svg)](https://github.com/WvXY/XenonVk/actions/workflows/ubuntu.build.yml)
+[![CI - Windows](https://github.com/WvXY/XenonVk/actions/workflows/windows.build.yml/badge.svg)](https://github.com/WvXY/XenonVk/actions/workflows/windows.build.yml)
+
 ## Description
 
 A simple 3D Vulkan game engine for my personal study and interests.
@@ -56,6 +59,7 @@ You can use `bash build.sh` to build the project or `bash run.sh` to build and r
 
 Or you can use **Clion IDE** or **VS Code** to build and run the project.(Tested)
 
+This project has set up [GitHub Actions](.github/workflows/) to build and test on Linux and Windows.
 
 -----
 
