@@ -20,6 +20,7 @@ private:
 
   void getAttributeDescriptions(PipelineConfigInfo& configInfo);
 
+  std::unique_ptr<XevPipeline> xevPipeline;
   std::string vertShaderSrc = "../spirv/point_light.vert.spv";
   std::string fragShaderSrc = "../spirv/point_light.frag.spv";
 };

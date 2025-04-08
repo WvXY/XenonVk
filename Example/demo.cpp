@@ -135,23 +135,23 @@ void DemoApp::run() {
 void DemoApp::load() {
   std::shared_ptr<XevModel> xevModel;
 
-  // {
-  //   std::string modelPath = "MountainTerrain.obj";
-  //   xevModel = XevModel::createModelFromFile(xevDevice, relativeModelPath + modelPath);
-  //
-  //   Entity terrainEntity = entityManager.createEntity();
-  //
-  //   TransformComponent terrainTransform;
-  //   terrainTransform.scale       = glm::vec3{1.0f};
-  //   terrainTransform.translation = glm::vec3{0, 0, 0};
-  //   terrainTransform.rotation.x  = glm::radians(180.f); // TODO: auto rotation on load
-  //   entityManager.addComponent(terrainEntity, terrainTransform);
-  //
-  //   // Set ModelComponent for the terrain (the model loaded earlier)
-  //   ModelComponent terrainModel;
-  //   terrainModel.model = xevModel;
-  //   entityManager.addComponent(terrainEntity, terrainModel);
-  // }
+  {
+    std::string modelPath = "MountainTerrain.obj";
+    xevModel = XevModel::createModelFromFile(xevDevice, relativeModelPath + modelPath);
+
+    Entity terrainEntity = entityManager.createEntity();
+
+    TransformComponent terrainTransform;
+    terrainTransform.scale       = glm::vec3{1.0f};
+    terrainTransform.translation = glm::vec3{0, 200, 0};
+    terrainTransform.rotation.x  = glm::radians(180.f); // TODO: auto rotation on load
+    entityManager.addComponent(terrainEntity, terrainTransform);
+
+    // Set ModelComponent for the terrain (the model loaded earlier)
+    ModelComponent terrainModel;
+    terrainModel.model = xevModel;
+    entityManager.addComponent(terrainEntity, terrainModel);
+  }
   //
   // {
   //   std::string modelPath = "Hogwarts.obj";
@@ -169,18 +169,18 @@ void DemoApp::load() {
   //   entityManager.addComponent(hogwartsEntity, hogwartsModel);
   // }
 
-  { // Floor
-    Entity floorEntity = entityManager.createEntity();
-    xevModel = XevModel::createModelFromFile(xevDevice, relativeModelPath + "quad.obj");
-    ModelComponent floorModel;
-    floorModel.model = xevModel;
-    entityManager.addComponent(floorEntity, floorModel);
-
-    TransformComponent floorTransform;
-    floorTransform.translation = glm::vec3{0, 10, 0};
-    floorTransform.scale       = glm::vec3{1000.f};
-    entityManager.addComponent(floorEntity, floorTransform);
-  }
+  // { // Floor
+  //   Entity floorEntity = entityManager.createEntity();
+  //   xevModel = XevModel::createModelFromFile(xevDevice, relativeModelPath + "quad.obj");
+  //   ModelComponent floorModel;
+  //   floorModel.model = xevModel;
+  //   entityManager.addComponent(floorEntity, floorModel);
+  //
+  //   TransformComponent floorTransform;
+  //   floorTransform.translation = glm::vec3{0, 10, 0};
+  //   floorTransform.scale       = glm::vec3{1000.f};
+  //   entityManager.addComponent(floorEntity, floorTransform);
+  // }
 
   { // Point light
     std::vector<glm::vec3> lightColors{{1.f, .1f, .1f}, {.1f, .1f, 1.f}, {.1f, 1.f, .1f},
@@ -191,7 +191,7 @@ void DemoApp::load() {
 
       PointLightComponent pointLight;
       pointLight.color     = lightColors[i % lightColors.size()];
-      pointLight.intensity = 100.f;
+      pointLight.intensity = 8000.f;
       entityManager.addComponent(pointLightEntity, pointLight);
 
       TransformComponent pointLightTransform;
@@ -199,7 +199,7 @@ void DemoApp::load() {
           glm::mat4(1.f), (i * glm::two_pi<float>()) / lightColors.size(),
           {0.f, -1.f, 0.f});
       pointLightTransform.translation =
-          rotateLight * glm::vec4(0.f, 0.f, -1.f, 10.f) * 10.f;
+          rotateLight * glm::vec4(0.f, 0.f, -1.f, 10.f) * 300.f;
       entityManager.addComponent(pointLightEntity, pointLightTransform);
     }
   }

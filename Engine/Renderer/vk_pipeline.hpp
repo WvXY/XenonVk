@@ -9,10 +9,9 @@ namespace xev {
 
 struct PipelineConfigInfo {
   PipelineConfigInfo() = default;
+  PipelineConfigInfo(const PipelineConfigInfo&) = default;
+  PipelineConfigInfo& operator=(const PipelineConfigInfo&) = default;
 
-  PipelineConfigInfo(const PipelineConfigInfo&) = delete;
-
-  PipelineConfigInfo& operator=(const PipelineConfigInfo&) = delete;
 
   std::vector<VkVertexInputBindingDescription> bindingDescriptions{};
   std::vector<VkVertexInputAttributeDescription> attributeDescriptions{};

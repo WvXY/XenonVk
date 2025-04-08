@@ -23,13 +23,8 @@ public:
 
 protected:
   EntityManager& entityManager;
-
   XevDevice& xevDevice;
-  std::unique_ptr<XevPipeline> xevPipeline;
   VkPipelineLayout pipelineLayout = nullptr;
-
-  std::string vertShaderSrc;
-  std::string fragShaderSrc;
 };
 
 } // namespace xev

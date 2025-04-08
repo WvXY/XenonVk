@@ -18,7 +18,13 @@ private:
 
   void createPipeline(VkRenderPass renderPass) override;
 
+  // TODO: encapsulate single pipeline initialization
+  std::unique_ptr<XevPipeline> fillPipeline;
   std::string vertShaderSrc = "../spirv/basic_shader.vert.spv";
   std::string fragShaderSrc = "../spirv/basic_shader.frag.spv";
+
+  std::unique_ptr<XevPipeline> wireframePipeline;
+  std::string wireVertShaderSrc = "../spirv/wireframe.vert.spv";
+  std::string wireFragShaderSrc = "../spirv/wireframe.frag.spv";
 };
 } // namespace xev

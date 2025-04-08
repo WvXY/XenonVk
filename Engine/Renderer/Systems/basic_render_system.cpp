@@ -57,32 +57,47 @@ void BasicRenderSystem::createPipelineLayout(VkDescriptorSetLayout globalSetLayo
 void BasicRenderSystem::createPipeline(VkRenderPass renderPass) {
   assert(pipelineLayout != nullptr && "Cannot create pipeline before pipeline layout");
 
-  PipelineConfigInfo pipelineConfig{};
-  XevPipeline::defaultPipelineConfigInfo(pipelineConfig);
-  pipelineConfig.renderPass     = renderPass;
-  pipelineConfig.pipelineLayout = pipelineLayout;
-  xevPipeline                   = std::make_unique<XevPipeline>(
-      xevDevice, vertShaderSrc, fragShaderSrc, pipelineConfig);
+  PipelineConfigInfo fillConfig{};
+  XevPipeline::defaultPipelineConfigInfo(fillConfig);
+  fillConfig.renderPass = renderPass;
+  fillConfig.pipelineLayout = pipelineLayout;
+  fillConfig.rasterizationInfo.polygonMode = VK_POLYGON_MODE_FILL;
+  // fillConfig.rasterizationInfo.cullMode = VK_CULL_MODE_BACK_BIT;
+
+  fillPipeline = std::make_unique<XevPipeline>(
+      xevDevice, vertShaderSrc, fragShaderSrc, fillConfig);
+
+  PipelineConfigInfo wireConfig = fillConfig;
+  wireConfig.rasterizationInfo.polygonMode = VK_POLYGON_MODE_LINE;
+  wireConfig.rasterizationInfo.cullMode = VK_CULL_MODE_NONE;
+  wireConfig.rasterizationInfo.lineWidth = 2.0f;
+
+  // Optional: Use depth bias to prevent z-fighting
+  wireConfig.rasterizationInfo.depthBiasEnable = VK_TRUE;
+  // wireConfig.rasterizationInfo.depthBiasConstantFactor = 1.25f;
+  // wireConfig.rasterizationInfo.depthBiasSlopeFactor = 1.75f;
+
+  wireframePipeline = std::make_unique<XevPipeline>(
+      xevDevice, wireVertShaderSrc, wireFragShaderSrc, wireConfig);
 }
 
 void BasicRenderSystem::render(FrameInfo& frameInfo) {
-  xevPipeline->bind(frameInfo.commandBuffer);
+  auto entitiesWithReqComps =
+      entityManager.getEntitiesWithComponents<ModelComponent, TransformComponent>();
 
+  // First pass: Filled rendering
+  fillPipeline->bind(frameInfo.commandBuffer);
   vkCmdBindDescriptorSets(
       frameInfo.commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1,
       &frameInfo.globalDescriptorSet, 0, nullptr);
 
-  auto entitiesWithReqComps =
-      entityManager.getEntitiesWithComponents<ModelComponent, TransformComponent>();
-
   for (const auto& entity : entitiesWithReqComps) {
-    auto& modelComponent     = entityManager.getComponent<ModelComponent>(entity);
+    auto& modelComponent = entityManager.getComponent<ModelComponent>(entity);
     auto& transformComponent = entityManager.getComponent<TransformComponent>(entity);
-
     if (modelComponent.model == nullptr) continue;
 
     SimplePushConstantData push{};
-    push.modelMatrix  = transformComponent.getMat4();
+    push.modelMatrix = transformComponent.getMat4();
     push.normalMatrix = transformComponent.getNormalMat3();
 
     vkCmdPushConstants(
@@ -90,10 +105,34 @@ void BasicRenderSystem::render(FrameInfo& frameInfo) {
         VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0,
         sizeof(SimplePushConstantData), &push);
 
-    // Bind the model and draw
+    modelComponent.model->bind(frameInfo.commandBuffer);
+    modelComponent.model->draw(frameInfo.commandBuffer);
+  }
+
+  // Second pass: Wireframe rendering
+  wireframePipeline->bind(frameInfo.commandBuffer);
+  vkCmdBindDescriptorSets(
+      frameInfo.commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1,
+      &frameInfo.globalDescriptorSet, 0, nullptr);
+
+  for (const auto& entity : entitiesWithReqComps) {
+    auto& modelComponent = entityManager.getComponent<ModelComponent>(entity);
+    auto& transformComponent = entityManager.getComponent<TransformComponent>(entity);
+    if (modelComponent.model == nullptr) continue;
+
+    SimplePushConstantData push{};
+    push.modelMatrix = transformComponent.getMat4();
+    push.normalMatrix = transformComponent.getNormalMat3();
+
+    vkCmdPushConstants(
+        frameInfo.commandBuffer, pipelineLayout,
+        VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0,
+        sizeof(SimplePushConstantData), &push);
+
     modelComponent.model->bind(frameInfo.commandBuffer);
     modelComponent.model->draw(frameInfo.commandBuffer);
   }
 }
+
 
 } // namespace xev
