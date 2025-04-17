@@ -145,11 +145,11 @@ void XevDevice::pickPhysicalDevice() {
 }
 
 void XevDevice::createLogicalDevice() {
-  QueueFamilyIndices indices = findQueueFamilies(physicalDevice);
+  queueFamilyIndices = findQueueFamilies(physicalDevice);
 
   std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
   std::set<uint32_t> uniqueQueueFamilies = {
-      indices.graphicsFamily, indices.presentFamily};
+      queueFamilyIndices.graphicsFamily, queueFamilyIndices.presentFamily};
 
   float queuePriority = 1.0f;
   for (uint32_t queueFamily : uniqueQueueFamilies) {
@@ -188,8 +188,8 @@ void XevDevice::createLogicalDevice() {
     throw std::runtime_error("failed to create logical device!");
   }
 
-  vkGetDeviceQueue(device_, indices.graphicsFamily, 0, &graphicsQueue_);
-  vkGetDeviceQueue(device_, indices.presentFamily, 0, &presentQueue_);
+  vkGetDeviceQueue(device_, queueFamilyIndices.graphicsFamily, 0, &graphicsQueue_);
+  vkGetDeviceQueue(device_, queueFamilyIndices.presentFamily, 0, &presentQueue_);
 }
 
 void XevDevice::createCommandPool() {
@@ -211,7 +211,7 @@ void XevDevice::createSurface() {
 }
 
 bool XevDevice::isDeviceSuitable(VkPhysicalDevice device) {
-  QueueFamilyIndices indices = findQueueFamilies(device);
+  queueFamilyIndices = findQueueFamilies(device);
 
   bool extensionsSupported = checkDeviceExtensionSupport(device);
 
@@ -225,7 +225,7 @@ bool XevDevice::isDeviceSuitable(VkPhysicalDevice device) {
   VkPhysicalDeviceFeatures supportedFeatures;
   vkGetPhysicalDeviceFeatures(device, &supportedFeatures);
 
-  return indices.isComplete() && extensionsSupported && swapChainAdequate &&
+  return queueFamilyIndices.isComplete() && extensionsSupported && swapChainAdequate &&
          supportedFeatures.samplerAnisotropy;
 }
 

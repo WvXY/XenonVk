@@ -42,10 +42,12 @@ public:
   XevDevice& operator=(XevDevice&&)      = delete;
 
   VkCommandPool getCommandPool() { return commandPool; }
+  VkPhysicalDevice getPhysicalDevice() { return physicalDevice; }
   VkDevice device() { return device_; }
   VkSurfaceKHR surface() { return surface_; }
   VkQueue graphicsQueue() { return graphicsQueue_; }
   VkQueue presentQueue() { return presentQueue_; }
+  VkInstance& getVkInstance() { return instance; }
 
   SwapChainSupportDetails getSwapChainSupport() {
     return querySwapChainSupport(physicalDevice);
@@ -112,6 +114,7 @@ private:
   VkSurfaceKHR surface_;
   VkQueue graphicsQueue_;
   VkQueue presentQueue_;
+  QueueFamilyIndices queueFamilyIndices;
 
   const std::vector<const char*> validationLayers   = {"VK_LAYER_KHRONOS_validation"};
   mutable std::vector<const char*> deviceExtensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};

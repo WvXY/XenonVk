@@ -7,7 +7,7 @@
 #include "time_manager.hpp"
 #include "vk_buffer.hpp"
 #include "vk_camera.hpp"
-
+#include "vk_imgui.hpp"
 // std
 #include <array>
 #include <cassert>
@@ -29,8 +29,12 @@ DemoApp::DemoApp() {
           .setMaxSets(XevSwapChain::MAX_FRAMES_IN_FLIGHT)
           .addPoolSize(
               VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, XevSwapChain::MAX_FRAMES_IN_FLIGHT)
+          .addPoolSize(
+              VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+              XevSwapChain::MAX_FRAMES_IN_FLIGHT)
           .build();
   load();
+  xevImGui.initImGuiForVulkan(globalPool->getDescriptorPool());
 }
 
 DemoApp::~DemoApp() {}
@@ -82,6 +86,8 @@ void DemoApp::run() {
   while (!xevWindow.shouldClose()) {
     glfwPollEvents();
 
+    xevImGui.beginFrame();
+
     // check ESC key for closing window
     if (xevController.isPressed(xevWindow.getGLFWwindow(), GLFW_KEY_ESCAPE)) {
       glfwSetWindowShouldClose(xevWindow.getGLFWwindow(), GLFW_TRUE);
@@ -125,6 +131,8 @@ void DemoApp::run() {
 
       basicRenderSystem.render(frameInfo);
       pointLightSystem.render(frameInfo);
+
+      xevImGui.endFrame(commandBuffer);
 
       xevRenderer.endSwapChainRenderPass(commandBuffer);
       xevRenderer.endFrame();

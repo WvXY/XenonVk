@@ -79,6 +79,8 @@ public:
   void freeDescriptors(std::vector<VkDescriptorSet>& descriptors) const;
   void resetPool();
 
+  VkDescriptorPool getDescriptorPool() const { return descriptorPool; }
+
 private:
   XevDevice& xevDevice;
   VkDescriptorPool descriptorPool;
