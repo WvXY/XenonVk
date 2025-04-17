@@ -65,7 +65,7 @@ This project has set up [GitHub Actions](.github/workflows/) to build and test o
 
 ## External Libraries
 
-The following libraries are used and pre-installed in this project [External](Engine/External) folder.
+The following libraries are used and pre-installed in this project [External](External) folder.
 
 | File              | Version | Project Link                                   |
 |-------------------|---------|------------------------------------------------|

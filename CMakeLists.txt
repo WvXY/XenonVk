@@ -7,9 +7,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # -----------------   Paths   -------------------
 set(AST_DIR ${CMAKE_SOURCE_DIR}/Assets)
 set(CMK_DIR ${CMAKE_SOURCE_DIR}/CMake)
-set(EXT_DIR ${CMAKE_SOURCE_DIR}/Engine/External)
-set(SRC_DIR ${CMAKE_SOURCE_DIR}/Engine)
-set(SHA_DIR ${CMAKE_SOURCE_DIR}/Engine/Renderer/Shaders)
+set(EXT_DIR ${CMAKE_SOURCE_DIR}/External)
+set(SRC_DIR ${CMAKE_SOURCE_DIR}/Source)
+set(SHA_DIR ${CMAKE_SOURCE_DIR}/Source/Shaders)
 set(SPIRV_OUT_DIR ${CMAKE_BINARY_DIR}/spirv)
 
 # ------------------- Options -------------------
@@ -23,5 +23,5 @@ include(CMake/autoconfig-dependencies.cmake)
 include(CMake/precompile-shaders.cmake)
 
 # ------------------- Project -------------------
-add_subdirectory(Engine)
-add_subdirectory(Example)
+add_subdirectory(Source)
+add_subdirectory(Demo)
