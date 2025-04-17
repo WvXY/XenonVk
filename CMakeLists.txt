@@ -19,7 +19,7 @@ set(SPIRV_OUT_DIR ${CMAKE_BINARY_DIR}/spirv)
 #endif ()
 
 # -------------- Dependencies -------------------
-include(CMake/autoconfig-dependencies.cmake)
+include(CMake/autoconfig-deps.cmake)
 include(CMake/precompile-shaders.cmake)
 
 # ------------------- Project -------------------
