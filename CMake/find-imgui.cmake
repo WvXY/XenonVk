@@ -4,18 +4,16 @@ find_package(imgui QUIET)
 
 if (NOT imgui_FOUND)
     message(STATUS "Imgui not found, fetching from GitHub...")
-    #file(MAKE_DIRECTORY ${EXT_DIR}/imgui)
     FetchContent_Declare(imgui
             URL https://github.com/ocornut/imgui/archive/refs/tags/v1.91.9b.tar.gz
             EXCLUDE_FROM_ALL
-            #        SOURCE_DIR ${EXT_DIR}/imgui
     )
     FetchContent_MakeAvailable(imgui)
 else ()
     message(STATUS "Imgui already installed. Using version: ${imgui_VERSION}")
 endif ()
 
-message(STATUS "Imgui include dir: ${imgui_SOURCE_DIR}/glm")
+message(STATUS "Imgui src dir: ${imgui_SOURCE_DIR}")
 
 #add_library(imgui
 #        ${imgui_external_SOURCE_DIR}/imgui.cpp

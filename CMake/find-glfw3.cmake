@@ -3,8 +3,8 @@ find_package(glfw3 QUIET)
 
 if (NOT glfw3_FOUND)
     message(STATUS "GLFW not found, fetching from GitHub...")
-    file(MAKE_DIRECTORY ${EXT_DIR}/glfw)
-    FetchContent_Declare(glfw3 GIT_REPOSITORY https://github.com/glfw/glfw.git
+    FetchContent_Declare(glfw3
+            GIT_REPOSITORY https://github.com/glfw/glfw.git
             GIT_TAG master
     )
     set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
@@ -16,4 +16,4 @@ else ()
     message(STATUS "GLFW already installed. Using version: ${glfw3_VERSION}")
 endif ()
 
-message(STATUS "GLFW include dir: ${glfw_SOURCE_DIR}/include")
+message(STATUS "GLFW src dir: ${glfw3_SOURCE_DIR}")

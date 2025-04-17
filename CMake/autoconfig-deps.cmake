@@ -10,9 +10,7 @@ endif ()
 # Auto-setup dependencies
 include(FetchContent)
 
-## Problem: put all dependencies with different builds in the External folder causes issues with MakeAvailable
-#set(FETCHCONTENT_BASE_DIR ${EXT_DIR})
-
+set(FETCHCONTENT_BASE_DIR ${CMAKE_BINARY_DIR}/External)
 
 include(${CMK_DIR}/find-glfw3.cmake)
 include(${CMK_DIR}/find-glm.cmake)
