@@ -19,6 +19,7 @@ target_link_libraries(${PROJECT_NAME}
         PRIVATE glm::glm
         PRIVATE glfw
         PRIVATE Vulkan::Vulkan
+        PRIVATE imgui
 )
 
 
