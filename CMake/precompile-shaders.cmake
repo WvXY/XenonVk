@@ -4,7 +4,7 @@
 if(WIN32)   # Windows
     set(GLSL_VALIDATOR "$ENV{VULKAN_SDK}/Bin/glslangValidator.exe")
 elseif(APPLE)   # MacOS
-    set(GLSL_VALIDATOR "$ENV{HOME}/.dev/VulkanSDK/1.4.309.0/macOS/bin/glslangValidator")
+    set(GLSL_VALIDATOR "/usr/local/bin/glslangValidator")
 elseif(UNIX)    # Linux
     set(GLSL_VALIDATOR "/bin/glslangValidator")
 else()  # Unsupported platform
